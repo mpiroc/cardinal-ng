@@ -1,0 +1,21 @@
+.mat-sidenav-container {
+  height: 100%;
+  position: relative;
+}
+
+.mat-sidenav {
+  z-index: 5;
+}
+
+md-sidenav {
+  width: 200px;
+}
+
+md-nav-list > md-list-item {
+  display: flex;
+  flex-direction: column;
+}
+
+md-nav-list md-icon {
+  margin-right: 12px;
+}

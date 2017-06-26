@@ -1,0 +1,14 @@
+.ng-material-nav-toolbar {
+  position: relative;
+  z-index: 10;
+  text-transform: uppercase;
+}
+
+.ng-material-app-title {
+  font-size: 16pt;
+  text-transform: initial;
+}
+
+.ng-material-flex-spacer {
+  flex: 1 1 auto;
+}
