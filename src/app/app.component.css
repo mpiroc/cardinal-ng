@@ -1,0 +1,45 @@
+.ng-material-main-container {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.ng-material-nav-toolbar {
+  position: relative;
+  z-index: 10;
+  text-transform: uppercase;
+}
+
+.ng-material-app-title {
+  font-size: 16pt;
+  text-transform: initial;
+}
+
+.mg-material-flex-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-sidenav-container {
+  height: 100%;
+  position: relative;
+}
+
+.mat-sidenav {
+  z-index: 5;
+}
+
+md-sidenav {
+  width: 200px;
+}
+
+md-nav-list > md-list-item {
+  display: flex;
+  flex-direction: column;
+}
+
+md-nav-list md-icon {
+  margin-right: 12px;
+}
