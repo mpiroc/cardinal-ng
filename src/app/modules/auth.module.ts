@@ -8,18 +8,18 @@ import { MaterialModule } from './material.module';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../services/auth.service';
 import { AuthGuardService } from '../services/auth-guard.service';
-import { AppLoginPageComponent } from '../components/app-login-page/app-login-page.component';
+import { AppLoginRouteComponent } from '../components/app-login-route/app-login-route.component';
 import { AppLoginButtonComponent } from '../components/app-login-button/app-login-button.component';
 
 const routes = [
   {
     path: 'login',
-    component: AppLoginPageComponent,
+    component: AppLoginRouteComponent,
     canActivate: [AuthGuardService],
   },
   {
     path: '**',
-    redirectTo: 'example',
+    redirectTo: 'decks',
   },
 ];
 
@@ -32,7 +32,7 @@ const routes = [
     AngularFireAuthModule,
   ],
   declarations: [
-    AppLoginPageComponent,
+    AppLoginRouteComponent,
     AppLoginButtonComponent,
   ],
   providers: [

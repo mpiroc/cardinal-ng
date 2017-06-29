@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthService {
-  private readonly defaultUrl: string = '/example';
+  private readonly defaultUrl: string = '/decks';
   readonly isLoggedIn$: Observable<boolean>;
   redirectUrl: string;
 

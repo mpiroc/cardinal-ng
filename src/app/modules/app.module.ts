@@ -6,7 +6,7 @@ import { AuthModule } from './auth.module';
 import { AuthGuardService } from '../services/auth-guard.service';
 import { MaterialModule } from './material.module';
 import { AppComponent } from '../components/app/app.component';
-import { AppExampleComponent } from '../components/app-example/app-example.component';
+import { AppDecksRouteComponent } from '../components/app-decks-route/app-decks-route.component';
 import { AppSidenavComponent } from '../components/app-sidenav/app-sidenav.component';
 import { AppToolbarComponent } from '../components/app-toolbar/app-toolbar.component';
 
@@ -14,8 +14,8 @@ import 'hammerjs';
 
 const routes = [
   {
-    path: 'example',
-    component: AppExampleComponent,
+    path: 'decks',
+    component: AppDecksRouteComponent,
     canActivate: [AuthGuardService],
   }
 ];
@@ -23,7 +23,7 @@ const routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    AppExampleComponent,
+    AppDecksRouteComponent,
     AppToolbarComponent,
     AppSidenavComponent,
   ],
