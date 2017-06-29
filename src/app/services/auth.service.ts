@@ -29,7 +29,6 @@ export class AuthService {
   }
 
   applyRedirect(urlOverride: string = null): void {
-    console.log(`Applying redirect to ${(urlOverride || this.redirectUrl || this.defaultUrl)}`);
     this.router.navigate([ urlOverride || this.redirectUrl || this.defaultUrl ]);
     this.redirectUrl = null;
   }

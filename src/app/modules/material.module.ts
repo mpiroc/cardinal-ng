@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MdButtonModule,
+  MdCardModule,
   MdCheckboxModule,
   MdIconModule,
   MdListModule,
@@ -13,6 +14,7 @@ import {
   imports: [
     BrowserAnimationsModule,
     MdButtonModule,
+    MdCardModule,
     MdCheckboxModule,
     MdIconModule,
     MdListModule,
@@ -21,6 +23,7 @@ import {
   ],
   exports: [
     MdButtonModule,
+    MdCardModule,
     MdCheckboxModule,
     MdIconModule,
     MdListModule,

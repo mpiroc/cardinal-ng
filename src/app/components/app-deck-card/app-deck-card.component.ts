@@ -24,10 +24,6 @@ export class AppDeckCardComponent implements OnInit {
     const deckId: string = this.deck.deckId;
 
     this.count$ = this.databaseService.getDeckCards(uid, deckId)
-      .map(cards => {
-        console.log('foo');
-        console.log(`cards: ${cards}`);
-        return cards.length;
-      });
+      .map(cards => cards.length);
   }
 }

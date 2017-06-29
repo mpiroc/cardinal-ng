@@ -15,7 +15,6 @@ export class DatabaseService {
   }
 
   getDeckCards(uid: string, deckId: string): FirebaseListObservable<any[]> {
-    console.log(`Fetching 'deckCards/${uid}/${deckId}'`);
     return this.database.list(`deckCards/${uid}/${deckId}`);
   }
 }

@@ -1,16 +1,21 @@
-<div>
-  <table>
-    <tr>
-      <td>Name</td>
-      <td>{{name}}</td>
-    </tr>
-    <tr>
-      <td>Description</td>
-      <td>{{description}}</td>
-    </tr>
-    <tr>
-      <td>Cards</td>
-      <td>{{count$ | async}}</td>
-    </tr>
-  </table>
-</div>
+<md-card>
+  <md-card-title>
+    {{name}}
+  </md-card-title>
+  <md-card-subtitle>
+    <span>{{count$ | async}}</span>
+    <span [ngPlural]="(count$ | async) || ''">
+      <ng-template ngPluralCase="=1">card</ng-template>
+      <ng-template ngPluralCase="other">cards</ng-template>
+    </span>
+  </md-card-subtitle>
+  <md-card-content>
+    {{description}}
+  </md-card-content>
+  <md-card-actions>
+    <button md-button>Review</button>
+    <button md-button>View</button>
+    <button md-button>Edit</button>
+    <button md-button>Delete</button>
+  </md-card-actions>
+</md-card>

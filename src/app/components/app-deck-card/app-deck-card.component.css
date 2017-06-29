@@ -1,0 +1,8 @@
+md-card {
+  margin: 4px;
+  width: 360px;
+}
+
+.mat-button {
+  min-width: 72px;
+}

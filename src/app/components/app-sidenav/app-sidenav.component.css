@@ -1,6 +1,6 @@
-.ng-material-main-content {
+/*.ng-material-main-content {
   margin: 8px;
-}
+}*/
 
 .mat-sidenav-container {
   height: 100%;
@@ -21,5 +21,5 @@ md-nav-list > md-list-item {
 }
 
 md-nav-list md-icon {
-  margin-right: 12px;
+  margin-right: 24px;
 }
