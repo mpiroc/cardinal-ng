@@ -1,1 +1,5 @@
-<span>Decks</span>
+<div>
+  <div *ngFor="let deck of ((decks$$ | async) | async)">
+    {{deck | json}}
+  </div>
+</div>

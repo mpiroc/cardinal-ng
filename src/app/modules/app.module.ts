@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AuthModule } from './auth.module';
+import { FirebaseModule } from './firebase.module';
 import { AuthGuardService } from '../services/auth-guard.service';
 import { MaterialModule } from './material.module';
 import { AppComponent } from '../components/app/app.component';
@@ -30,7 +30,7 @@ const routes = [
   imports: [
     BrowserModule,
     MaterialModule,
-    AuthModule,
+    FirebaseModule,
     RouterModule.forRoot(routes),
   ],
   providers: [],
