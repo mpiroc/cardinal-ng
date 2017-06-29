@@ -11,11 +11,11 @@ export class DatabaseService {
   }
 
   getDecks(uid: string): FirebaseListObservable<any[]> {
-    if (!uid) {
-      console.log('uid: ' + uid);
-      return null;
-    }
-
     return this.database.list(`userDecks/${uid}`);
+  }
+
+  getDeckCards(uid: string, deckId: string): FirebaseListObservable<any[]> {
+    console.log(`Fetching 'deckCards/${uid}/${deckId}'`);
+    return this.database.list(`deckCards/${uid}/${deckId}`);
   }
 }

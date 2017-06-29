@@ -13,7 +13,6 @@ export class AppDecksRouteComponent implements OnInit {
   decks$$: Observable<FirebaseListObservable<any[]>>;
 
   constructor(private authService: AuthService, private databaseService: DatabaseService) {
-
   }
 
   ngOnInit(): void {
