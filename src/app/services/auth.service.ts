@@ -15,7 +15,8 @@ export class AuthService {
 
     this.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
-        this.applyRedirect();
+        //console.log('default redirect from ' + router.url);
+        //this.applyRedirect();
       }
 
       if (!isLoggedIn && this.router.url !== '/login') {
@@ -29,7 +30,9 @@ export class AuthService {
   }
 
   applyRedirect(urlOverride: string = null): void {
-    this.router.navigate([ urlOverride || this.redirectUrl || this.defaultUrl ]);
+    const url: string = urlOverride || this.redirectUrl || this.defaultUrl;
+
+    this.router.navigate([ url ]);
     this.redirectUrl = null;
   }
 

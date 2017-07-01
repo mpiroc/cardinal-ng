@@ -1,6 +1,6 @@
 <md-card>
   <md-card-title>
-    {{name}}
+    {{deck.name}}
   </md-card-title>
   <md-card-subtitle>
     <span>{{count$ | async}}</span>
@@ -10,12 +10,12 @@
     </span>
   </md-card-subtitle>
   <md-card-content>
-    {{description}}
+    {{deck.description}}
   </md-card-content>
   <md-card-actions>
-    <button md-button>Review</button>
-    <button md-button>View</button>
-    <button md-button>Edit</button>
-    <button md-button>Delete</button>
+    <a md-button>Review</a>
+    <a md-button routerLink='/deck/{{deck.deckId}}'>View</a>
+    <a md-button>Edit</a>
+    <a md-button>Delete</a>
   </md-card-actions>
 </md-card>

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../services/database.service';
+import { DeckModel } from '../../models/deck-model';
 
 @Component({
   selector: 'app-deck-card',
@@ -8,22 +9,15 @@ import { DatabaseService } from '../../services/database.service';
   styleUrls: [ 'app-deck-card.component.css' ],
 })
 export class AppDeckCardComponent implements OnInit {
-  @Input() deck: any;
-  name: string;
-  description: string;
+  @Input() deck: DeckModel;
   count$: Observable<number>;
 
   constructor(private databaseService: DatabaseService) {
   }
 
   ngOnInit(): void {
-    this.name = this.deck.name;
-    this.description = this.deck.description;
-
-    const uid: string = this.deck.uid;
-    const deckId: string = this.deck.deckId;
-
-    this.count$ = this.databaseService.getDeckCards(uid, deckId)
+    this.count$ = this.databaseService
+      .getDeckCards(this.deck.uid, this.deck.deckId)
       .map(cards => cards.length);
   }
 }

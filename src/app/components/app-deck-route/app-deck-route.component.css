@@ -1,0 +1,25 @@
+.container {
+  margin: 4px;
+}
+
+.centered {
+  margin: auto;
+}
+
+.ng-material-card-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ng-material-new-card-button {
+  margin: 8px 0 0 0;
+  display: flex;
+}
+
+.ng-material-tab-body {
+  margin: 8px 0;
+}
+
+.propertyLabel {
+  font-weight: bold;
+}

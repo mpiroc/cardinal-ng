@@ -23,16 +23,12 @@ export class AuthGuardService implements CanActivate {
 
   private checkUrl(url: string): Observable<boolean> {
     return this.authService.isLoggedIn$.map(isLoggedIn => {
-      if (isLoggedIn && url === '/login') {
-        return false;
+      if (url === '/login') {
+        return !isLoggedIn;
       }
 
-      if (!isLoggedIn && url !== '/login') {
-        this.authService.redirectUrl = url;
-        return false;
-      }
-
-      return true;
+      this.authService.redirectUrl = url;
+      return isLoggedIn;
     });
   }
 }
