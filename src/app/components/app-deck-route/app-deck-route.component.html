@@ -1,31 +1,8 @@
 <div class='container'>
   <div class='ng-material-card-list'>
-    <md-card class='container' *ngFor='let data of mockData'>
-      <md-card-content>
-        <md-tab-group>
-          <md-tab label='Front'>
-            <div class='ng-material-tab-body'>{{data.front}}</div>
-          </md-tab>
-          <md-tab label='Back'>
-            <div class='ng-material-tab-body'>{{data.back}}</div>
-          </md-tab>
-          <md-tab label='Details'>
-            <div class='ng-material-tab-body'>
-              <md-list>
-                <md-list-item>
-                  <label class='propertyLabel'>Next due:</label>&nbsp;
-                  <span>{{data.nextDue}}</span>
-                </md-list-item>
-              </md-list>
-            </div>
-          </md-tab>
-        </md-tab-group>
-      </md-card-content>
-      <md-card-actions>
-        <a md-button>Edit</a>
-        <a md-button>Delete</a>
-      </md-card-actions>
-    </md-card>
+    <div class='container' *ngFor='let card of mockData'>
+      <app-card-card [card]='card'></app-card-card>
+    </div>
   </div>
   <div class='ng-material-new-card-button'>
     <button md-fab class='centered'><md-icon>add</md-icon></button>

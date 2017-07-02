@@ -16,10 +16,6 @@
   display: flex;
 }
 
-.ng-material-tab-body {
-  margin: 8px 0;
-}
-
 .propertyLabel {
   font-weight: bold;
 }
