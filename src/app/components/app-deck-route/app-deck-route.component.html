@@ -1,6 +1,6 @@
 <div class='container'>
   <div class='ng-material-card-list'>
-    <div class='container' *ngFor='let card of mockData'>
+    <div class='container' *ngFor='let card of (deckCards$ | async)'>
       <app-card-card [card]='card'></app-card-card>
     </div>
   </div>
