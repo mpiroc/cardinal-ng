@@ -7,12 +7,13 @@
   position: relative;
 }
 
-.mat-sidenav {
-  z-index: 5;
+.mat-nav-list .mat-list-item {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 md-sidenav {
-  width: 200px;
+  width: 240px;
 }
 
 md-nav-list > md-list-item {
@@ -21,5 +22,6 @@ md-nav-list > md-list-item {
 }
 
 md-nav-list md-icon {
-  margin-right: 24px;
+  width: 56px;
 }
+
