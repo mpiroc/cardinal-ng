@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { AuthService } from '../../services/auth.service';
 import { DatabaseService } from '../../services/database.service';
-import { DeckCardModel } from '../../models/deck-card-model';
+import * as fb from '../../models/firebase-models';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { DeckCardModel } from '../../models/deck-card-model';
   styleUrls: [ './app-deck-route.component.css' ],
 })
 export class AppDeckRouteComponent implements OnInit {
-  deckCards$: Observable<DeckCardModel[]>;
+  deckCards$: Observable<fb.IDeckCard[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,24 +22,12 @@ export class AppDeckRouteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ngOnInit');
     const uid$ = this.authService.user$.map(user =>user.uid);
     const deckId$ = this.activatedRoute.paramMap
       .map(paramMap => paramMap.get('deckId'));
 
     this.deckCards$ = Observable
       .combineLatest(uid$, deckId$)
-      .switchMap(results => this.getCards(results[0], results[1]));
-  }
-
-  private getCards(uid: string, deckId: string) {
-    return this.databaseService.getDeckCards(uid, deckId)
-      .map((cards: any[]) => cards
-        .map(card => ({
-          uid: uid,
-          deckId: deckId,
-          cardId: card.cardId,
-        } as DeckCardModel))
-      );
+      .switchMap(results => this.databaseService.getDeckCards(results[0], results[1]));
   }
 }

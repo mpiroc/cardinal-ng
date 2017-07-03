@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../services/database.service';
-import { DeckModel } from '../../models/deck-model';
+import * as fb from '../../models/firebase-models';
 
 @Component({
   selector: 'app-deck-card',
@@ -9,7 +9,7 @@ import { DeckModel } from '../../models/deck-model';
   styleUrls: [ 'app-deck-card.component.css' ],
 })
 export class AppDeckCardComponent implements OnInit {
-  @Input() deck: DeckModel;
+  @Input() deck: fb.IUserDeck;
   count$: Observable<number>;
 
   constructor(private databaseService: DatabaseService) {
