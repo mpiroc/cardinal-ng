@@ -18,6 +18,8 @@ export class AppDecksRouteComponent implements OnInit {
 
   ngOnInit(): void {
     this.decks$ = this.authService.user$
-      .switchMap(user => this.databaseService.getDecks(user.uid));
+      .switchMap(user => user ?
+        this.databaseService.getDecks(user.uid) :
+        Observable.of());
   }
 }

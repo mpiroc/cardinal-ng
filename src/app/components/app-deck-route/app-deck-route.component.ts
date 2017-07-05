@@ -22,12 +22,21 @@ export class AppDeckRouteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const uid$ = this.authService.user$.map(user =>user.uid);
+    const uid$ = this.authService.user$.map(user => user ? user.uid : null);
     const deckId$ = this.activatedRoute.paramMap
       .map(paramMap => paramMap.get('deckId'));
 
     this.deckCards$ = Observable
       .combineLatest(uid$, deckId$)
-      .switchMap(results => this.databaseService.getDeckCards(results[0], results[1]));
+      .switchMap(results => {
+        const uid = results[0];
+        const deckId = results[1];
+        
+        if (uid && deckId) {
+          return this.databaseService.getDeckCards(results[0], results[1]);
+        }
+
+        return Observable.of();
+      });
   }
 }

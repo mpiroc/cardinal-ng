@@ -15,8 +15,7 @@ export class AuthService {
 
     this.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
-        //console.log('default redirect from ' + router.url);
-        //this.applyRedirect();
+        this.applyRedirect();
       }
 
       if (!isLoggedIn && this.router.url !== '/login') {
