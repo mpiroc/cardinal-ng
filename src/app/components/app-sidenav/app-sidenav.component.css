@@ -1,20 +1,17 @@
-.mat-sidenav-container {
-  height: 100%;
-  position: relative;
-}
-
-.mat-nav-list .mat-list-item {
-  font-size: 14px;
-  font-weight: 500;
+md-sidenav-container {
+  flex-grow: 1;
 }
 
 md-sidenav {
   width: 200px;
 }
 
-md-nav-list > md-list-item {
+md-nav-list md-list-item {
   display: flex;
   flex-direction: column;
+
+  font-size: 14px;
+  font-weight: 500;
 }
 
 md-nav-list md-icon {
