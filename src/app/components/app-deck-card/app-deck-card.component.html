@@ -4,7 +4,7 @@
   </md-card-title>
   <md-card-subtitle>
     <span>{{count$ | async}}</span>
-    <span [ngPlural]="(count$ | async) || ''">
+    <span [ngPlural]="(count$ | async) || ''" *ngIf="(count$ | async) !== null">
       <ng-template ngPluralCase="=1">card</ng-template>
       <ng-template ngPluralCase="other">cards</ng-template>
     </span>

@@ -8,6 +8,7 @@ import {
   MdIconModule,
   MdListModule,
   MdSidenavModule,
+  MdSnackBarModule,
   MdTabsModule,
   MdToolbarModule,
 } from '@angular/material';
@@ -22,6 +23,7 @@ import {
     MdIconModule,
     MdListModule,
     MdSidenavModule,
+    MdSnackBarModule,
     MdTabsModule,
     MdToolbarModule,
   ],
@@ -33,6 +35,7 @@ import {
     MdIconModule,
     MdListModule,
     MdSidenavModule,
+    MdSnackBarModule,
     MdTabsModule,
     MdToolbarModule,
   ],

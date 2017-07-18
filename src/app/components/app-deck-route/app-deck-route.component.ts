@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { MdSnackBar } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { AuthService } from '../../services/auth.service';
@@ -18,7 +19,8 @@ export class AppDeckRouteComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private databaseService: DatabaseService) {
+    private databaseService: DatabaseService,
+    private snackbar: MdSnackBar) {
   }
 
   ngOnInit(): void {
@@ -35,6 +37,12 @@ export class AppDeckRouteComponent implements OnInit {
         if (uid && deckId) {
           return this.databaseService.getDeckCards(results[0], results[1]);
         }
+
+        return Observable.of();
+      })
+      .catch(err => {
+        console.error(err);
+        this.snackbar.open(`Could not load cards`, null, { duration: 3000 });
 
         return Observable.of();
       });
