@@ -1,6 +1,6 @@
 md-card {
   margin: 4px;
-  width: 360px;
+  width: 384px; /* using 64px as an increment, 64 * 6 = 384 */
 }
 
 .mat-button {

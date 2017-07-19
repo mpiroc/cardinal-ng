@@ -1,0 +1,16 @@
+<div class="main-container">
+  <h1 md-dialog-title>Edit Deck</h1>
+  <div md-dialog-content class="main-content">
+    <md-input-container>
+      <input mdInput placeholder="Name" [(ngModel)]="name">
+      <!--<input md-input placeholder="Name">-->
+    </md-input-container>
+    <md-input-container>
+      <textarea mdInput placeholder="Description" rows="3" [(ngModel)]="description"></textarea>
+    </md-input-container>
+  </div>
+  <div md-dialog-actions>
+    <button md-button [md-dialog-close]="dialogResult.Cancel">Cancel</button>
+    <button md-button [md-dialog-close]="dialogResult.Save">Save</button>
+  </div>
+</div>

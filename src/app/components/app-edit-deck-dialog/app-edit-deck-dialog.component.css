@@ -1,0 +1,9 @@
+.main-content {
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container {
+  min-width: 448px;
+}
