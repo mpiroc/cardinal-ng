@@ -19,8 +19,9 @@ export class AppCardCardComponent implements OnInit {
 
   ngOnInit(): void {
     const emptyCardContent = {
-      side1: "",
-      side2: "",
+      ...this.card,
+      front: "",
+      back: "",
     };
     this.content$ = this.databaseService.getCardContent(
       this.card.uid,

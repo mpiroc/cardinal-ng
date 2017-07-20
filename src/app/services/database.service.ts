@@ -12,11 +12,15 @@ export class DatabaseService {
   }
 
   getDecks(uid: string): Observable<fb.IUserDeck[]> {
-    return this.database.list(`userDecks/${uid}`);
+    return this.database.list(`userDeck/${uid}`);
+  }
+
+  getDeckInfo(uid: string, deckId: string): Observable<fb.IDeckInfo> {
+    return this.database.object(`deckInfo/${uid}/${deckId}`);
   }
 
   getDeckCards(uid: string, deckId: string): Observable<fb.IDeckCard[]> {
-    return this.database.list(`deckCards/${uid}/${deckId}`);
+    return this.database.list(`deckCard/${uid}/${deckId}`);
   }
 
   getCardContent(uid: string, deckId: string, cardId: string): Observable<fb.ICardContent> {
@@ -24,6 +28,6 @@ export class DatabaseService {
   }
 
   updateUserDeck(uid: string, deckId: string, data: any): Promise<void> {
-    return this.database.object(`userDecks/${uid}/${deckId}`).update(data);
+    return this.database.object(`userDeck/${uid}/${deckId}`).update(data);
   }
 }

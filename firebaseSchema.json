@@ -1,0 +1,64 @@
+{
+  "user": {
+    "[uid]": {
+      "uid": "{uid}",
+      "name": "{name}",
+    }
+  },
+  "userDeck": {
+    "[uid]": {
+      "[deckId]": {
+        "uid": "{uid}",
+        "deckId": "{deckId}",
+      }
+    }
+  },
+  "deckCard": {
+    "[uid]": {
+      "[deckId]": {
+        "[cardId]": {
+          "uid": "{uid}",
+          "deckId": "{deckId}",
+          "cardId": "{cardId}",
+        }
+      }
+    }
+  },
+  "deckInfo": {
+    "[uid]": {
+      "[deckId]": {
+        "uid": "{uid}",
+        "deckId": "{deckId}",
+        "name": "{name}",
+        "description": "{description}",
+      }
+    }
+  },
+  "cardContent": {
+    "[uid]": {
+      "[deckId]": {
+        "[cardId]": {
+          "uid": "{uid}",
+          "deckId": "{deckId}",
+          "cardId": "{cardId}",
+          "front": "{front}",
+          "back": "{back}",
+        }
+      }
+    }
+  },
+  "cardHistory": {
+    "[uid]": {
+      "[deckId]": {
+        "[cardId]": {
+          "uid": "{uid}",
+          "deckId": "{deckId}",
+          "cardId": "{cardId}",
+          "difficulty": "{difficulty}",
+          "grade": "{grade}",
+          "repetitions": "{repetitions}",
+        }
+      }
+    }
+  }
+}

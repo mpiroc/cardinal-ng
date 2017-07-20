@@ -1,6 +1,6 @@
 <md-card>
   <md-card-title>
-    {{deck.name}}
+    {{name$ | async}}
   </md-card-title>
   <md-card-subtitle>
     <span>{{count$ | async}}</span>
@@ -10,7 +10,7 @@
     </span>
   </md-card-subtitle>
   <md-card-content>
-    {{deck.description}}
+    {{description$ | async}}
   </md-card-content>
   <md-card-actions>
     <a md-button>Review</a>

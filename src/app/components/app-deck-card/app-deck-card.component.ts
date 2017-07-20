@@ -14,12 +14,20 @@ import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dia
 })
 export class AppDeckCardComponent implements OnInit {
   @Input() deck: fb.IUserDeck;
+  name$: Observable<string>;
+  description$: Observable<string>;
   count$: Observable<number>;
 
   constructor(private databaseService: DatabaseService, private snackbar: MdSnackBar, private dialog: MdDialog) {
   }
 
   ngOnInit(): void {
+    const deckInfo$: Observable<fb.IDeckInfo> = this.databaseService
+      .getDeckInfo(this.deck.uid, this.deck.deckId)
+      .catch(err => this.logError(err, "Could not load deck info"));
+
+    this.name$ = deckInfo$.map(info => info.name);
+    this.description$ = deckInfo$.map(info => info.description);
     this.count$ = this.databaseService
       .getDeckCards(this.deck.uid, this.deck.deckId)
       .map(cards => cards.length)
