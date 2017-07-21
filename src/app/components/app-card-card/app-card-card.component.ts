@@ -29,11 +29,9 @@ export class AppCardCardComponent implements OnInit {
       this.card.$key)
       .startWith(emptyCardContent)
       .catch(err => {
-        console.log('1');
         console.error(err);
         this.snackbar.open(`Could not load card content`, null, { duration: 3000 });
 
-        console.log('2');
         return Observable.of(emptyCardContent);
       });
   }

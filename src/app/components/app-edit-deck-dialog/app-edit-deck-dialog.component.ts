@@ -21,12 +21,8 @@ export class AppEditDeckDialog {
   dialogResult: typeof AppEditDeckDialogResult = AppEditDeckDialogResult;
 
   constructor(@Inject(MD_DIALOG_DATA) data: Observable<fb.IDeckInfo>) {
-    this.name$ = data.map(info => {
-      return this.name = info.name;
-    });
-    this.description$ = data.map(info => {
-      return this.description = info.description;
-    });
+    this.name$ = data.map(info => this.name = info.name);
+    this.description$ = data.map(info => this.description = info.description);
   }
 
   onNameInput($event: any) {
