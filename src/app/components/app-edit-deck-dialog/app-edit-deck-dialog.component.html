@@ -2,11 +2,11 @@
   <h1 md-dialog-title>Edit Deck</h1>
   <div md-dialog-content class="main-content">
     <md-input-container>
-      <input mdInput placeholder="Name" [(ngModel)]="name">
+      <input mdInput placeholder="Name" value="{{name$ | async}}" (input)="onNameInput($event)"> 
       <!--<input md-input placeholder="Name">-->
     </md-input-container>
     <md-input-container>
-      <textarea mdInput placeholder="Description" rows="3" [(ngModel)]="description"></textarea>
+      <textarea mdInput placeholder="Description" rows="3" value="{{description$ | async}}" (input)="onDescriptionInput($event)"></textarea>
     </md-input-container>
   </div>
   <div md-dialog-actions>

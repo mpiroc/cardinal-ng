@@ -14,6 +14,7 @@ import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dia
 })
 export class AppDeckCardComponent implements OnInit {
   @Input() deck: fb.IUserDeck;
+  private deckInfo$: Observable<fb.IDeckInfo>;
   name$: Observable<string>;
   description$: Observable<string>;
   count$: Observable<number>;
@@ -22,12 +23,12 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const deckInfo$: Observable<fb.IDeckInfo> = this.databaseService
+    this.deckInfo$ = this.databaseService
       .getDeckInfo(this.deck.uid, this.deck.$key)
       .catch(err => this.logError(err, "Could not load deck info"));
 
-    this.name$ = deckInfo$.map(info => info.name);
-    this.description$ = deckInfo$.map(info => info.description);
+    this.name$ = this.deckInfo$.map(info => info.name);
+    this.description$ = this.deckInfo$.map(info => info.description);
     this.count$ = this.databaseService
       .getCards(this.deck.uid, this.deck.$key)
       .map(cards => cards.length)
@@ -38,7 +39,7 @@ export class AppDeckCardComponent implements OnInit {
     const dialogRef: MdDialogRef<AppEditDeckDialog> = this.dialog.open(AppEditDeckDialog, {
       panelClass: 'test-panel-class',
       backdropClass: 'test-backdrop-class',
-      data: this.deck,
+      data: this.deckInfo$,
     });
     dialogRef.afterClosed()
       .map(result => result === undefined ? AppEditDeckDialogResult.Cancel : result)
