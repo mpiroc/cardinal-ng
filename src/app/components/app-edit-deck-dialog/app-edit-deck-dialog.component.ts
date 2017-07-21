@@ -17,7 +17,7 @@ export class AppEditDeckDialog {
   public description: string;
   dialogResult: typeof AppEditDeckDialogResult = AppEditDeckDialogResult;
 
-  constructor(@Inject(MD_DIALOG_DATA) data: fb.IUserDeck) {
+  constructor(@Inject(MD_DIALOG_DATA) data: fb.IDeckInfo) {
     this.name = data.name;
     this.description = data.description;
   }

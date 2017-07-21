@@ -1,6 +1,10 @@
 import { Injectable, Input } from '@angular/core';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { Promise } from 'firebase';
+import {
+  AngularFireDatabase,
+  FirebaseListObservable,
+  FirebaseObjectObservable,
+} from 'angularfire2/database';
+import { database } from 'firebase';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import * as fb from '../models/firebase-models';
@@ -11,23 +15,132 @@ export class DatabaseService {
   constructor(private database: AngularFireDatabase) {
   }
 
-  getDecks(uid: string): Observable<fb.IUserDeck[]> {
-    return this.database.list(`userDeck/${uid}`);
+  // Create
+  async createDeck(uid: string): firebase.Promise<void> {
+    const userDeck: fb.IUserDeck = await this.getDecks(uid).push({
+      uid,
+    });
+
+    await this.getDeckInfo(uid, userDeck.$key).set({
+      uid,
+      name: "",
+      description: "",
+    });
   }
 
-  getDeckInfo(uid: string, deckId: string): Observable<fb.IDeckInfo> {
-    return this.database.object(`deckInfo/${uid}/${deckId}`);
+  async createCard(uid: string, deckId: string): firebase.Promise<void> {
+    const deckCard: fb.IDeckCard = await this.getCards(uid, deckId).push({
+      uid,
+      deckId,
+    });
+
+    const cardContent: firebase.Promise<void> =
+      this.getCardContent(uid, deckId, deckCard.$key).set({
+        uid,
+        deckId,
+        front: "",
+        back: "",
+      });
+
+    const cardHistory: firebase.Promise<void> =
+      this.getCardHistory(uid, deckId, deckCard.$key).set({
+        uid,
+        deckId,
+        difficulty: 2.5,
+        grade: 0,
+        repetitions: 0,
+      });
+
+    await firebase.Promise.all([cardContent, cardHistory]);
   }
 
-  getDeckCards(uid: string, deckId: string): Observable<fb.IDeckCard[]> {
-    return this.database.list(`deckCard/${uid}/${deckId}`);
+  // Retrieve
+  getDecks(uid: string): FirebaseListObservable<fb.IUserDeck[]> {
+    return this.database.list(this.getUserDeckPath(uid));
   }
 
-  getCardContent(uid: string, deckId: string, cardId: string): Observable<fb.ICardContent> {
-    return this.database.object(`cardContent/${uid}/${deckId}/${cardId}`);
+  getDeckInfo(uid: string, deckId: string): FirebaseObjectObservable<fb.IDeckInfo> {
+    return this.database.object(`${this.getDeckInfoPath(uid)}/${deckId}`);
   }
 
-  updateUserDeck(uid: string, deckId: string, data: any): Promise<void> {
-    return this.database.object(`userDeck/${uid}/${deckId}`).update(data);
+  getCards(uid: string, deckId: string): FirebaseListObservable<fb.IDeckCard[]> {
+    return this.database.list(this.getDeckCardPath(uid, deckId));
+  }
+
+  getCardContent(uid: string, deckId: string, cardId: string): FirebaseObjectObservable<fb.ICardContent> {
+    return this.database.object(`${this.getCardContentPath(uid, deckId)}/${cardId}`);
+  }
+
+  getCardHistory(uid: string, deckId: string, cardId: string): FirebaseObjectObservable<fb.ICardHistory> {
+    return this.database.object(`${this.getCardHistoryPath(uid, deckId)}/${cardId}`);
+  }
+
+  // Update
+  updateDeckInfo(uid: string, deckId: string,
+    name: string, description: string)
+    : firebase.Promise<void> {
+
+    return this.getDeckInfo(uid, deckId).update({
+      name,
+      description,
+    });
+  }
+
+  updateCardContent(uid: string, deckId: string, cardId: string,
+    front: string, back: string)
+    : firebase.Promise<void> {
+
+    return this.getCardContent(uid, deckId, cardId).update({
+      front,
+      back,
+    });
+  }
+
+  updateCardHistory(uid: string, deckId: string, cardId: string,
+    difficulty: number, grade: number, repetitions: number)
+    : firebase.Promise<void> {
+
+    return this.getCardHistory(uid, deckId, cardId).update({
+      difficulty,
+      grade,
+      repetitions,
+    });
+  }
+
+  // Delete
+  deleteDeck(uid: string, deckId: string): firebase.Promise<any[]> {
+    return firebase.Promise.all([
+      this.getDecks(uid).remove(deckId),
+      this.database.list(this.getDeckInfoPath(uid)).remove(deckId),
+    ]);
+  }
+
+  async deleteCard(uid: string, deckId: string, cardId: string): firebase.Promise<any[]> {
+    return firebase.Promise.all([
+      this.getCards(uid, deckId).remove(cardId),
+      this.database.list(this.getCardContentPath(uid, deckId)).remove(cardId),
+      this.database.list(this.getCardHistoryPath(uid, deckId)).remove(cardId),
+    ]);
+  }
+
+  // Helpers
+  private getUserDeckPath(uid: string): string {
+    return `userDeck/${uid}`;
+  }
+
+  private getDeckInfoPath(uid: string): string {
+    return `deckInfo/${uid}`;
+  }
+
+  private getDeckCardPath(uid: string, deckId: string): string {
+    return `deckCard/${uid}/${deckId}`;
+  }
+
+  private getCardContentPath(uid: string, deckId: string): string {
+    return `cardContent/${uid}/${deckId}`;
+  }
+
+  private getCardHistoryPath(uid: string, deckId: string): string {
+    return `cardHistory/${uid}/${deckId}`;
   }
 }

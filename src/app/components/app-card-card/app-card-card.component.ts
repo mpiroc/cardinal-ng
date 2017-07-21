@@ -26,7 +26,7 @@ export class AppCardCardComponent implements OnInit {
     this.content$ = this.databaseService.getCardContent(
       this.card.uid,
       this.card.deckId,
-      this.card.cardId)
+      this.card.$key)
       .startWith(emptyCardContent)
       .catch(err => {
         console.log('1');

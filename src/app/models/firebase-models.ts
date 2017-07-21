@@ -1,39 +1,26 @@
-export interface IUser {
-  uid: string;
-  name: string;
-}
-
 export interface IUserDeck {
   uid: string;
-  deckId: string;
+  $key: string;
 }
 
-export interface IDeckInfo {
-  uid: string;
-  deckId: string;
+export interface IDeckInfo extends IUserDeck {
   name: string;
   description: string;
 }
 
 export interface IDeckCard {
-  uid: string,
-  deckId: string,
-  cardId: string,
+  uid: string;
+  deckId: string;
+  $key: string;
 }
 
-export interface ICardContent {
-  uid: string,
-  deckId: string,
-  cardId: string,
+export interface ICardContent extends IDeckCard {
   front: string;
   back: string;
 }
 
-export interface ICardHistory {
-  uid: string,
-  deckId: string,
-  cardId: string,
+export interface ICardHistory extends IDeckCard {
   difficulty: number;
   grade: number;
-  repetitionCount: number;
+  repetitions: number;
 }

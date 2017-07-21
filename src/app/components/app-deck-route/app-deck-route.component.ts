@@ -35,7 +35,7 @@ export class AppDeckRouteComponent implements OnInit {
         const deckId = results[1];
         
         if (uid && deckId) {
-          return this.databaseService.getDeckCards(results[0], results[1]);
+          return this.databaseService.getCards(uid, deckId);
         }
 
         return Observable.of();

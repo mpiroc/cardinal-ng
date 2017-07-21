@@ -23,13 +23,13 @@ export class AppDeckCardComponent implements OnInit {
 
   ngOnInit(): void {
     const deckInfo$: Observable<fb.IDeckInfo> = this.databaseService
-      .getDeckInfo(this.deck.uid, this.deck.deckId)
+      .getDeckInfo(this.deck.uid, this.deck.$key)
       .catch(err => this.logError(err, "Could not load deck info"));
 
     this.name$ = deckInfo$.map(info => info.name);
     this.description$ = deckInfo$.map(info => info.description);
     this.count$ = this.databaseService
-      .getDeckCards(this.deck.uid, this.deck.deckId)
+      .getCards(this.deck.uid, this.deck.$key)
       .map(cards => cards.length)
       .catch(err => this.logError(err, "Could not load card count"));
   }
@@ -50,10 +50,12 @@ export class AppDeckCardComponent implements OnInit {
             
             case AppEditDeckDialogResult.Save:
               
-              const promise: Promise<void> = this.databaseService.updateUserDeck(this.deck.uid, this.deck.deckId, {
-                name: dialogRef.componentInstance.name,
-                description: dialogRef.componentInstance.description,
-              });
+              const promise: Promise<void> = this.databaseService.updateDeckInfo(
+                this.deck.uid,
+                this.deck.$key,
+                dialogRef.componentInstance.name,
+                dialogRef.componentInstance.description,
+              );
               return Observable.from(promise);
               
 
