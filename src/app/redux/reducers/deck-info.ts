@@ -61,7 +61,7 @@ function deckInfo(state: Map<string, any> = initialDeckInfoState, action: Action
 const initialDeckInfosState = Map<string, any>({
 })
 
-function deckInfos(state: Map<string, any> = initialDeckInfosState, action: Action) {
+export function deckInfos(state: Map<string, any> = initialDeckInfosState, action: Action) {
   switch (action.type) {
     case DECK_INFO_START_LISTENING:
     case DECK_INFO_STOP_LISTENING:

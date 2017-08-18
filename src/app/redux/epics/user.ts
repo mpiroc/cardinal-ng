@@ -1,6 +1,8 @@
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/switchMap';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { AuthService } from '../../services/auth.service';
@@ -16,7 +18,7 @@ import {
   userLogout,
 } from '../actions/shared';
 
-export function createUserStartListeningEpic(authService: AuthService) {
+export function createUserEpic(authService: AuthService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<Map<string, any>>) => action$
     .ofType(USER_START_LISTENING)
     .switchMap((action: IUserStartListeningAction) => authService.user$

@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/startWith';
 import { DatabaseService } from '../../services/database.service';
 import * as fb from '../../models/firebase-models';
 

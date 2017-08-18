@@ -2,9 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NgReduxModule, NgRedux } from '@angular-redux/store';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
+import { AuthService } from '../services/auth.service';
+import { DatabaseService } from '../services/database.service';
 import { AppComponent } from '../components/app/app.component';
 import { AppSidenavComponent } from '../components/app-sidenav/app-sidenav.component';
 import { AppToolbarComponent } from '../components/app-toolbar/app-toolbar.component';
@@ -16,6 +19,7 @@ import { AppDeckCardComponent } from '../components/app-deck-card/app-deck-card.
 import { AppDeckRouteComponent } from '../components/app-deck-route/app-deck-route.component';
 import { AppEditDeckDialog } from '../components/app-edit-deck-dialog/app-edit-deck-dialog.component';
 import { AppRoutes } from '../routes/app-routes';
+import { configureStore } from '../redux/configureStore';
 
 import 'hammerjs';
 
@@ -38,10 +42,16 @@ import 'hammerjs';
     FirebaseModule,
     RouterModule.forRoot(AppRoutes),
     FormsModule,
+    NgReduxModule,
   ],
-  providers: [],
+  providers: [
+  ],
   entryComponents: [ AppEditDeckDialog ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {
+  constructor(ngRedux: NgRedux<Map<string, any>>, authService: AuthService, databaseService: DatabaseService) {
+    const store = configureStore(authService, databaseService);
+    ngRedux.provideStore(store);
+  }
 }

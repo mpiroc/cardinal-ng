@@ -17,7 +17,7 @@ const initialUserState: Map<string, any> = Map({
   error: null,
 });
 
-function user(state: Map<string, any> = initialUserState, action: Action) : Map<string, any> {
+export function user(state: Map<string, any> = initialUserState, action: Action) : Map<string, any> {
   switch (action.type) {
     case USER_START_LISTENING:
       return state
