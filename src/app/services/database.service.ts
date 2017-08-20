@@ -17,7 +17,7 @@ export class DatabaseService {
 
   // Create
   async createDeck(uid: string): firebase.Promise<void> {
-    const userDeck: fb.IUserDeck = await this.getDecks(uid).push({
+    const userDeck: fb.IUserDeck = await this.getUserDecks(uid).push({
       uid,
     });
 
@@ -55,7 +55,7 @@ export class DatabaseService {
   }
 
   // Retrieve
-  getDecks(uid: string): FirebaseListObservable<fb.IUserDeck[]> {
+  getUserDecks(uid: string): FirebaseListObservable<fb.IUserDeck[]> {
     return this.database.list(this.getUserDeckPath(uid));
   }
 
@@ -110,7 +110,7 @@ export class DatabaseService {
   // Delete
   deleteDeck(uid: string, deckId: string): firebase.Promise<any[]> {
     return firebase.Promise.all([
-      this.getDecks(uid).remove(deckId),
+      this.getUserDecks(uid).remove(deckId),
       this.database.list(this.getDeckInfoPath(uid)).remove(deckId),
     ]);
   }
