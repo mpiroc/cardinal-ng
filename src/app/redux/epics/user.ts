@@ -15,6 +15,9 @@ import {
   userError,
 } from '../actions/user';
 import {
+  userDecksStartListening,
+} from '../actions/user-decks';
+import {
   userLogout,
 } from '../actions/shared';
 
@@ -22,13 +25,13 @@ export function createUserEpic(authService: AuthService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<Map<string, any>>) => action$
     .ofType(USER_START_LISTENING)
     .switchMap((action: IUserStartListeningAction) => authService.user$
-      .switchMap(handleUserReceived)
+      .switchMap(user => handleUserReceived(store, user))
       .takeUntil(action$.ofType(USER_STOP_LISTENING))
       .catch(handleUserError)
     );
 }
 
-function handleUserReceived(user: firebase.User) : Observable<Action> {
+function handleUserReceived(store: MiddlewareAPI<Map<string, any>>, user: firebase.User) : Observable<Action> {
   if (user === null) {
     return Observable.of(
       userLogout(),
@@ -36,7 +39,10 @@ function handleUserReceived(user: firebase.User) : Observable<Action> {
     );
   }
 
-  return Observable.of(userReceived(user.uid, user.displayName));
+  return Observable.of<Action>(
+    userReceived(user.uid, user.displayName),
+    userDecksStartListening(user.uid),
+  );
 }
 
 function handleUserError(err) : Observable<Action> {

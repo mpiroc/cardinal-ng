@@ -2,7 +2,6 @@ import { Action } from 'redux';
 
 // Actions
 export const USER_DECKS_START_LISTENING = "USER_DECKS_START_LISTENING";
-export const USER_DECKS_STOP_LISTENING = "USER_DECKS_STOP_LISTENING";
 export const USER_DECKS_RECEIVED = "USER_DECKS_RECEIVED";
 export const USER_DECKS_ERROR = "USER_DECKS_ERROR";
 
@@ -12,9 +11,6 @@ export interface IUserDecksAction extends Action {
 }
 
 export interface IUserDecksStartListeningAction extends IUserDecksAction {
-}
-
-export interface IUserDecksStopListeningAction extends IUserDecksAction {
 }
 
 export interface IUserDecksReceivedAction extends IUserDecksAction {
@@ -29,13 +25,6 @@ export interface IUserDecksErrorAction extends IUserDecksAction {
 export function userDecksStartListening(uid: string) {
   return {
     type: USER_DECKS_START_LISTENING,
-    uid,
-  }
-}
-
-export function userDecksStopListening(uid: string) {
-  return {
-    type: USER_DECKS_STOP_LISTENING,
     uid,
   }
 }

@@ -29,20 +29,20 @@ export function createDeckInfoEpic(databaseService: DatabaseService) {
       .map((deckInfo: IDeckInfo) => deckInfoReceived(deckInfo.uid, deckInfo.$key, deckInfo.name, deckInfo.description))
       .takeUntil(action$
         .ofType(USER_LOGOUT, DECK_INFO_STOP_LISTENING)
-        .filter(stopAction => filterStopAction(action, stopAction))
+        .filter(stopAction => filterStopAction(stopAction, action.deckId))
       )
       .catch(err => Observable.of(deckInfoError(action.uid, action.deckId, err.message)))
     );
 }
 
-function filterStopAction(action: IDeckInfoAction, stopAction: Action): boolean {
+function filterStopAction(stopAction: Action, deckId: string): boolean {
   switch (stopAction.type) {
     case USER_LOGOUT:
       return true;
     
     case DECK_INFO_STOP_LISTENING:
       const typedStopAction = stopAction as IDeckInfoStopListeningAction;
-      return typedStopAction.deckId === action.deckId;
+      return typedStopAction.deckId === deckId;
 
     default:
       return false;
