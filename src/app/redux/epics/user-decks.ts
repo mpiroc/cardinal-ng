@@ -25,8 +25,14 @@ export function createUserDecksEpic(databaseService: DatabaseService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(USER_DECKS_START_LISTENING)
     .mergeMap((action: IUserDecksStartListeningAction) => databaseService.getUserDecks(action.uid)
-      .map((userDecks: IUserDeck[]) => userDecksReceived(action.uid, Set<string>(userDecks.map(userDeck => userDeck.$key))))
+      .map((userDecks: IUserDeck[]) => userDecksReceived(action.uid, convertToMap(userDecks)))
       .takeUntil(action$.ofType(USER_LOGOUT))
       .catch(err => Observable.of(userDecksError(action.uid, err.message)))
     );
+}
+
+function convertToMap(userDecks: IUserDeck[]) : Map<string, IUserDeck> {
+  return userDecks.reduce(
+    (result, current) => result.set(current.$key, current),
+    Map<string, IUserDeck>());
 }

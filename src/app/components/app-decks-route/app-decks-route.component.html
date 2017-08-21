@@ -1,5 +1,5 @@
 <div class="ng-material-decks-list">
-  <div *ngFor="let deck of decks$ | async">
+  <div *ngFor="let deck of (decks$ | async).toArray()">
     <app-deck-card [deck]="deck"></app-deck-card>
   </div>
 </div>

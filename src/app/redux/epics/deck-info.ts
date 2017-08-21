@@ -27,6 +27,7 @@ import {
   USER_LOGOUT,
 } from '../actions/shared';
 import { IState } from '../state';
+import { IUserDeck } from '../../models/firebase-models';
 
 export function createDeckInfoEpic(databaseService: DatabaseService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
@@ -44,8 +45,8 @@ export function createDeckInfoEpic(databaseService: DatabaseService) {
 export function createDeckInfoCleanupEpic() {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(USER_DECKS_RECEIVED)
-    .mergeMap((action: IUserDecksReceivedAction) => action.deckIds
-      .subtract(store.getState().userDecks.get("deckIds"))
+    .mergeMap((action: IUserDecksReceivedAction) => store.getState().userDecks.get("decks")
+      .filterNot((userDeck: IUserDeck) => action.decks.has(userDeck.$key))
       .map(deckId => deckInfoStopListening(action.uid, deckId))
       .toArray()
     );

@@ -11,12 +11,13 @@ import {
 import {
   USER_LOGOUT,
 } from '../actions/shared';
+import { IUserDeck } from '../../models/firebase-models';
 
 const initialUserDecksState: Map<string, any> = Map({
   isListening: false,
   isLoading: false,
   error: false,
-  deckIds: Set<string>(),
+  decks: Map<string, IUserDeck>(),
 });
 
 export function userDecks(state: Map<string, any> = initialUserDecksState, action: Action): Map<string, any> {
@@ -32,7 +33,7 @@ export function userDecks(state: Map<string, any> = initialUserDecksState, actio
       const typedAction = action as IUserDecksReceivedAction;
       return state
         .set("isLoading", false)
-        .set("deckIds", typedAction.deckIds);
+        .set("decks", typedAction.decks);
     }
 
     case USER_DECKS_ERROR:
@@ -50,7 +51,7 @@ export function userDecks(state: Map<string, any> = initialUserDecksState, actio
         .set("isListening", false)
         .set("isLoading", false)
         .set("error", null)
-        .set("deckIds", state.get("deckIds").clear());
+        .set("decks", state.get("decks").clear());
 
     default:
       return state;

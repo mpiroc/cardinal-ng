@@ -1,5 +1,6 @@
 import { Action } from 'redux';
-import { Set } from 'immutable';
+import { Map } from 'immutable';
+import { IUserDeck } from '../../models/firebase-models';
 
 // Actions
 export const USER_DECKS_START_LISTENING = "USER_DECKS_START_LISTENING";
@@ -15,7 +16,7 @@ export interface IUserDecksStartListeningAction extends IUserDecksAction {
 }
 
 export interface IUserDecksReceivedAction extends IUserDecksAction {
-  deckIds: Set<string>;
+  decks: Map<string, IUserDeck>;
 }
 
 export interface IUserDecksErrorAction extends IUserDecksAction {
@@ -30,11 +31,11 @@ export function userDecksStartListening(uid: string) : IUserDecksStartListeningA
   }
 }
 
-export function userDecksReceived(uid: string, deckIds: Set<string>) : IUserDecksReceivedAction {
+export function userDecksReceived(uid: string, decks: Map<string, IUserDeck>) : IUserDecksReceivedAction {
   return {
     type: USER_DECKS_RECEIVED,
     uid,
-    deckIds,
+    decks,
   }
 }
 
