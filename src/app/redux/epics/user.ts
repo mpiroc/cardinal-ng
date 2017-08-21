@@ -20,18 +20,19 @@ import {
 import {
   userLogout,
 } from '../actions/shared';
+import { IState } from '../state';
 
 export function createUserEpic(authService: AuthService) {
-  return (action$: ActionsObservable<Action>, store: MiddlewareAPI<Map<string, any>>) => action$
+  return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(USER_START_LISTENING)
-    .switchMap((action: IUserStartListeningAction) => authService.user$
-      .switchMap(user => handleUserReceived(store, user))
+    .mergeMap((action: IUserStartListeningAction) => authService.user$
+      .mergeMap(user => handleUserReceived(store, user))
       .takeUntil(action$.ofType(USER_STOP_LISTENING))
-      .catch(handleUserError)
+      .catch(err => Observable.of(userError(err.message as string)))
     );
 }
 
-function handleUserReceived(store: MiddlewareAPI<Map<string, any>>, user: firebase.User) : Observable<Action> {
+function handleUserReceived(store: MiddlewareAPI<IState>, user: firebase.User) : Observable<Action> {
   if (user === null) {
     return Observable.of(
       userLogout(),
@@ -40,11 +41,8 @@ function handleUserReceived(store: MiddlewareAPI<Map<string, any>>, user: fireba
   }
 
   return Observable.of<Action>(
+    userLogout(),
     userReceived(user.uid, user.displayName),
     userDecksStartListening(user.uid),
   );
-}
-
-function handleUserError(err) : Observable<Action> {
-  return Observable.of(userError(err.message as string));
 }

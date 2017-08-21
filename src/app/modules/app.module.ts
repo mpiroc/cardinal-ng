@@ -21,6 +21,7 @@ import { AppEditDeckDialog } from '../components/app-edit-deck-dialog/app-edit-d
 import { AppRoutes } from '../routes/app-routes';
 import { configureStore } from '../redux/configureStore';
 import { userStartListening } from '../redux/actions/user';
+import { IState } from '../redux/state';
 
 import 'hammerjs';
 
@@ -51,7 +52,7 @@ import 'hammerjs';
   bootstrap: [ AppComponent ]
 })
 export class AppModule {
-  constructor(ngRedux: NgRedux<Map<string, any>>, authService: AuthService, databaseService: DatabaseService) {
+  constructor(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
     const store = configureStore(authService, databaseService);
     ngRedux.provideStore(store);
     store.dispatch(userStartListening());

@@ -1,4 +1,4 @@
-import { Map, List } from 'immutable';
+import { Map, Set } from 'immutable';
 import { Action } from 'redux';
 import {
   USER_DECKS_START_LISTENING,
@@ -16,7 +16,7 @@ const initialUserDecksState: Map<string, any> = Map({
   isListening: false,
   isLoading: false,
   error: false,
-  deckIds: List<string>(),
+  deckIds: Set<string>(),
 });
 
 export function userDecks(state: Map<string, any> = initialUserDecksState, action: Action): Map<string, any> {
@@ -32,7 +32,7 @@ export function userDecks(state: Map<string, any> = initialUserDecksState, actio
       const typedAction = action as IUserDecksReceivedAction;
       return state
         .set("isLoading", false)
-        .set("deckIds", List(typedAction.deckIds));
+        .set("deckIds", typedAction.deckIds);
     }
 
     case USER_DECKS_ERROR:
@@ -45,11 +45,12 @@ export function userDecks(state: Map<string, any> = initialUserDecksState, actio
     }
 
     case USER_LOGOUT:
+    state.get
       return state
         .set("isListening", false)
         .set("isLoading", false)
         .set("error", null)
-        .get("deckIds").clear();
+        .set("deckIds", state.get("deckIds").clear());
 
     default:
       return state;

@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { Set } from 'immutable';
 
 // Actions
 export const USER_DECKS_START_LISTENING = "USER_DECKS_START_LISTENING";
@@ -14,7 +15,7 @@ export interface IUserDecksStartListeningAction extends IUserDecksAction {
 }
 
 export interface IUserDecksReceivedAction extends IUserDecksAction {
-  deckIds: string[];
+  deckIds: Set<string>;
 }
 
 export interface IUserDecksErrorAction extends IUserDecksAction {
@@ -22,14 +23,14 @@ export interface IUserDecksErrorAction extends IUserDecksAction {
 }
 
 // Action creators
-export function userDecksStartListening(uid: string) {
+export function userDecksStartListening(uid: string) : IUserDecksStartListeningAction {
   return {
     type: USER_DECKS_START_LISTENING,
     uid,
   }
 }
 
-export function userDecksReceived(uid: string, deckIds: string[]) {
+export function userDecksReceived(uid: string, deckIds: Set<string>) : IUserDecksReceivedAction {
   return {
     type: USER_DECKS_RECEIVED,
     uid,
@@ -37,7 +38,7 @@ export function userDecksReceived(uid: string, deckIds: string[]) {
   }
 }
 
-export function userDecksError(uid: string, error: string) {
+export function userDecksError(uid: string, error: string) : IUserDecksErrorAction {
   return {
     type: USER_DECKS_ERROR,
     uid,

@@ -6,10 +6,15 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
+import { NgRedux } from '@angular-redux/store';
 import { Promise } from 'firebase';
 import { DatabaseService } from '../../services/database.service';
 import * as fb from '../../models/firebase-models';
 import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
+import {
+  deckInfoStartListening,
+} from '../../redux/actions/deck-info';
+import { IState } from '../../redux/state';
 
 @Component({
   selector: 'app-deck-card',
@@ -18,15 +23,18 @@ import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dia
 })
 export class AppDeckCardComponent implements OnInit {
   @Input() deck: fb.IUserDeck;
+  
   private deckInfo$: Observable<fb.IDeckInfo>;
   name$: Observable<string>;
   description$: Observable<string>;
   count$: Observable<number>;
 
-  constructor(private databaseService: DatabaseService, private snackbar: MdSnackBar, private dialog: MdDialog) {
+  constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private snackbar: MdSnackBar, private dialog: MdDialog) {
   }
 
   ngOnInit(): void {
+    this.ngRedux.dispatch(deckInfoStartListening(this.deck.uid, this.deck.$key));
+
     this.deckInfo$ = this.databaseService
       .getDeckInfo(this.deck.uid, this.deck.$key)
       .catch(err => this.logError(err, "Could not load deck info"));
