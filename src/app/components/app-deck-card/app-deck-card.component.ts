@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
+import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
-import { NgRedux } from '@angular-redux/store';
 import { Promise } from 'firebase';
 import { DatabaseService } from '../../services/database.service';
 import * as fb from '../../models/firebase-models';
@@ -14,8 +14,15 @@ import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dia
 import {
   deckInfoStartListening,
 } from '../../redux/actions/deck-info';
+import {
+  deckInfo
+} from '../../redux/reducers/deck-info';
 import { IState } from '../../redux/state';
 
+@WithSubStore({
+  basePathMethodName: "getBasePath",
+  localReducer: deckInfo,
+})
 @Component({
   selector: 'app-deck-card',
   templateUrl: 'app-deck-card.component.html',
@@ -24,23 +31,25 @@ import { IState } from '../../redux/state';
 export class AppDeckCardComponent implements OnInit {
   @Input() deck: fb.IUserDeck;
   
-  private deckInfo$: Observable<fb.IDeckInfo>;
-  name$: Observable<string>;
-  description$: Observable<string>;
   count$: Observable<number>;
 
+  @select(["name"])
+  name$: string;
+
+  @select(["description"])
+  description$: string;
+
   constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private snackbar: MdSnackBar, private dialog: MdDialog) {
+  }
+
+  getBasePath() {
+    return ['deckInfos', this.deck.$key];
   }
 
   ngOnInit(): void {
     this.ngRedux.dispatch(deckInfoStartListening(this.deck.uid, this.deck.$key));
 
-    this.deckInfo$ = this.databaseService
-      .getDeckInfo(this.deck.uid, this.deck.$key)
-      .catch(err => this.logError(err, "Could not load deck info"));
-
-    this.name$ = this.deckInfo$.map(info => info.name);
-    this.description$ = this.deckInfo$.map(info => info.description);
+    // TODO: Fetch from redux store
     this.count$ = this.databaseService
       .getCards(this.deck.uid, this.deck.$key)
       .map(cards => cards.length)
@@ -51,7 +60,10 @@ export class AppDeckCardComponent implements OnInit {
     const dialogRef: MdDialogRef<AppEditDeckDialog> = this.dialog.open(AppEditDeckDialog, {
       panelClass: 'test-panel-class',
       backdropClass: 'test-backdrop-class',
-      data: this.deckInfo$,
+      data: {
+        name$: this.name$,
+        description$: this.description$,
+      },
     });
     dialogRef.afterClosed()
       .map(result => result === undefined ? AppEditDeckDialogResult.Cancel : result)

@@ -21,7 +21,7 @@ const initialDeckInfoState: Map<string, any> = Map({
   error: null,
 });
 
-function deckInfo(state: Map<string, any> = initialDeckInfoState, action: Action) : Map<string, any> {
+export function deckInfo(state: Map<string, any> = initialDeckInfoState, action: Action) : Map<string, any> {
   switch (action.type) {
     case DECK_INFO_START_LISTENING:
       return state

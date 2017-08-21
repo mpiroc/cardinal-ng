@@ -9,6 +9,11 @@ export enum AppEditDeckDialogResult {
   Save,
 }
 
+interface IAppEditDeckDialogData {
+  name$: Observable<string>;
+  description$: Observable<string>;
+}
+
 @Component({
   selector: 'app-edit-deck-dialog',
   templateUrl: './app-edit-deck-dialog.component.html',
@@ -21,9 +26,9 @@ export class AppEditDeckDialog {
   public description$: Observable<string>;
   dialogResult: typeof AppEditDeckDialogResult = AppEditDeckDialogResult;
 
-  constructor(@Inject(MD_DIALOG_DATA) data: Observable<fb.IDeckInfo>) {
-    this.name$ = data.map(info => this.name = info.name);
-    this.description$ = data.map(info => this.description = info.description);
+  constructor(@Inject(MD_DIALOG_DATA) data: IAppEditDeckDialogData) {
+    this.name$ = data.name$.map(name => this.name = name);
+    this.description$ = data.description$.map(description => this.description = description);
   }
 
   onNameInput($event: any) {
