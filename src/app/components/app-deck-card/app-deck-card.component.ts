@@ -51,7 +51,7 @@ export class AppDeckCardComponent implements OnInit {
 
     // TODO: Fetch from redux store
     this.count$ = this.databaseService
-      .getCards(this.deck.uid, this.deck.$key)
+      .getDeckCards(this.deck.uid, this.deck.$key)
       .map(cards => cards.length)
       .catch(err => this.logError(err, "Could not load card count"));
   }

@@ -1,4 +1,4 @@
-import { Map, Set } from 'immutable';
+import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';

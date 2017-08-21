@@ -1,4 +1,4 @@
-import { Map, Set } from 'immutable';
+import { Map } from 'immutable';
 import { Action } from 'redux';
 import {
   USER_DECKS_START_LISTENING,
@@ -46,7 +46,6 @@ export function userDecks(state: Map<string, any> = initialUserDecksState, actio
     }
 
     case USER_LOGOUT:
-    state.get
       return state
         .set("isListening", false)
         .set("isLoading", false)

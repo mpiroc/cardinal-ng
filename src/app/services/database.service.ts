@@ -29,7 +29,7 @@ export class DatabaseService {
   }
 
   async createCard(uid: string, deckId: string): firebase.Promise<void> {
-    const deckCard: fb.IDeckCard = await this.getCards(uid, deckId).push({
+    const deckCard: fb.IDeckCard = await this.getDeckCards(uid, deckId).push({
       uid,
       deckId,
     });
@@ -63,7 +63,7 @@ export class DatabaseService {
     return this.database.object(`${this.getDeckInfoPath(uid)}/${deckId}`);
   }
 
-  getCards(uid: string, deckId: string): FirebaseListObservable<fb.IDeckCard[]> {
+  getDeckCards(uid: string, deckId: string): FirebaseListObservable<fb.IDeckCard[]> {
     return this.database.list(this.getDeckCardPath(uid, deckId));
   }
 
@@ -117,7 +117,7 @@ export class DatabaseService {
 
   async deleteCard(uid: string, deckId: string, cardId: string): firebase.Promise<any[]> {
     return firebase.Promise.all([
-      this.getCards(uid, deckId).remove(cardId),
+      this.getDeckCards(uid, deckId).remove(cardId),
       this.database.list(this.getCardContentPath(uid, deckId)).remove(cardId),
       this.database.list(this.getCardHistoryPath(uid, deckId)).remove(cardId),
     ]);
