@@ -39,7 +39,7 @@ export function createCardContentEpic(databaseService: DatabaseService) {
 export function createCardContentCleanupEpic() {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(DECK_CARDS_RECEIVED)
-    .mergeMap((action: IDeckCardsReceivedAction) => store.getState().deckCards.get("cards")
+    .mergeMap((action: IDeckCardsReceivedAction) => store.getState().deckCards.get(action.deckId).get("cards")
       .filterNot((deckCard: IDeckCard) => action.cards.has(deckCard.$key))
       .map(cardId => cardContentStopListening(action.uid, action.deckId, cardId))
       .toArray()

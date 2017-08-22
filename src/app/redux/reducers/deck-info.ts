@@ -15,7 +15,7 @@ import {
 import {
   onStartListening,
   onStopListening,
-  onReceived,
+  onItemReceived,
   onError,
 } from './common';
 
@@ -35,7 +35,7 @@ export function deckInfo(state: Map<string, any> = initialDeckInfoState, action:
       return onStopListening(state);
 
     case DECK_INFO_RECEIVED:
-      return onReceived(state, action as IDeckInfoReceivedAction);
+      return onItemReceived(state, action as IDeckInfoReceivedAction);
 
     case DECK_INFO_ERROR:
       return onError(state, action as IDeckInfoErrorAction);

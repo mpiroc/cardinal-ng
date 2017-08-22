@@ -16,7 +16,7 @@ import {
 import {
   onStartListening,
   onStopListening,
-  onReceived,
+  onItemReceived,
   onError,
 } from './common';
 
@@ -36,7 +36,7 @@ export function cardContent(state: Map<string, any> = initialCardContentState, a
       return onStopListening(state);
 
     case CARD_CONTENT_RECEIVED:
-      return onReceived(state, action as ICardContentReceivedAction);
+      return onItemReceived(state, action as ICardContentReceivedAction);
 
     case CARD_CONTENT_ERROR:
       return onError(state, action as ICardContentErrorAction);

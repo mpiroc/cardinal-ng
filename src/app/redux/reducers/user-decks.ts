@@ -1,7 +1,9 @@
 import { Map } from 'immutable';
 import { Action } from 'redux';
+import { IUserDeck } from '../../models/firebase-models';
 import {
   USER_DECKS_START_LISTENING,
+  USER_DECKS_STOP_LISTENING,
   USER_DECKS_RECEIVED,
   USER_DECKS_ERROR,
   IUserDecksAction,
@@ -11,46 +13,32 @@ import {
 import {
   USER_LOGOUT,
 } from '../actions/shared';
-import { IUserDeck } from '../../models/firebase-models';
+import {
+  getInitialListState,
+  onStartListening,
+  onStopListening,
+  onListReceived,
+  onError,
+} from './common';
 
-const initialUserDecksState: Map<string, any> = Map({
-  isListening: false,
-  isLoading: false,
-  error: false,
-  decks: Map<string, IUserDeck>(),
-});
+const initialUserDecksState = getInitialListState<IUserDeck>();
 
 export function userDecks(state: Map<string, any> = initialUserDecksState, action: Action): Map<string, any> {
   switch (action.type) {
     case USER_DECKS_START_LISTENING:
-      return state
-        .set("isListening", true)
-        .set("isLoading", true)
-        .set("error", null);
+      return onStartListening(state);
+
+    case USER_DECKS_STOP_LISTENING:
+      return onStopListening(state);
 
     case USER_DECKS_RECEIVED:
-    {
-      const typedAction = action as IUserDecksReceivedAction;
-      return state
-        .set("isLoading", false)
-        .set("decks", typedAction.decks);
-    }
+      return onListReceived(state, action as IUserDecksReceivedAction);
 
     case USER_DECKS_ERROR:
-    {
-      const typedAction = action as IUserDecksErrorAction;
-      return state
-        .set("isListening", false)
-        .set("isLoading", false)
-        .set("error", typedAction.error);
-    }
+      return onError(state, action as IUserDecksErrorAction);
 
     case USER_LOGOUT:
-      return state
-        .set("isListening", false)
-        .set("isLoading", false)
-        .set("error", null)
-        .set("decks", state.get("decks").clear());
+      return state.clear();
 
     default:
       return state;

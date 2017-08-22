@@ -10,11 +10,11 @@ import { DatabaseService } from '../../services/database.service';
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {
   return combineEpics(
     createDeckInfoEpic(databaseService),
-    createDeckInfoCleanupEpic(),
+    //createDeckInfoCleanupEpic(),
     createUserEpic(authService),
     createUserDecksEpic(databaseService),
     createDeckCardsEpic(databaseService),
     createCardContentEpic(databaseService),
-    createCardContentCleanupEpic()
+    //createCardContentCleanupEpic(),
   );
 }

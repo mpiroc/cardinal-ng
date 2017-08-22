@@ -19,6 +19,7 @@ import {
 import {
   USER_LOGOUT,
 } from '../actions/shared';
+import { convertToMap } from './common';
 import { IState } from '../state';
 
 export function createUserDecksEpic(databaseService: DatabaseService) {
@@ -29,10 +30,4 @@ export function createUserDecksEpic(databaseService: DatabaseService) {
       .takeUntil(action$.ofType(USER_LOGOUT))
       .catch(err => Observable.of(userDecksError(action.uid, err.message)))
     );
-}
-
-function convertToMap(userDecks: IUserDeck[]) : Map<string, IUserDeck> {
-  return userDecks.reduce(
-    (result, current) => result.set(current.$key, current),
-    Map<string, IUserDeck>());
 }

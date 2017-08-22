@@ -1,6 +1,9 @@
-export interface IUserDeck {
-  uid: string;
+export interface IFirebaseModel {
   $key: string;
+}
+
+export interface IUserDeck extends IFirebaseModel {
+  uid: string;
 }
 
 export interface IDeckInfo extends IUserDeck {
@@ -8,10 +11,9 @@ export interface IDeckInfo extends IUserDeck {
   description: string;
 }
 
-export interface IDeckCard {
+export interface IDeckCard extends IFirebaseModel {
   uid: string;
   deckId: string;
-  $key: string;
 }
 
 export interface ICardContent extends IDeckCard {

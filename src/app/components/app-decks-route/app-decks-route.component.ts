@@ -10,6 +10,10 @@ import { IUserDeck } from '../../models/firebase-models';
   styleUrls: [ './app-decks-route.component.css' ],
 })
 export class AppDecksRouteComponent {
-  @select(['userDecks', 'decks'])
+  @select(['userDecks', 'data'])
   decks$: Observable<Map<string, IUserDeck>>;
+
+  emptyIfNull(cards: Map<string, IUserDeck>): Map<string, IUserDeck> {
+    return cards || Map<string, IUserDeck>();
+  }
 }

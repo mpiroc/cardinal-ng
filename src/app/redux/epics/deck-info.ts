@@ -44,8 +44,8 @@ export function createDeckInfoEpic(databaseService: DatabaseService) {
 export function createDeckInfoCleanupEpic() {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(USER_DECKS_RECEIVED)
-    .mergeMap((action: IUserDecksReceivedAction) => store.getState().userDecks.get("decks")
-      .filterNot((userDeck: IUserDeck) => action.decks.has(userDeck.$key))
+    .mergeMap((action: IUserDecksReceivedAction) => store.getState().userDecks.get("data")
+      .filterNot((userDeck: IUserDeck) => action.data.has(userDeck.$key))
       .map(deckId => deckInfoStopListening(action.uid, deckId))
       .toArray()
     );
