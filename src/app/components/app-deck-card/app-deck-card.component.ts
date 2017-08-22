@@ -33,17 +33,17 @@ export class AppDeckCardComponent implements OnInit {
   
   count$: Observable<number>;
 
-  @select(["name"])
+  @select(["data", "name"])
   name$: string;
 
-  @select(["description"])
+  @select(["data", "description"])
   description$: string;
 
   constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private snackbar: MdSnackBar, private dialog: MdDialog) {
   }
 
   getBasePath() {
-    return ['deckInfos', this.deck.$key];
+    return ["deckInfos", this.deck.$key];
   }
 
   ngOnInit(): void {

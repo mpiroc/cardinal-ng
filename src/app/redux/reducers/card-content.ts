@@ -56,10 +56,10 @@ export function cardContents(state: Map<string, any> = initialCardContentsState,
     case CARD_CONTENT_RECEIVED:
     case CARD_CONTENT_ERROR:
       const typedAction = action as ICardContentAction;
-      return state
-        .set(typedAction.cardId, cardContent(
-          state.get(typedAction.cardId),
-          action));
+      return state.set(
+        typedAction.cardId,
+        cardContent(state.get(typedAction.cardId), action),
+      );
 
     case USER_LOGOUT:
       return state.clear();

@@ -32,7 +32,7 @@ export function createDeckInfoEpic(databaseService: DatabaseService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(DECK_INFO_START_LISTENING)
     .mergeMap((action: IDeckInfoStartListeningAction) => databaseService.getDeckInfo(action.uid, action.deckId)
-      .map((deckInfo: IDeckInfo) => deckInfoReceived(deckInfo.uid, deckInfo.$key, deckInfo.name, deckInfo.description))
+      .map((deckInfo: IDeckInfo) => deckInfoReceived(action.uid, action.deckId, deckInfo))
       .takeUntil(action$
         .ofType(USER_LOGOUT, DECK_INFO_STOP_LISTENING)
         .filter(stopAction => filterStopAction(stopAction, action.deckId))

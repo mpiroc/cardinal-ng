@@ -12,46 +12,33 @@ import {
 import {
   USER_LOGOUT,
 } from '../actions/shared';
+import {
+  onStartListening,
+  onStopListening,
+  onReceived,
+  onError,
+} from './common';
 
 const initialDeckInfoState: Map<string, any> = Map({
-  name: null,
-  description: null,
   isListening: false,
   isLoading: false,
   error: null,
+  data: null,
 });
 
 export function deckInfo(state: Map<string, any> = initialDeckInfoState, action: Action) : Map<string, any> {
   switch (action.type) {
     case DECK_INFO_START_LISTENING:
-      return state
-        .set("isListening", true)
-        .set("isLoading", true)
-        .set("error", null);
+      return onStartListening(state);
 
     case DECK_INFO_STOP_LISTENING:
-      return state
-        .set("isListening", false)
-        .set("isLoading", false)
-        .set("error", null);
+      return onStopListening(state);
 
     case DECK_INFO_RECEIVED:
-    {
-      const typedAction = action as IDeckInfoReceivedAction;
-      return state
-        .set("isLoading", false)
-        .set("name", typedAction.name)
-        .set("description", typedAction.description);
-    }
+      return onReceived(state, action as IDeckInfoReceivedAction);
 
     case DECK_INFO_ERROR:
-    {
-      const typedAction = action as IDeckInfoErrorAction;
-      return state
-        .set("isListening", false)
-        .set("isLoading", false)
-        .set("error", typedAction.error);
-    }
+      return onError(state, action as IDeckInfoErrorAction);
 
     default:
       return state;
@@ -68,9 +55,10 @@ export function deckInfos(state: Map<string, any> = initialDeckInfosState, actio
     case DECK_INFO_RECEIVED:
     case DECK_INFO_ERROR:
       const typedAction = action as IDeckInfoAction;
-      return state.set(typedAction.deckId, deckInfo(
-        state.get(typedAction.deckId),
-        action));
+      return state.set(
+        typedAction.deckId,
+        deckInfo(state.get(typedAction.deckId),action),
+      );
     
     case USER_LOGOUT:
       return state.clear();

@@ -1,4 +1,9 @@
 import { Action } from 'redux';
+import { IDeckInfo } from '../../models/firebase-models';
+import {
+  IReceivedAction,
+  IErrorAction,
+} from './common';
 
 // Actions
 export const DECK_INFO_START_LISTENING = "DECK_INFO_START_LISTENING";
@@ -18,13 +23,10 @@ export interface IDeckInfoStartListeningAction extends IDeckInfoAction {
 export interface IDeckInfoStopListeningAction extends IDeckInfoAction {
 }
 
-export interface IDeckInfoReceivedAction extends IDeckInfoAction {
-  name: string;
-  description: string;
+export interface IDeckInfoReceivedAction extends IDeckInfoAction, IReceivedAction<IDeckInfo> {
 }
 
-export interface IDeckInfoErrorAction extends IDeckInfoAction {
-  error: string;
+export interface IDeckInfoErrorAction extends IDeckInfoAction, IErrorAction {
 }
 
 // Action creators
@@ -44,13 +46,12 @@ export function deckInfoStopListening(uid: string, deckId: string) : IDeckInfoSt
   }
 }
 
-export function deckInfoReceived(uid: string, deckId: string, name: string, description: string) : IDeckInfoReceivedAction {
+export function deckInfoReceived(uid: string, deckId: string, data: IDeckInfo) : IDeckInfoReceivedAction {
   return {
     type: DECK_INFO_RECEIVED,
     uid,
     deckId,
-    name,
-    description,
+    data,
   };
 }
 
