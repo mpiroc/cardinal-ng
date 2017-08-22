@@ -1,5 +1,10 @@
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/filter';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { DatabaseService } from '../../services/database.service';
@@ -14,6 +19,7 @@ import {
   deckCardsError,
 } from '../actions/deck-cards';
 import { USER_LOGOUT } from '../actions/shared';
+import { convertToMap } from './common';
 import { IState } from '../state';
 
 export function createDeckCardsEpic(databaseService: DatabaseService) {
@@ -29,20 +35,13 @@ export function createDeckCardsEpic(databaseService: DatabaseService) {
     );
 }
 
-function convertToMap(deckCards: IDeckCard[]) : Map<string, IDeckCard> {
-  return deckCards.reduce(
-    (result, current) => result.set(current.$key, current),
-    Map<string, IDeckCard>());
-}
-
 function filterStopAction(stopAction: Action, deckId: string): boolean {
   switch (stopAction.type) {
     case USER_LOGOUT:
       return true;
 
     case DECK_CARDS_STOP_LISTENING:
-      const typedStopAction = stopAction as IDeckCardsStopListeningAction;
-      return typedStopAction.deckId === deckId;
+      return (stopAction as IDeckCardsStopListeningAction).deckId === deckId;
     
     default:
       return false;

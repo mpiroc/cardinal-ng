@@ -1,5 +1,6 @@
 import { Map } from 'immutable';
 import { Action } from 'redux';
+import { IDeckCard } from '../../models/firebase-models';
 import {
   DECK_CARDS_START_LISTENING,
   DECK_CARDS_STOP_LISTENING,
@@ -14,45 +15,29 @@ import {
 import {
   USER_LOGOUT,
 } from '../actions/shared';
-import { IDeckCard } from '../../models/firebase-models';
+import {
+  getInitialListState,
+  onStartListening,
+  onStopListening,
+  onListReceived,
+  onError,
+} from './common';
 
-const initialSingleDeckCardsState: Map<string, any> = Map({
-  isListening: false,
-  isLoading: false,
-  error: false,
-  cards: Map<string, IDeckCard>(),
-})
+const initialSingleDeckCardsState = getInitialListState<IDeckCard>();
 
 export function singleDeckCards(state: Map<string, any> = initialSingleDeckCardsState, action: Action): Map<string, any> {
   switch (action.type) {
     case DECK_CARDS_START_LISTENING:
-      return state
-        .set("isListening", true)
-        .set("isLoading", true)
-        .set("error", null);
-    
+      return onStartListening(state);
+
     case DECK_CARDS_STOP_LISTENING:
-      return state
-        .set("isListening", false)
-        .set("isLoading", false)
-        .set("error", null);
+      return onStopListening(state);
     
     case DECK_CARDS_RECEIVED:
-    {
-      const typedAction = action as IDeckCardsReceivedAction;
-      return state
-        .set("isLoading", false)
-        .set("cards", typedAction.cards);
-    }
+      return onListReceived(state, action as IDeckCardsReceivedAction);
     
     case DECK_CARDS_ERROR:
-    {
-      const typedAction = action as IDeckCardsErrorAction;
-      return state
-        .set("isListening", false)
-        .set("isLoading", false)
-        .set("error", typedAction.error);
-    }
+      return onError(state, action as IDeckCardsErrorAction);
 
     default:
       return state;

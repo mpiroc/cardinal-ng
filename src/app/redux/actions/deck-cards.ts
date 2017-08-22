@@ -1,6 +1,10 @@
 import { Action } from 'redux';
 import { Map } from 'immutable';
 import { IDeckCard } from '../../models/firebase-models';
+import {
+  IReceivedAction,
+  IErrorAction,
+} from './common';
 
 // Actions
 export const DECK_CARDS_START_LISTENING = "DECK_CARDS_START_LISTENING";
@@ -22,12 +26,10 @@ export interface IDeckCardsStopListeningAction extends IDeckCardsAction {
 
 }
 
-export interface IDeckCardsReceivedAction extends IDeckCardsAction {
-  cards: Map<string, IDeckCard>;
+export interface IDeckCardsReceivedAction extends IDeckCardsAction, IReceivedAction<Map<string, IDeckCard>> {
 }
 
-export interface IDeckCardsErrorAction extends IDeckCardsAction {
-  error: string;
+export interface IDeckCardsErrorAction extends IDeckCardsAction, IErrorAction {
 }
 
 // Action creators
@@ -47,12 +49,12 @@ export function deckCardsStopListening(uid: string, deckId: string) : IDeckCards
   };
 }
 
-export function deckCardsReceived(uid: string, deckId: string, cards: Map<string, IDeckCard>) : IDeckCardsReceivedAction {
+export function deckCardsReceived(uid: string, deckId: string, data: Map<string, IDeckCard>) : IDeckCardsReceivedAction {
   return {
     type: DECK_CARDS_RECEIVED,
     uid,
     deckId,
-    cards,
+    data,
   };
 }
 

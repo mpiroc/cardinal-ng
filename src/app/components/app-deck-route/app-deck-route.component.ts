@@ -25,7 +25,7 @@ export class AppDeckRouteComponent implements OnInit {
   private uid: string;
   private deckId: string;
 
-  @select(["cards"])
+  @select(["data"])
   deckCards$: Observable<Map<string, IDeckCard>>;
 
   constructor(
