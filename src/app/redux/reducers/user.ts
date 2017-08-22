@@ -22,12 +22,14 @@ export function user(state: Map<string, any> = initialUserState, action: Action)
     case USER_START_LISTENING:
       return state
         .set("isListening", true)
-        .set("isLoading", true);
+        .set("isLoading", true)
+        .set("error", null);
 
     case USER_STOP_LISTENING:
       return state
         .set("isListening", false)
-        .set("isLoading", false);
+        .set("isLoading", false)
+        .set("error", null);
 
     case USER_RECEIVED:
     {

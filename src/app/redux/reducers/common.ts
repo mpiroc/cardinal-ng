@@ -35,6 +35,7 @@ export function onStopListening(state: Map<string, any>) : Map<string, any> {
 function onReceived(state: Map<string, any>, data: Map<string, any>) : Map<string, any> {
   return state
     .set("isLoading", false) 
+    .set("error", null)
     .set("data", data);
 }
 
