@@ -1,4 +1,4 @@
-import { Action } from 'redux'
+import { Action } from 'redux';
 import { ICardContent } from '../../models/firebase-models';
 import {
   IReceivedAction,

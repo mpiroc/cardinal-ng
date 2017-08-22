@@ -14,18 +14,14 @@ import {
   USER_LOGOUT,
 } from '../actions/shared';
 import {
+  getInitialItemState,
   onStartListening,
   onStopListening,
   onItemReceived,
   onError,
 } from './common';
 
-const initialCardContentState: Map<string, any> = Map({
-  isListening: false,
-  isLoading: false,
-  error: null,
-  data: null,
-});
+const initialCardContentState = getInitialItemState();
 
 export function cardContent(state: Map<string, any> = initialCardContentState, action: Action) : Map<string, any> {
   switch (action.type) {
@@ -46,8 +42,7 @@ export function cardContent(state: Map<string, any> = initialCardContentState, a
   }
 }
 
-const initialCardContentsState: Map<string, any> = Map({
-});
+const initialCardContentsState = Map<string, any>();
 
 export function cardContents(state: Map<string, any> = initialCardContentsState, action: Action) {
   switch (action.type) {

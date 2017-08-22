@@ -4,6 +4,7 @@ import { deckInfos } from './deck-info';
 import { userDecks } from './user-decks';
 import { deckCards } from './deck-cards';
 import { cardContents } from './card-content';
+import { cardHistories } from './card-history';
 
 export const rootReducer = combineReducers({
   user,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
   userDecks,
   deckCards,
   cardContents,
+  cardHistories,
 });
