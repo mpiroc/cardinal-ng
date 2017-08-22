@@ -67,7 +67,7 @@ export function deckInfos(state: Map<string, any> = initialDeckInfosState, actio
     case DECK_INFO_STOP_LISTENING:
     case DECK_INFO_RECEIVED:
     case DECK_INFO_ERROR:
-      const typedAction: IDeckInfoAction = (action as IDeckInfoAction);
+      const typedAction = action as IDeckInfoAction;
       return state.set(typedAction.deckId, deckInfo(
         state.get(typedAction.deckId),
         action));

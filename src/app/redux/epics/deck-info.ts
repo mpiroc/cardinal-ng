@@ -1,4 +1,4 @@
-import { Map, Set } from 'immutable';
+import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -8,7 +8,7 @@ import 'rxjs/add/operator/filter';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { DatabaseService } from '../../services/database.service';
-import { IDeckInfo } from '../../models/firebase-models';
+import { IDeckInfo, IUserDeck } from '../../models/firebase-models';
 import {
   DECK_INFO_START_LISTENING,
   DECK_INFO_STOP_LISTENING,
@@ -27,7 +27,6 @@ import {
   USER_LOGOUT,
 } from '../actions/shared';
 import { IState } from '../state';
-import { IUserDeck } from '../../models/firebase-models';
 
 export function createDeckInfoEpic(databaseService: DatabaseService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
