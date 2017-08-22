@@ -1,53 +1,65 @@
+import { Map } from 'immutable';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { MdSnackBar } from '@angular/material';
+import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
-import { AuthService } from '../../services/auth.service';
-import { DatabaseService } from '../../services/database.service';
-import * as fb from '../../models/firebase-models';
+import { IDeckCard } from '../../models/firebase-models';
+import { deckCardsStartListening } from '../../redux/actions/deck-cards';
+import { singleDeckCards } from '../../redux/reducers/deck-cards';
+import { IState, isListening } from '../../redux/state';
 
-
+@WithSubStore({
+  basePathMethodName: "getBasePath",
+  localReducer: singleDeckCards,
+})
 @Component({
   selector: 'app-deck-route',
   templateUrl: './app-deck-route.component.html',
   styleUrls: [ './app-deck-route.component.css' ],
 })
 export class AppDeckRouteComponent implements OnInit {
-  deckCards$: Observable<fb.IDeckCard[]>;
+  private uid: string;
+  private deckId: string;
+
+  @select(["cards"])
+  deckCards$: Observable<Map<string, IDeckCard>>;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private authService: AuthService,
-    private databaseService: DatabaseService,
-    private snackbar: MdSnackBar) {
+    private ngRedux: NgRedux<IState>,
+    private activatedRoute: ActivatedRoute) {
+  }
+
+  getBasePath() : string[] {
+    if (this.deckId) {
+      return ['deckCards', this.deckId];
+    }
+
+    return null;
+  }
+
+  emptyIfNull(cards: Map<string, IDeckCard>): Map<string, IDeckCard> {
+    return cards || Map<string, IDeckCard>();
   }
 
   ngOnInit(): void {
-    const uid$ = this.authService.user$.map(user => user ? user.uid : null);
+    const uid$ = this.ngRedux.select<string>(["user", "uid"]);
     const deckId$ = this.activatedRoute.paramMap
       .map(paramMap => paramMap.get('deckId'));
 
-    this.deckCards$ = Observable
-      .combineLatest(uid$, deckId$)
-      .switchMap(results => {
-        const uid = results[0];
-        const deckId = results[1];
-        
-        if (uid && deckId) {
-          return this.databaseService.getDeckCards(uid, deckId);
+    Observable.combineLatest(uid$, deckId$)
+      .subscribe(results => {
+        const deckCards = this.ngRedux.getState().deckCards;
+
+        this.uid = results[0];
+        this.deckId = results[1];
+
+        if (this.uid && this.deckId && !isListening(deckCards, this.deckId)) {
+          this.ngRedux.dispatch(deckCardsStartListening(this.uid, this.deckId));
         }
-
-        return Observable.of();
-      })
-      .catch(err => {
-        console.error(err);
-        this.snackbar.open(`Could not load cards`, null, { duration: 3000 });
-
-        return Observable.of();
       });
   }
 }

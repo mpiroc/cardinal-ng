@@ -1,6 +1,6 @@
 <div class='container'>
   <div class='ng-material-card-list'>
-    <div class='container' *ngFor='let card of (deckCards$ | async)'>
+    <div class='container' *ngFor='let card of emptyIfNull(deckCards$ | async).toArray()'>
       <app-card-card [card]='card'></app-card-card>
     </div>
   </div>

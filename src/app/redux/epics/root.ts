@@ -2,6 +2,7 @@ import { combineEpics } from 'redux-observable';
 import { createDeckInfoEpic, createDeckInfoCleanupEpic } from './deck-info';
 import { createUserEpic } from './user';
 import { createUserDecksEpic } from './user-decks';
+import { createDeckCardsEpic } from './deck-cards';
 import { AuthService } from '../../services/auth.service';
 import { DatabaseService } from '../../services/database.service';
 
@@ -11,5 +12,6 @@ export function createRootEpic(authService: AuthService, databaseService: Databa
     createDeckInfoCleanupEpic(),
     createUserEpic(authService),
     createUserDecksEpic(databaseService),
+    createDeckCardsEpic(databaseService),
   );
 }
