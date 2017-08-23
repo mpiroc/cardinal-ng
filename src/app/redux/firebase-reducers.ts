@@ -57,7 +57,7 @@ export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> impleme
   }
 }
 
-export class FirebaseCollectionReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
+export class FirebaseMapReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
   private initialState = Map<string, TModel>();
 
   constructor(

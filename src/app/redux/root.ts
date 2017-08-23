@@ -5,25 +5,25 @@ import { DatabaseService } from '../services/database.service';
 import {
   UserObjectReducer,
   UserEpic,
-  CardContentCollectionReducer,
+  CardContentMapReducer,
   CardContentEpic,
-  CardHistoryCollectionReducer,
+  CardHistoryMapReducer,
   CardHistoryEpic,
-  DeckInfoCollectionReducer,
+  DeckInfoMapReducer,
   DeckInfoEpic,
   UserDeckListReducer,
   UserDeckEpic,
-  DeckCardCollectionReducer,
+  DeckCardMapReducer,
   DeckCardEpic,
 } from './firebase-modules';
 
 export const rootReducer = combineReducers({
   user: UserObjectReducer.reducer.bind(UserObjectReducer),
-  cardContent: CardContentCollectionReducer.reducer.bind(CardContentCollectionReducer),  
-  cardHistory: CardHistoryCollectionReducer.reducer.bind(CardHistoryCollectionReducer),
-  deckInfo: DeckInfoCollectionReducer.reducer.bind(DeckInfoCollectionReducer),
+  cardContent: CardContentMapReducer.reducer.bind(CardContentMapReducer),  
+  cardHistory: CardHistoryMapReducer.reducer.bind(CardHistoryMapReducer),
+  deckInfo: DeckInfoMapReducer.reducer.bind(DeckInfoMapReducer),
   userDeck: UserDeckListReducer.reducer.bind(UserDeckListReducer),
-  deckCard: DeckCardCollectionReducer.reducer.bind(DeckCardCollectionReducer),
+  deckCard: DeckCardMapReducer.reducer.bind(DeckCardMapReducer),
 });
 
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {

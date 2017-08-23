@@ -7,7 +7,7 @@ import {
 } from './firebase-actions';
 import {
   FirebaseObjectReducer,
-  FirebaseCollectionReducer,
+  FirebaseMapReducer,
   FirebaseListReducer,
 } from './firebase-reducers';
 import {
@@ -30,7 +30,7 @@ import {
 
 export const CardContentActions = new FirebaseActions<ICardContent, ICardArgs>("CARD_CONTENT");
 export const CardContentObjectReducer = new FirebaseObjectReducer<ICardContent, ICardArgs>(CardContentActions);
-export const CardContentCollectionReducer = new FirebaseCollectionReducer<ICardContent, ICardArgs>(
+export const CardContentMapReducer = new FirebaseMapReducer<ICardContent, ICardArgs>(
     CardContentActions,
     CardContentObjectReducer,
     args => args.cardId)
@@ -38,7 +38,7 @@ export const CardContentEpic = new FirebaseObjectEpic(CardContentActions, [ USER
 
 export const CardHistoryActions = new FirebaseActions<ICardHistory, ICardArgs>("CARD_HISTORY");
 export const CardHistoryObjectReducer = new FirebaseObjectReducer<ICardHistory, ICardArgs>(CardHistoryActions);
-export const CardHistoryCollectionReducer = new FirebaseCollectionReducer<ICardHistory, ICardArgs>(
+export const CardHistoryMapReducer = new FirebaseMapReducer<ICardHistory, ICardArgs>(
   CardHistoryActions,
   CardHistoryObjectReducer,
   args => args.cardId);
@@ -46,7 +46,7 @@ export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions, [ USER
 
 export const DeckCardActions = new FirebaseActions<IDeckCard, IDeckArgs>("DECK_CARD");
 export const DeckCardListReducer = new FirebaseListReducer<IDeckCard, IDeckArgs>(DeckCardActions);
-export const DeckCardCollectionReducer = new FirebaseCollectionReducer<IDeckCard, IDeckArgs>(
+export const DeckCardMapReducer = new FirebaseMapReducer<IDeckCard, IDeckArgs>(
   DeckCardActions,
   DeckCardListReducer,
   args => args.deckId);
@@ -54,7 +54,7 @@ export const DeckCardEpic = new FirebaseListEpic(DeckCardActions, [ USER_LOGOUT 
 
 export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeckArgs>("DECK_INFO");
 export const DeckInfoObjectReducer = new FirebaseObjectReducer<IDeckInfo, IDeckArgs>(DeckInfoActions);
-export const DeckInfoCollectionReducer = new FirebaseCollectionReducer<IDeckInfo, IDeckArgs>(
+export const DeckInfoMapReducer = new FirebaseMapReducer<IDeckInfo, IDeckArgs>(
   DeckInfoActions,
   DeckInfoObjectReducer,
   args => args.deckId);
