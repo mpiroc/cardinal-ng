@@ -1,5 +1,5 @@
 export interface IFirebaseModel {
-  $key: string;
+  $key?: string;
 }
 
 export interface IUserDeck extends IFirebaseModel {

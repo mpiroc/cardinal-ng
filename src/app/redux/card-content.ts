@@ -6,4 +6,4 @@ import { ICardArgs } from '../services/database.service';
 
 export const CardContentActions = new FirebaseActions<ICardContent, ICardArgs>("CARD_CONTENT");
 export const CardContentReducer = new FirebaseItemReducer<ICardContent, ICardArgs>(CardContentActions);
-export const CardContentEpic = new FirebaseItemEpic(CardContentActions)
+export const CardContentEpic = new FirebaseItemEpic(CardContentActions);

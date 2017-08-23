@@ -2,10 +2,6 @@ import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import {
-  FirebaseObjectObservable,
-  FirebaseListObservable,
-} from 'angularfire2/database';
 import { IState } from './state';
 import { IFirebaseModel } from '../models/firebase-models';
 import { FirebaseActions, IHasArgs } from './firebase-actions';
@@ -16,7 +12,7 @@ export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
   }
 
-  public createEpic(fetch: (args: TArgs) => FirebaseObjectObservable<TModel>) {
+  public createEpic(fetch: (args: TArgs) => Observable<TModel>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
@@ -47,7 +43,7 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
   }
 
-  public createEpic(fetch: (args: TArgs) => FirebaseListObservable<TModel[]>) {
+  public createEpic(fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)

@@ -86,6 +86,10 @@ export class DatabaseService {
     return this.database.list(this.getDeckCardPath(uid, deckId));
   }
 
+  _getDeckCards(args: IDeckArgs): FirebaseListObservable<fb.IDeckCard[]> {
+    return this.database.list(this.getDeckCardPath(args.uid, args.deckId));
+  }
+
   getCardContent(uid: string, deckId: string, cardId: string): FirebaseObjectObservable<fb.ICardContent> {
     return this.database.object(`${this.getCardContentPath(uid, deckId)}/${cardId}`);
   }
