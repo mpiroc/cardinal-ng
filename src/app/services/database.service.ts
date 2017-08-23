@@ -27,27 +27,27 @@ export class DatabaseService {
   }
 
   // Create
-  async createDeck(args: IUserArgs): firebase.Promise<void> {
-    const userDeck: fb.IUserDeck = await this.getUserDecks(args).push(args);
+  async createDeck(args: IUserArgs, name: string, description: string,): firebase.Promise<void> {
+    const userDeck: { key: string } = await this.getUserDecks(args).push(args);
 
     const deckArgs: IDeckArgs = {
       ...args,
-      deckId: userDeck.$key,
+      deckId: userDeck.key,
     };
 
     await this.getDeckInfo(deckArgs).set({
       ...deckArgs,
-      name: "",
-      description: "",
+      name,
+      description,
     });
   }
 
   async createCard(args: IDeckArgs): firebase.Promise<void> {
-    const deckCard: fb.IDeckCard = await this.getDeckCards(args).push(args);
+    const deckCard: { key: string } = await this.getDeckCards(args).push(args);
 
     const cardArgs: ICardArgs = {
       ...args,
-      cardId: deckCard.$key,
+      cardId: deckCard.key,
     };
 
     const cardContent: firebase.Promise<void> =

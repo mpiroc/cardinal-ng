@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
+import { MdDialog, MdDialogRef } from '@angular/material';
 import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
@@ -60,8 +60,6 @@ export class AppDeckCardComponent implements OnInit {
 
   onEdit(): void {
     const dialogRef: MdDialogRef<AppEditDeckDialog> = this.dialog.open(AppEditDeckDialog, {
-      panelClass: 'test-panel-class',
-      backdropClass: 'test-backdrop-class',
       data: {
         name$: this.name$,
         description$: this.description$,
@@ -89,8 +87,7 @@ export class AppDeckCardComponent implements OnInit {
           }
         }
         catch(err) {
-          this.logError(err, "Could not edit deck");
-          return  Observable.of<void>();
+          return this.logError(err, "Could not edit deck");
         }
       })
       .catch(err => this.logError(err, "Could not edit deck"))
@@ -99,8 +96,6 @@ export class AppDeckCardComponent implements OnInit {
 
   logError(err: any, message: string): Observable<any> {
     console.error(err);
-    //this.snackbar.open(`${message}: ${err.message}`, null, { duration: 3000});
-
     return Observable.of();
   }
 }
