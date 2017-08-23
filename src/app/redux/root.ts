@@ -3,36 +3,43 @@ import { combineEpics } from 'redux-observable';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
 import {
-  UserReducer,
+  UserItemReducer,
   UserEpic,
-  CardContentReducer,
+  CardContentCollectionReducer,
   CardContentEpic,
-  CardHistoryReducer,
+  CardHistoryCollectionReducer,
   CardHistoryEpic,
-  DeckInfoReducer,
+  DeckInfoCollectionReducer,
   DeckInfoEpic,
-  UserDeckReducer,
+  UserDeckListReducer,
   UserDeckEpic,
-  DeckCardReducer,
+  DeckCardCollectionReducer,
   DeckCardEpic,
 } from './firebase-modules';
 
 export const rootReducer = combineReducers({
-  user: UserDeckReducer.reducer.bind(UserDeckReducer),
-  cardContent: CardContentReducer.collectionReducer.bind(CardContentReducer),  
-  cardHistory: CardHistoryReducer.collectionReducer.bind(CardHistoryReducer),
-  deckInfo: DeckInfoReducer.collectionReducer.bind(DeckInfoReducer),
-  userDeck: UserDeckReducer.reducer.bind(UserDeckReducer),
-  deckCard: DeckCardReducer.reducer.bind(DeckCardReducer),
+  user: UserItemReducer.reducer.bind(UserItemReducer),
+  cardContent: CardContentCollectionReducer.reducer.bind(CardContentCollectionReducer),  
+  cardHistory: CardHistoryCollectionReducer.reducer.bind(CardHistoryCollectionReducer),
+  deckInfo: DeckInfoCollectionReducer.reducer.bind(DeckInfoCollectionReducer),
+  userDeck: UserDeckListReducer.reducer.bind(UserDeckListReducer),
+  deckCard: DeckCardCollectionReducer.reducer.bind(DeckCardCollectionReducer),
 });
 
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {
   return combineEpics(
-    UserEpic.createEpic(args => authService.user$),
-    CardContentEpic.createEpic(databaseService.getCardContent),
-    CardHistoryEpic.createEpic(databaseService.getCardHistory),
-    DeckInfoEpic.createEpic(databaseService.getDeckInfo),
-    UserDeckEpic.createEpic(databaseService.getUserDecks),
-    DeckCardEpic.createEpic(databaseService.getDeckCards),
+    UserEpic.createEpic(args => authService.user$.map(user => { return {
+      displayName: user.displayName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      photoURL: user.photoURL,
+      providerId: user.providerId,
+      uid: user.uid,
+    }})),
+    CardContentEpic.createEpic(databaseService.getCardContent.bind(databaseService)),
+    CardHistoryEpic.createEpic(databaseService.getCardHistory.bind(databaseService)),
+    DeckInfoEpic.createEpic(databaseService.getDeckInfo.bind(databaseService)),
+    UserDeckEpic.createEpic(databaseService.getUserDecks.bind(databaseService)),
+    DeckCardEpic.createEpic(databaseService.getDeckCards.bind(databaseService)),
   );
 }

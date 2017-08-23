@@ -13,13 +13,13 @@ import * as fb from '../../models/firebase-models';
 import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
 import {
   DeckInfoActions,
-  DeckInfoReducer,
+  DeckInfoItemReducer,
 } from '../../redux/firebase-modules';
 import { IState } from '../../redux/state';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: DeckInfoReducer.reducer,
+  localReducer: DeckInfoItemReducer.reducer.bind(DeckInfoItemReducer),
 })
 @Component({
   selector: 'app-deck-card',
@@ -41,7 +41,7 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   getBasePath() {
-    return ["deckInfos", this.deck.$key];
+    return ["deckInfo", this.deck.$key];
   }
 
   ngOnInit(): void {

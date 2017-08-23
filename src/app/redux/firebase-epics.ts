@@ -12,27 +12,35 @@ import { FirebaseActions, IHasArgs, USER_LOGOUT } from './firebase-actions';
 import { FirebaseItemReducer } from './firebase-reducers';
 
 export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
-  constructor(private actions: FirebaseActions<TModel, TArgs>) {
+  constructor(
+    private actions: FirebaseActions<TModel, TArgs>,
+    private stopActions: string[] = [ USER_LOGOUT ],
+    private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>) {
+    
+    if (!handleReceived) {
+      this.handleReceived = (store, data, args) => Observable.of(this.actions.itemReceived(args, data));
+    }
   }
 
   public createEpic(fetch: (args: TArgs) => Observable<TModel>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
-        .map((data: TModel) => this.actions.itemReceived(action.args, data))
+        .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         // TODO: Also stop listening when item is removed from its master list (i.e. userDecks, deckCards)
         .takeUntil(action$
-          .ofType(USER_LOGOUT, this.actions.STOP_LISTENING)
+          .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
       );
   }
 
   private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
-    switch (stopAction.type) {
-      case USER_LOGOUT:
-        return true;
+    if (this.stopActions.find(stopAction.type)) {
+      return true;
+    }
 
+    switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
         return JSON.stringify(stopAction.args) === JSON.stringify(action.args);
 
@@ -43,7 +51,9 @@ export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
 }
 
 export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
-  constructor(private actions: FirebaseActions<TModel, TArgs>) {
+  constructor(
+    private actions: FirebaseActions<TModel, TArgs>,
+    private stopActions: string[] = [ USER_LOGOUT ]) {
   }
 
   public createEpic(fetch: (args: TArgs) => Observable<TModel[]>) {
@@ -52,7 +62,7 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .map((data: TModel[]) => this.actions.listReceived(action.args, this.convertToMap(data)))
         .takeUntil(action$
-          .ofType(USER_LOGOUT, this.actions.STOP_LISTENING)
+          .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
         .catch(err => Observable.of(this.actions.error(action.args, err.message)))
@@ -60,10 +70,11 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
   }
 
   private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
-    switch (stopAction.type) {
-      case USER_LOGOUT:
-        return true;
+    if (this.stopActions.find(stopAction.type)) {
+      return true;
+    }
 
+    switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
         return JSON.stringify(stopAction.args) === JSON.stringify(action.args);
 

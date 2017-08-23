@@ -9,7 +9,7 @@ export interface IState {
 
 export function isListening(store: Map<string, any>, ...path: string[]) {
   const result = path.reduce((current, key) => {
-    return current ? null : current.get(key);
+    return current ? current.get(key) : null;
   }, store);
 
   return result ? result.get("isListening") === true : false;

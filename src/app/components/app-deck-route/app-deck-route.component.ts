@@ -10,13 +10,13 @@ import 'rxjs/add/operator/switchMap';
 import { IDeckCard } from '../../models/firebase-models';
 import {
   DeckCardActions,
-  DeckCardReducer,
+  DeckCardListReducer,
 } from '../../redux/firebase-modules';
 import { IState, isListening } from '../../redux/state';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: DeckCardReducer.reducer,
+  localReducer: DeckCardListReducer.reducer.bind(DeckCardListReducer),
 })
 @Component({
   selector: 'app-deck-route',
@@ -37,7 +37,7 @@ export class AppDeckRouteComponent implements OnInit {
 
   getBasePath() : string[] {
     if (this.deckId) {
-      return ['deckCards', this.deckId];
+      return ['deckCard', this.deckId];
     }
 
     return null;
@@ -48,7 +48,7 @@ export class AppDeckRouteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const uid$ = this.ngRedux.select<string>(["user", "uid"]);
+    const uid$ = this.ngRedux.select<string>(["user", "data", "uid"]);
     const deckId$ = this.activatedRoute.paramMap
       .map(paramMap => paramMap.get('deckId'));
 

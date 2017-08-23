@@ -4,6 +4,12 @@ import { IFirebaseModel } from '../models/firebase-models';
 
 export const USER_LOGOUT = "USER_LOGOUT";
 
+export function userLogout() : Action {
+  return {
+    type: USER_LOGOUT,
+  }
+}
+
 export interface IItemReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;
 }

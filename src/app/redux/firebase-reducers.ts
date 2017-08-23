@@ -10,7 +10,11 @@ import {
   USER_LOGOUT,
 } from './firebase-actions';
 
-export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> {
+export interface IFirebaseReducer {
+  reducer: (state: Map<string, any>, action: Action) => Map<string, any>;
+}
+
+export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
     isLoading: false,
@@ -18,9 +22,7 @@ export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> {
     data: null,
   });
 
-  private initialCollectionState = Map<string, any>();
-
-  constructor(private actions: FirebaseActions<TModel, TArgs>, private selectKey?: (args: TArgs) => string) {
+  constructor(private actions: FirebaseActions<TModel, TArgs>) {
   }
 
   reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
@@ -53,15 +55,25 @@ export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> {
         return state;
     }
   }
+}
 
-  collectionReducer(state: Map<string, any> = this.initialCollectionState, action: Action) : Map<string, any> {
+export class FirebaseCollectionReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
+  private initialState = Map<string, TModel>();
+
+  constructor(
+    private actions: FirebaseActions<TModel, TArgs>,
+    private itemReducer: IFirebaseReducer,
+    private selectKey: (args: TArgs) => string) {
+  }
+
+  reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
       case this.actions.STOP_LISTENING:
       case this.actions.RECEIVED:
       case this.actions.ERROR:
         const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
-        return state.set(key, this.reducer(state.get(key), action as Action));
+        return state.set(key, this.itemReducer.reducer(state.get(key), action as Action));
 
       case USER_LOGOUT:
         return state.clear();
@@ -72,7 +84,7 @@ export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> {
   }
 }
 
-export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> {
+export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
     isLoading: false,
