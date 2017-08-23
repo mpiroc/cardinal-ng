@@ -54,8 +54,8 @@ export class AppDeckCardComponent implements OnInit {
     this.ngRedux.dispatch(DeckCardActions.startListening(deckArgs));
 
     this.count$ = this.ngRedux
-      .select(["deckCard", this.deck.$key])
-      .map((deckCards: Map<string, any>) => deckCards.size);
+      .select(["deckCard", this.deck.$key, "data"])
+      .map((cards: Map<string, any>) => cards.size);
   }
 
   onEdit(): void {
