@@ -1,5 +1,8 @@
 export interface IFirebaseModel {
-  $key?: string;
+  $key: string;
+}
+
+export interface IUser extends IFirebaseModel, firebase.UserInfo {
 }
 
 export interface IUserDeck extends IFirebaseModel {

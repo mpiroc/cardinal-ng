@@ -19,6 +19,7 @@ import {
   ICardArgs,
 } from '../services/database.service';
 import {
+  IUser,
   ICardContent,
   ICardHistory,
   IDeckCard,
@@ -62,8 +63,8 @@ export const UserDeckActions = new FirebaseActions<IUserDeck, IUserArgs>("USER_D
 export const UserDeckListReducer = new FirebaseListReducer<IUserDeck, IUserArgs>(UserDeckActions);
 export const UserDeckEpic = new FirebaseListEpic(UserDeckActions);
 
-export const UserActions = new FirebaseActions<firebase.UserInfo, {}>("USER");
-export const UserItemReducer = new FirebaseItemReducer<firebase.UserInfo, {}>(UserActions);
+export const UserActions = new FirebaseActions<IUser, {}>("USER");
+export const UserItemReducer = new FirebaseItemReducer<IUser, {}>(UserActions);
 export const UserEpic = new FirebaseItemEpic(
   UserActions,
   [],
