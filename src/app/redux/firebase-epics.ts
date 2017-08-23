@@ -18,6 +18,7 @@ export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .map((data: TModel) => this.actions.received(action.args, data))
+        // TODO: Also stop listening when item is removed from its master list (i.e. userDecks, deckCards)
         .takeUntil(action$
           .ofType(USER_LOGOUT, this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))

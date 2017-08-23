@@ -9,9 +9,15 @@ import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import * as fb from '../models/firebase-models';
 
-export interface ICardContentArgs {
+export interface IUserArgs {
   uid: string;
+}
+
+export interface IDeckArgs extends IUserArgs {
   deckId: string;
+}
+
+export interface ICardArgs extends IDeckArgs {
   cardId: string;
 }
 
@@ -68,6 +74,10 @@ export class DatabaseService {
     return this.database.object(`${this.getDeckInfoPath(uid)}/${deckId}`);
   }
 
+  _getDeckInfo(args: IDeckArgs): FirebaseObjectObservable<fb.IDeckInfo> {
+    return this.database.object(`${this.getDeckInfoPath(args.uid)}/${args.deckId}`);
+  }
+
   getDeckCards(uid: string, deckId: string): FirebaseListObservable<fb.IDeckCard[]> {
     return this.database.list(this.getDeckCardPath(uid, deckId));
   }
@@ -76,12 +86,16 @@ export class DatabaseService {
     return this.database.object(`${this.getCardContentPath(uid, deckId)}/${cardId}`);
   }
 
-  _getCardContent(args: ICardContentArgs): FirebaseObjectObservable<fb.ICardContent> {
+  _getCardContent(args: ICardArgs): FirebaseObjectObservable<fb.ICardContent> {
     return this.database.object(`${this.getCardContentPath(args.uid, args.deckId)}/${args.cardId}`);
   }
 
   getCardHistory(uid: string, deckId: string, cardId: string): FirebaseObjectObservable<fb.ICardHistory> {
     return this.database.object(`${this.getCardHistoryPath(uid, deckId)}/${cardId}`);
+  }
+
+  _getCardHistory(args: ICardArgs): FirebaseObjectObservable<fb.ICardHistory> {
+    return this.database.object(`${this.getCardHistoryPath(args.uid, args.deckId)}/${args.cardId}}`);
   }
 
   // Update
