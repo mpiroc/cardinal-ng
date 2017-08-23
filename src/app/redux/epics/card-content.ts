@@ -53,7 +53,7 @@ function filterStopAction(stopAction: Action, cardId: string): boolean {
 
     case CARD_CONTENT_STOP_LISTENING:
       const typedStopAction = stopAction as ICardContentStopListeningAction;
-      return typedStopAction.cardId == cardId;
+      return typedStopAction.cardId === cardId;
 
     default:
       return false;

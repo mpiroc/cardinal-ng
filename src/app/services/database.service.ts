@@ -9,6 +9,11 @@ import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import * as fb from '../models/firebase-models';
 
+export interface ICardContentArgs {
+  uid: string;
+  deckId: string;
+  cardId: string;
+}
 
 @Injectable()
 export class DatabaseService {
@@ -69,6 +74,10 @@ export class DatabaseService {
 
   getCardContent(uid: string, deckId: string, cardId: string): FirebaseObjectObservable<fb.ICardContent> {
     return this.database.object(`${this.getCardContentPath(uid, deckId)}/${cardId}`);
+  }
+
+  _getCardContent(args: ICardContentArgs): FirebaseObjectObservable<fb.ICardContent> {
+    return this.database.object(`${this.getCardContentPath(args.uid, args.deckId)}/${args.cardId}`);
   }
 
   getCardHistory(uid: string, deckId: string, cardId: string): FirebaseObjectObservable<fb.ICardHistory> {
