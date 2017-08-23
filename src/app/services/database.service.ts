@@ -27,36 +27,39 @@ export class DatabaseService {
   }
 
   // Create
-  async createDeck(uid: string): firebase.Promise<void> {
-    const userDeck: fb.IUserDeck = await this.getUserDecks({ uid }).push({
-      uid,
-    });
+  async createDeck(args: IUserArgs): firebase.Promise<void> {
+    const userDeck: fb.IUserDeck = await this.getUserDecks(args).push(args);
 
-    await this.getDeckInfo({ uid, deckId: userDeck.$key }).set({
-      uid,
+    const deckArgs: IDeckArgs = {
+      ...args,
+      deckId: userDeck.$key,
+    };
+
+    await this.getDeckInfo(deckArgs).set({
+      ...deckArgs,
       name: "",
       description: "",
     });
   }
 
-  async createCard(uid: string, deckId: string): firebase.Promise<void> {
-    const deckCard: fb.IDeckCard = await this.getDeckCards({ uid, deckId }).push({
-      uid,
-      deckId,
-    });
+  async createCard(args: IDeckArgs): firebase.Promise<void> {
+    const deckCard: fb.IDeckCard = await this.getDeckCards(args).push(args);
+
+    const cardArgs: ICardArgs = {
+      ...args,
+      cardId: deckCard.$key,
+    };
 
     const cardContent: firebase.Promise<void> =
-      this.getCardContent({ uid, deckId, cardId: deckCard.$key }).set({
-        uid,
-        deckId,
+      this.getCardContent(cardArgs).set({
+        ...cardArgs,
         front: "",
         back: "",
       });
 
     const cardHistory: firebase.Promise<void> =
-      this.getCardHistory({ uid, deckId, cardId: deckCard.$key }).set({
-        uid,
-        deckId,
+      this.getCardHistory(cardArgs).set({
+        ...cardArgs,
         difficulty: 2.5,
         grade: 0,
         repetitions: 0,
@@ -67,51 +70,42 @@ export class DatabaseService {
 
   // Retrieve
   getUserDecks(args: IUserArgs): FirebaseListObservable<fb.IUserDeck[]> {
-    return this.database.list(this.getUserDeckPath(args.uid));
+    return this.database.list(this.getUserDeckBasePath(args));
   }
 
   getDeckInfo(args: IDeckArgs): FirebaseObjectObservable<fb.IDeckInfo> {
-    return this.database.object(`${this.getDeckInfoPath(args.uid)}/${args.deckId}`);
+    return this.database.object(this.getDeckInfoPath(args));
   }
 
   getDeckCards(args: IDeckArgs): FirebaseListObservable<fb.IDeckCard[]> {
-    return this.database.list(this.getDeckCardPath(args.uid, args.deckId));
+    return this.database.list(this.getDeckCardBasePath(args));
   }
 
   getCardContent(args: ICardArgs): FirebaseObjectObservable<fb.ICardContent> {
-    return this.database.object(`${this.getCardContentPath(args.uid, args.deckId)}/${args.cardId}`);
+    return this.database.object(this.getCardContentPath(args));
   }
 
   getCardHistory(args: ICardArgs): FirebaseObjectObservable<fb.ICardHistory> {
-    return this.database.object(`${this.getCardHistoryPath(args.uid, args.deckId)}/${args.cardId}}`);
+    return this.database.object(this.getCardHistoryPath(args));
   }
 
   // Update
-  updateDeckInfo(uid: string, deckId: string,
-    name: string, description: string)
-    : firebase.Promise<void> {
-
-    return this.getDeckInfo({ uid, deckId }).update({
+  updateDeckInfo(args: IDeckArgs, name: string, description: string) : firebase.Promise<void> {
+    return this.getDeckInfo(args).update({
       name,
       description,
     });
   }
 
-  updateCardContent(uid: string, deckId: string, cardId: string,
-    front: string, back: string)
-    : firebase.Promise<void> {
-
-    return this.getCardContent({ uid, deckId, cardId }).update({
+  updateCardContent(args: ICardArgs, front: string, back: string) : firebase.Promise<void> {
+    return this.getCardContent(args).update({
       front,
       back,
     });
   }
 
-  updateCardHistory(uid: string, deckId: string, cardId: string,
-    difficulty: number, grade: number, repetitions: number)
-    : firebase.Promise<void> {
-
-    return this.getCardHistory({ uid, deckId, cardId }).update({
+  updateCardHistory(args: ICardArgs, difficulty: number, grade: number, repetitions: number) : firebase.Promise<void> {
+    return this.getCardHistory(args).update({
       difficulty,
       grade,
       repetitions,
@@ -119,39 +113,60 @@ export class DatabaseService {
   }
 
   // Delete
-  deleteDeck(uid: string, deckId: string): firebase.Promise<any[]> {
+  deleteDeck(args: IDeckArgs): firebase.Promise<any[]> {
     return firebase.Promise.all([
-      this.getUserDecks({ uid }).remove(deckId),
-      this.database.list(this.getDeckInfoPath(uid)).remove(deckId),
+      this.getUserDecks(args).remove(args.deckId),
+      this.database.list(this.getDeckInfoBasePath(args)).remove(args.deckId),
     ]);
   }
 
-  async deleteCard(uid: string, deckId: string, cardId: string): firebase.Promise<any[]> {
+  async deleteCard(args: ICardArgs): firebase.Promise<any[]> {
     return firebase.Promise.all([
-      this.getDeckCards({ uid, deckId }).remove(cardId),
-      this.database.list(this.getCardContentPath(uid, deckId)).remove(cardId),
-      this.database.list(this.getCardHistoryPath(uid, deckId)).remove(cardId),
+      this.getDeckCards(args).remove(args.cardId),
+      this.database.list(this.getCardContentBasePath(args)).remove(args.cardId),
+      this.database.list(this.getCardHistoryBasePath(args)).remove(args.cardId),
     ]);
   }
 
-  // Helpers
-  private getUserDeckPath(uid: string): string {
-    return `userDeck/${uid}`;
+  // Base path helpers
+  private getUserDeckBasePath(args: IUserArgs): string {
+    return `userDeck/${args.uid}`;
   }
 
-  private getDeckInfoPath(uid: string): string {
-    return `deckInfo/${uid}`;
+  private getDeckInfoBasePath(args: IUserArgs): string {
+    return `deckInfo/${args.uid}`;
   }
 
-  private getDeckCardPath(uid: string, deckId: string): string {
-    return `deckCard/${uid}/${deckId}`;
+  private getDeckCardBasePath(args: IDeckArgs): string {
+    return `deckCard/${args.uid}/${args.deckId}`;
   }
 
-  private getCardContentPath(uid: string, deckId: string): string {
-    return `cardContent/${uid}/${deckId}`;
+  private getCardContentBasePath(args: IDeckArgs): string {
+    return `cardContent/${args.uid}/${args.deckId}`;
   }
 
-  private getCardHistoryPath(uid: string, deckId: string): string {
-    return `cardHistory/${uid}/${deckId}`;
+  private getCardHistoryBasePath(args: IDeckArgs): string {
+    return `cardHistory/${args.uid}/${args.deckId}`;
+  }
+
+  // Full path helpers
+  private getUserDeckPath(args: IDeckArgs): string {
+    return `${this.getUserDeckBasePath(args)}/${args.deckId}`;
+  }
+
+  private getDeckInfoPath(args: IDeckArgs): string {
+    return `${this.getDeckInfoBasePath(args)}/${args.deckId}`;
+  }
+
+  private getDeckCardPath(args: ICardArgs): string {
+    return `${this.getDeckCardBasePath(args)}/${args.cardId}`;
+  }
+
+  private getCardContentPath(args: ICardArgs): string {
+    return `${this.getCardContentBasePath(args)}/${args.cardId}`;
+  }
+
+  private getCardHistoryPath(args: ICardArgs): string {
+    return `${this.getCardHistoryBasePath(args)}/${args.cardId}`;
   }
 }

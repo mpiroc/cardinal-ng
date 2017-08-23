@@ -76,15 +76,13 @@ export class AppDeckCardComponent implements OnInit {
               return Observable.of<void>();
             
             case AppEditDeckDialogResult.Save:
-              
-              const promise: Promise<void> = this.databaseService.updateDeckInfo(
-                this.deck.uid,
-                this.deck.$key,
+              return Observable.from(this.databaseService.updateDeckInfo({
+                  uid: this.deck.uid,
+                  deckId: this.deck.$key,
+                },
                 dialogRef.componentInstance.name,
                 dialogRef.componentInstance.description,
-              );
-              return Observable.from(promise);
-              
+              ));
 
             default:
               throw new Error(`Unknown dialog response: ${result}`);
