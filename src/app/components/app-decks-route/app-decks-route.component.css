@@ -1,6 +1,17 @@
+.container {
+  margin: 4px;
+}
+
 .ng-material-decks-list {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
-  margin: 4px;
+}
+
+.centered {
+  margin: auto;
+}
+
+.ng-material-new-deck-button {
+  margin: 8px 0 0 0;
+  display: flex;
 }
