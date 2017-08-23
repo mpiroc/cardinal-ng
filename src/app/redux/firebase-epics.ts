@@ -8,13 +8,13 @@ import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { IState } from './state';
 import { IFirebaseModel } from '../models/firebase-models';
-import { FirebaseActions, IHasArgs, USER_LOGOUT } from './firebase-actions';
+import { FirebaseActions, IHasArgs } from './firebase-actions';
 import { FirebaseItemReducer } from './firebase-reducers';
 
 export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private stopActions: string[] = [ USER_LOGOUT ],
+    private stopActions: string[],
     private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>) {
     
     if (!handleReceived) {
@@ -53,7 +53,7 @@ export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
 export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private stopActions: string[] = [ USER_LOGOUT ]) {
+    private stopActions: string[]) {
   }
 
   public createEpic(fetch: (args: TArgs) => Observable<TModel[]>) {
