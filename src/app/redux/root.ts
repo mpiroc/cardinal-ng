@@ -14,11 +14,16 @@ import {
   DeckInfoReducer,
   DeckInfoEpic,
 } from './deck-info';
+import {
+  UserDeckReducer,
+  UserDeckEpic,
+} from './user-deck';
 
 export const rootReducer = combineReducers({
   cardContent: CardContentReducer.reducer,  
   cardHistory: CardHistoryReducer.reducer,
   deckInfo: DeckInfoReducer.reducer,
+  userDeck: UserDeckReducer.reducer,
 });
 
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {
@@ -26,5 +31,6 @@ export function createRootEpic(authService: AuthService, databaseService: Databa
     CardContentEpic.createEpic(databaseService._getCardContent),
     CardHistoryEpic.createEpic(databaseService._getCardHistory),
     DeckInfoEpic.createEpic(databaseService._getDeckInfo),
+    UserDeckEpic.createEpic(databaseService._getUserDecks),
   );
 }

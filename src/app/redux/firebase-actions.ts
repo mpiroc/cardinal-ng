@@ -1,8 +1,12 @@
 import { Action } from 'redux';
 import { IFirebaseModel } from '../models/firebase-models';
 
-export interface IReceivedAction<TModel extends IFirebaseModel> extends Action {
+export interface IItemReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;
+}
+
+export interface IListReceivedAction<TModel extends IFirebaseModel> extends Action {
+  data: Map<string, TModel>;
 }
 
 export interface IErrorAction extends Action {
@@ -47,7 +51,15 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
     };
   }
 
-  received(args: TArgs, data: TModel) : IHasArgs<TArgs> & Action & IReceivedAction<TModel> {
+  itemReceived(args: TArgs, data: TModel) : IHasArgs<TArgs> & Action & IItemReceivedAction<TModel> {
+    return {
+      type: this.RECEIVED,
+      args,
+      data,
+    };
+  }
+
+  listReceived(args: TArgs, data: Map<string, TModel>) : IHasArgs<TArgs> & Action & IListReceivedAction<TModel> {
     return {
       type: this.RECEIVED,
       args,

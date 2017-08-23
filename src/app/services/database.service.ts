@@ -70,6 +70,10 @@ export class DatabaseService {
     return this.database.list(this.getUserDeckPath(uid));
   }
 
+  _getUserDecks(args: IUserArgs): FirebaseListObservable<fb.IUserDeck[]> {
+    return this.database.list(this.getUserDeckPath(args.uid));
+  }
+
   getDeckInfo(uid: string, deckId: string): FirebaseObjectObservable<fb.IDeckInfo> {
     return this.database.object(`${this.getDeckInfoPath(uid)}/${deckId}`);
   }
