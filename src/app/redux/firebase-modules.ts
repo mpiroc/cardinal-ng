@@ -6,12 +6,12 @@ import {
   userLogout,
 } from './firebase-actions';
 import {
-  FirebaseItemReducer,
+  FirebaseObjectReducer,
   FirebaseCollectionReducer,
   FirebaseListReducer,
 } from './firebase-reducers';
 import {
-  FirebaseItemEpic,
+  FirebaseObjectEpic,
   FirebaseListEpic,
 } from './firebase-epics';
 import {
@@ -29,20 +29,20 @@ import {
 } from '../models/firebase-models';
 
 export const CardContentActions = new FirebaseActions<ICardContent, ICardArgs>("CARD_CONTENT");
-export const CardContentItemReducer = new FirebaseItemReducer<ICardContent, ICardArgs>(CardContentActions);
+export const CardContentObjectReducer = new FirebaseObjectReducer<ICardContent, ICardArgs>(CardContentActions);
 export const CardContentCollectionReducer = new FirebaseCollectionReducer<ICardContent, ICardArgs>(
     CardContentActions,
-    CardContentItemReducer,
+    CardContentObjectReducer,
     args => args.cardId)
-export const CardContentEpic = new FirebaseItemEpic(CardContentActions, [ USER_LOGOUT ]);
+export const CardContentEpic = new FirebaseObjectEpic(CardContentActions, [ USER_LOGOUT ]);
 
 export const CardHistoryActions = new FirebaseActions<ICardHistory, ICardArgs>("CARD_HISTORY");
-export const CardHistoryItemReducer = new FirebaseItemReducer<ICardHistory, ICardArgs>(CardHistoryActions);
+export const CardHistoryObjectReducer = new FirebaseObjectReducer<ICardHistory, ICardArgs>(CardHistoryActions);
 export const CardHistoryCollectionReducer = new FirebaseCollectionReducer<ICardHistory, ICardArgs>(
   CardHistoryActions,
-  CardHistoryItemReducer,
+  CardHistoryObjectReducer,
   args => args.cardId);
-export const CardHistoryEpic = new FirebaseItemEpic(CardHistoryActions, [ USER_LOGOUT ]);
+export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions, [ USER_LOGOUT ]);
 
 export const DeckCardActions = new FirebaseActions<IDeckCard, IDeckArgs>("DECK_CARD");
 export const DeckCardListReducer = new FirebaseListReducer<IDeckCard, IDeckArgs>(DeckCardActions);
@@ -53,31 +53,31 @@ export const DeckCardCollectionReducer = new FirebaseCollectionReducer<IDeckCard
 export const DeckCardEpic = new FirebaseListEpic(DeckCardActions, [ USER_LOGOUT ]);
 
 export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeckArgs>("DECK_INFO");
-export const DeckInfoItemReducer = new FirebaseItemReducer<IDeckInfo, IDeckArgs>(DeckInfoActions);
+export const DeckInfoObjectReducer = new FirebaseObjectReducer<IDeckInfo, IDeckArgs>(DeckInfoActions);
 export const DeckInfoCollectionReducer = new FirebaseCollectionReducer<IDeckInfo, IDeckArgs>(
   DeckInfoActions,
-  DeckInfoItemReducer,
+  DeckInfoObjectReducer,
   args => args.deckId);
-export const DeckInfoEpic = new FirebaseItemEpic(DeckInfoActions, [ USER_LOGOUT ]);
+export const DeckInfoEpic = new FirebaseObjectEpic(DeckInfoActions, [ USER_LOGOUT ]);
 
 export const UserDeckActions = new FirebaseActions<IUserDeck, IUserArgs>("USER_DECK");
 export const UserDeckListReducer = new FirebaseListReducer<IUserDeck, IUserArgs>(UserDeckActions);
 export const UserDeckEpic = new FirebaseListEpic(UserDeckActions, [ USER_LOGOUT ]);
 
 export const UserActions = new FirebaseActions<IUser, {}>("USER");
-export const UserItemReducer = new FirebaseItemReducer<IUser, {}>(UserActions);
-export const UserEpic = new FirebaseItemEpic(UserActions, [],
+export const UserObjectReducer = new FirebaseObjectReducer<IUser, {}>(UserActions);
+export const UserEpic = new FirebaseObjectEpic(UserActions, [],
   (store, data, args) => {
     if (!data) {
       return Observable.of(
         userLogout(),
-        UserActions.itemReceived({}, null),
+        UserActions.objectReceived({}, null),
       );
     }
 
     return Observable.of(
       userLogout(),
-      UserActions.itemReceived({}, data),
+      UserActions.objectReceived({}, data),
       UserDeckActions.startListening({ uid: data.uid }),
     );
   }

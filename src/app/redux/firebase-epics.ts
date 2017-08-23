@@ -9,16 +9,16 @@ import { ActionsObservable } from 'redux-observable';
 import { IState } from './state';
 import { IFirebaseModel } from '../models/firebase-models';
 import { FirebaseActions, IHasArgs } from './firebase-actions';
-import { FirebaseItemReducer } from './firebase-reducers';
+import { FirebaseObjectReducer } from './firebase-reducers';
 
-export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
+export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
     private stopActions: string[],
     private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>) {
     
     if (!handleReceived) {
-      this.handleReceived = (store, data, args) => Observable.of(this.actions.itemReceived(args, data));
+      this.handleReceived = (store, data, args) => Observable.of(this.actions.objectReceived(args, data));
     }
   }
 
@@ -27,7 +27,7 @@ export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
-        // TODO: Also stop listening when item is removed from its master list (i.e. userDecks, deckCards)
+        // TODO: Also stop listening when object is removed from its master map (i.e. userDecks, deckCards)
         .takeUntil(action$
           .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))

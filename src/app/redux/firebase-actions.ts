@@ -10,7 +10,7 @@ export function userLogout() : Action {
   }
 }
 
-export interface IItemReceivedAction<TModel extends IFirebaseModel> extends Action {
+export interface IObjectReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;
 }
 
@@ -60,7 +60,7 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
     };
   }
 
-  itemReceived(args: TArgs, data: TModel) : IHasArgs<TArgs> & Action & IItemReceivedAction<TModel> {
+  objectReceived(args: TArgs, data: TModel) : IHasArgs<TArgs> & Action & IObjectReceivedAction<TModel> {
     return {
       type: this.RECEIVED,
       args,

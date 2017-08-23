@@ -3,7 +3,7 @@ import { combineEpics } from 'redux-observable';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
 import {
-  UserItemReducer,
+  UserObjectReducer,
   UserEpic,
   CardContentCollectionReducer,
   CardContentEpic,
@@ -18,7 +18,7 @@ import {
 } from './firebase-modules';
 
 export const rootReducer = combineReducers({
-  user: UserItemReducer.reducer.bind(UserItemReducer),
+  user: UserObjectReducer.reducer.bind(UserObjectReducer),
   cardContent: CardContentCollectionReducer.reducer.bind(CardContentCollectionReducer),  
   cardHistory: CardHistoryCollectionReducer.reducer.bind(CardHistoryCollectionReducer),
   deckInfo: DeckInfoCollectionReducer.reducer.bind(DeckInfoCollectionReducer),

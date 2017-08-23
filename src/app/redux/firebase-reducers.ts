@@ -4,7 +4,7 @@ import { IFirebaseModel } from '../models/firebase-models';
 import {
   FirebaseActions,
   IHasArgs,
-  IItemReceivedAction,
+  IObjectReceivedAction,
   IListReceivedAction,
   IErrorAction,
   USER_LOGOUT,
@@ -14,7 +14,7 @@ export interface IFirebaseReducer {
   reducer: (state: Map<string, any>, action: Action) => Map<string, any>;
 }
 
-export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
+export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
     isLoading: false,
@@ -43,7 +43,7 @@ export class FirebaseItemReducer<TModel extends IFirebaseModel, TArgs> implement
         return state
           .set("isLoading", false) 
           .set("error", null)
-          .set("data", Map<string, any>((action as IItemReceivedAction<TModel>).data));
+          .set("data", Map<string, any>((action as IObjectReceivedAction<TModel>).data));
 
       case this.actions.ERROR:
         return state
@@ -62,7 +62,7 @@ export class FirebaseCollectionReducer<TModel extends IFirebaseModel, TArgs> imp
 
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private itemReducer: IFirebaseReducer,
+    private objectReducer: IFirebaseReducer,
     private selectKey: (args: TArgs) => string) {
   }
 
@@ -73,7 +73,7 @@ export class FirebaseCollectionReducer<TModel extends IFirebaseModel, TArgs> imp
       case this.actions.RECEIVED:
       case this.actions.ERROR:
         const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
-        return state.set(key, this.itemReducer.reducer(state.get(key), action as Action));
+        return state.set(key, this.objectReducer.reducer(state.get(key), action as Action));
 
       case USER_LOGOUT:
         return state.clear();
