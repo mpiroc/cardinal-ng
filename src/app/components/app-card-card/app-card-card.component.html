@@ -2,10 +2,10 @@
   <md-card-content>
     <md-tab-group>
       <md-tab label='Front'>
-        <div class='ng-material-tab-body'>{{(content$ | async).front}}</div>
+        <div class='ng-material-tab-body'>{{front$ | async}}</div>
       </md-tab>
       <md-tab label='Back'>
-        <div class='ng-material-tab-body'>{{(content$ | async).back}}</div>
+        <div class='ng-material-tab-body'>{{back$ | async}}</div>
       </md-tab>
     </md-tab-group>
   </md-card-content>

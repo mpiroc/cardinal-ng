@@ -9,9 +9,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { Promise } from 'firebase';
 import { DatabaseService } from '../../services/database.service';
-import * as fb from '../../models/firebase-models';
+import { IUserDeck } from '../../models/firebase-models';
 import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
 import {
+  DeckCardActions,
   DeckInfoActions,
   DeckInfoObjectReducer,
 } from '../../redux/firebase-modules';
@@ -27,7 +28,7 @@ import { IState } from '../../redux/state';
   styleUrls: [ 'app-deck-card.component.css' ],
 })
 export class AppDeckCardComponent implements OnInit {
-  @Input() deck: fb.IUserDeck;
+  @Input() deck: IUserDeck;
   
   count$: Observable<number>;
 
@@ -37,7 +38,7 @@ export class AppDeckCardComponent implements OnInit {
   @select(["data", "description"])
   description$: string;
 
-  constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private snackbar: MdSnackBar, private dialog: MdDialog) {
+  constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private dialog: MdDialog) {
   }
 
   getBasePath() {
@@ -45,19 +46,16 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ngRedux.dispatch(DeckInfoActions.startListening({
+    const deckArgs = {
       uid: this.deck.uid,
       deckId: this.deck.$key,
-    }));
+    };
+    this.ngRedux.dispatch(DeckInfoActions.startListening(deckArgs));
+    this.ngRedux.dispatch(DeckCardActions.startListening(deckArgs));
 
-    // TODO: Fetch from redux store
-    this.count$ = this.databaseService
-      .getDeckCards({
-        uid: this.deck.uid,
-        deckId: this.deck.$key,
-      })
-      .map(cards => cards.length)
-      .catch(err => this.logError(err, "Could not load card count"));
+    this.count$ = this.ngRedux
+      .select(["deckCard", this.deck.$key])
+      .map((deckCards: Map<string, any>) => deckCards.size);
   }
 
   onEdit(): void {
@@ -70,7 +68,7 @@ export class AppDeckCardComponent implements OnInit {
       },
     });
     dialogRef.afterClosed()
-      .map(result => result === undefined ? AppEditDeckDialogResult.Cancel : result)
+      .map(result => result || AppEditDeckDialogResult.Cancel)
       .switchMap(result => {
         try {
           switch (result) {
@@ -103,7 +101,7 @@ export class AppDeckCardComponent implements OnInit {
 
   logError(err: any, message: string): Observable<any> {
     console.error(err);
-    this.snackbar.open(`${message}: ${err.message}`, null, { duration: 3000});
+    //this.snackbar.open(`${message}: ${err.message}`, null, { duration: 3000});
 
     return Observable.of();
   }

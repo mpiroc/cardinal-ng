@@ -1,42 +1,42 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MdSnackBar } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/startWith';
-import { DatabaseService } from '../../services/database.service';
-import * as fb from '../../models/firebase-models';
+import { NgRedux, select, WithSubStore } from '@angular-redux/store';
+import { IDeckCard } from '../../models/firebase-models';
+import {
+  CardContentActions,
+  CardContentObjectReducer,
+} from '../../redux/firebase-modules';
+import { IState } from '../../redux/state';
 
+@WithSubStore({
+  basePathMethodName: "getBasePath",
+  localReducer: CardContentObjectReducer.reducer.bind(CardContentObjectReducer),
+})
 @Component({
   selector: 'app-card-card',
   templateUrl: 'app-card-card.component.html',
   styleUrls: [ 'app-card-card.component.css' ],
 })
 export class AppCardCardComponent implements OnInit {
-  @Input() card: fb.IDeckCard;
-  content$: Observable<fb.ICardContent>;
+  @Input() card: IDeckCard;
 
-  constructor(private databaseService: DatabaseService, private snackbar: MdSnackBar) {
+  @select(["data", "front"])
+  front$: string;
 
+  @select(["data", "back"])
+  back$: string;
+
+  constructor(private ngRedux: NgRedux<IState>) {
+  }
+
+  getBasePath() {
+    return [ "cardContent", this.card.$key ];
   }
 
   ngOnInit(): void {
-    const emptyCardContent = {
-      ...this.card,
-      front: "",
-      back: "",
-    };
-    this.content$ = this.databaseService.getCardContent({
+    this.ngRedux.dispatch(CardContentActions.startListening({
       uid: this.card.uid,
       deckId: this.card.deckId,
       cardId: this.card.$key,
-    })
-      .startWith(emptyCardContent)
-      .catch(err => {
-        console.error(err);
-        this.snackbar.open(`Could not load card content`, null, { duration: 3000 });
-
-        return Observable.of(emptyCardContent);
-      });
+    }));
   }
 }
