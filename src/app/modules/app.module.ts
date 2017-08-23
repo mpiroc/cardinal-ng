@@ -20,7 +20,7 @@ import { AppDeckRouteComponent } from '../components/app-deck-route/app-deck-rou
 import { AppEditDeckDialog } from '../components/app-edit-deck-dialog/app-edit-deck-dialog.component';
 import { AppRoutes } from '../routes/app-routes';
 import { configureStore } from '../redux/configureStore';
-import { userStartListening } from '../redux/actions/user';
+import { UserActions } from '../redux/firebase-modules';
 import { IState } from '../redux/state';
 
 import 'hammerjs';
@@ -55,6 +55,6 @@ export class AppModule {
   constructor(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
     const store = configureStore(authService, databaseService);
     ngRedux.provideStore(store);
-    store.dispatch(userStartListening());
+    store.dispatch(UserActions.startListening({}));
   }
 }

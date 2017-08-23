@@ -3,6 +3,8 @@ export interface IState {
   userDecks: Map<string, any>;
   deckInfos: Map<string, any>;
   deckCards: Map<string, any>;
+  cardContent: Map<string, any>;
+  cardHistory: Map<string, any>;
 }
 
 export function isListening(store: Map<string, any>, ...path: string[]) {

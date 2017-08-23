@@ -1,12 +1,15 @@
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { IState } from './state';
 import { IFirebaseModel } from '../models/firebase-models';
-import { FirebaseActions, IHasArgs } from './firebase-actions';
+import { FirebaseActions, IHasArgs, USER_LOGOUT } from './firebase-actions';
 import { FirebaseItemReducer } from './firebase-reducers';
-import { USER_LOGOUT } from './actions/shared';
 
 export class FirebaseItemEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
@@ -70,8 +73,6 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
   }
 
   private convertToMap(data: TModel[]) : Map<string, TModel> {
-    return data.reduce(
-      (result, current) => result.set(current.$key, current),
-      Map<string, TModel>());
+    return data.reduce((result, current) => result.set(current.$key, current), Map<string, TModel>());
   }
 }

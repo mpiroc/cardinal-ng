@@ -8,13 +8,15 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { IDeckCard } from '../../models/firebase-models';
-import { deckCardsStartListening } from '../../redux/actions/deck-cards';
-import { singleDeckCards } from '../../redux/reducers/deck-cards';
+import {
+  DeckCardActions,
+  DeckCardReducer,
+} from '../../redux/firebase-modules';
 import { IState, isListening } from '../../redux/state';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: singleDeckCards,
+  localReducer: DeckCardReducer.reducer,
 })
 @Component({
   selector: 'app-deck-route',
@@ -58,7 +60,10 @@ export class AppDeckRouteComponent implements OnInit {
         this.deckId = results[1];
 
         if (this.uid && this.deckId && !isListening(deckCards, this.deckId)) {
-          this.ngRedux.dispatch(deckCardsStartListening(this.uid, this.deckId));
+          this.ngRedux.dispatch(DeckCardActions.startListening({
+            uid: this.uid,
+            deckId: this.deckId,
+          }));
         }
       });
   }

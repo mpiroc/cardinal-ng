@@ -5,44 +5,34 @@ import { DatabaseService } from '../services/database.service';
 import {
   UserReducer,
   UserEpic,
-} from './user';
-import {
   CardContentReducer,
   CardContentEpic,
-} from './card-content';
-import {
   CardHistoryReducer,
   CardHistoryEpic,
-} from './card-history';
-import {
   DeckInfoReducer,
   DeckInfoEpic,
-} from './deck-info';
-import {
   UserDeckReducer,
   UserDeckEpic,
-} from './user-deck';
-import {
   DeckCardReducer,
   DeckCardEpic,
-} from './deck-card';
+} from './firebase-modules';
 
 export const rootReducer = combineReducers({
-  user: UserDeckReducer.reducer,
-  cardContent: CardContentReducer.reducer,  
-  cardHistory: CardHistoryReducer.reducer,
-  deckInfo: DeckInfoReducer.reducer,
-  userDeck: UserDeckReducer.reducer,
-  deckCard: DeckCardReducer.reducer,
+  user: UserDeckReducer.reducer.bind(UserDeckReducer),
+  cardContent: CardContentReducer.collectionReducer.bind(CardContentReducer),  
+  cardHistory: CardHistoryReducer.collectionReducer.bind(CardHistoryReducer),
+  deckInfo: DeckInfoReducer.collectionReducer.bind(DeckInfoReducer),
+  userDeck: UserDeckReducer.reducer.bind(UserDeckReducer),
+  deckCard: DeckCardReducer.reducer.bind(DeckCardReducer),
 });
 
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {
   return combineEpics(
     UserEpic.createEpic(args => authService.user$),
-    CardContentEpic.createEpic(databaseService._getCardContent),
-    CardHistoryEpic.createEpic(databaseService._getCardHistory),
-    DeckInfoEpic.createEpic(databaseService._getDeckInfo),
-    UserDeckEpic.createEpic(databaseService._getUserDecks),
-    DeckCardEpic.createEpic(databaseService._getDeckCards),
+    CardContentEpic.createEpic(databaseService.getCardContent),
+    CardHistoryEpic.createEpic(databaseService.getCardHistory),
+    DeckInfoEpic.createEpic(databaseService.getDeckInfo),
+    UserDeckEpic.createEpic(databaseService.getUserDecks),
+    DeckCardEpic.createEpic(databaseService.getDeckCards),
   );
 }

@@ -12,16 +12,14 @@ import { DatabaseService } from '../../services/database.service';
 import * as fb from '../../models/firebase-models';
 import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
 import {
-  deckInfoStartListening,
-} from '../../redux/actions/deck-info';
-import {
-  deckInfo
-} from '../../redux/reducers/deck-info';
+  DeckInfoActions,
+  DeckInfoReducer,
+} from '../../redux/firebase-modules';
 import { IState } from '../../redux/state';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: deckInfo,
+  localReducer: DeckInfoReducer.reducer,
 })
 @Component({
   selector: 'app-deck-card',
@@ -47,11 +45,17 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ngRedux.dispatch(deckInfoStartListening(this.deck.uid, this.deck.$key));
+    this.ngRedux.dispatch(DeckInfoActions.startListening({
+      uid: this.deck.uid,
+      deckId: this.deck.$key,
+    }));
 
     // TODO: Fetch from redux store
     this.count$ = this.databaseService
-      .getDeckCards(this.deck.uid, this.deck.$key)
+      .getDeckCards({
+        uid: this.deck.uid,
+        deckId: this.deck.$key,
+      })
       .map(cards => cards.length)
       .catch(err => this.logError(err, "Could not load card count"));
   }

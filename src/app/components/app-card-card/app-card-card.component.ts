@@ -26,10 +26,11 @@ export class AppCardCardComponent implements OnInit {
       front: "",
       back: "",
     };
-    this.content$ = this.databaseService.getCardContent(
-      this.card.uid,
-      this.card.deckId,
-      this.card.$key)
+    this.content$ = this.databaseService.getCardContent({
+      uid: this.card.uid,
+      deckId: this.card.deckId,
+      cardId: this.card.$key,
+    })
       .startWith(emptyCardContent)
       .catch(err => {
         console.error(err);

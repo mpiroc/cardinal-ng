@@ -1,5 +1,8 @@
+import { Map } from 'immutable';
 import { Action } from 'redux';
 import { IFirebaseModel } from '../models/firebase-models';
+
+export const USER_LOGOUT = "USER_LOGOUT";
 
 export interface IItemReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;
@@ -18,7 +21,7 @@ export interface IHasArgs<TArgs> {
 }
 
 export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
-  constructor(private prefix: string) {
+  constructor(public prefix: string) {
   }
 
   get START_LISTENING() {
