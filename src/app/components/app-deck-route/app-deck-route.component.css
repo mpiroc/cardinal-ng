@@ -2,20 +2,16 @@
   margin: 4px;
 }
 
-.centered {
-  margin: auto;
-}
-
 .ng-material-card-list {
   display: flex;
   flex-wrap: wrap;
 }
 
+.centered {
+  margin: auto;
+}
+
 .ng-material-new-card-button {
   margin: 8px 0 0 0;
   display: flex;
-}
-
-.propertyLabel {
-  font-weight: bold;
 }
