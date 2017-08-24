@@ -17,6 +17,7 @@ import { AppCardCardComponent } from '../components/app-card-card/app-card-card.
 import { AppDecksRouteComponent } from '../components/app-decks-route/app-decks-route.component';
 import { AppDeckCardComponent } from '../components/app-deck-card/app-deck-card.component';
 import { AppDeckRouteComponent } from '../components/app-deck-route/app-deck-route.component';
+import { AppDeleteDeckConfirmationDialog } from '../components/app-delete-deck-confirmation-dialog/app-delete-deck-confirmation-dialog.component';
 import { AppEditDeckDialog } from '../components/app-edit-deck-dialog/app-edit-deck-dialog.component';
 import { AppRoutes } from '../routes/app-routes';
 import { configureStore } from '../redux/configureStore';
@@ -36,6 +37,7 @@ import 'hammerjs';
     AppDecksRouteComponent,
     AppDeckCardComponent,
     AppDeckRouteComponent,
+    AppDeleteDeckConfirmationDialog,
     AppEditDeckDialog,
   ],
   imports: [
@@ -48,7 +50,10 @@ import 'hammerjs';
   ],
   providers: [
   ],
-  entryComponents: [ AppEditDeckDialog ],
+  entryComponents: [
+    AppEditDeckDialog,
+    AppDeleteDeckConfirmationDialog,
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {

@@ -1,0 +1,10 @@
+<div class="main-container">
+  <h1 md-dialog-title>Delete Deck?</h1>
+  <div md-dialog-content class="main-content">
+    Are you sure that you want to delete '{{name$ | async}}'?
+  </div>
+  <div md-dialog-actions>
+    <button md-button [md-dialog-close]="dialogResult.Cancel">Cancel</button>
+    <button md-button [md-dialog-close]="dialogResult.Ok">Ok</button>
+  </div>
+</div>

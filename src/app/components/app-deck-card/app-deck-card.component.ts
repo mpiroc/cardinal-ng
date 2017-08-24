@@ -9,7 +9,14 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
 import { IUserDeck } from '../../models/firebase-models';
-import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
+import {
+  AppEditDeckDialog,
+  AppEditDeckDialogResult,
+} from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
+import {
+  AppDeleteDeckConfirmationDialog,
+  AppDeleteDeckConfirmationDialogResult,
+} from '../app-delete-deck-confirmation-dialog/app-delete-deck-confirmation-dialog.component';
 import {
   DeckCardActions,
   DeckInfoActions,
@@ -85,7 +92,7 @@ export class AppDeckCardComponent implements OnInit {
               throw new Error(`Unknown dialog response: ${result}`);
           }
         }
-        catch(err) {
+        catch (err) {
           return this.logError(err, "Could not edit deck");
         }
       })
@@ -94,10 +101,33 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   onDelete() {
-    this.databaseService.deleteDeck({
-      uid: this.deck.uid,
-      deckId: this.deck.$key,
-    })
+    const dialogRef: MdDialogRef<AppDeleteDeckConfirmationDialog> = this.dialog.open(AppDeleteDeckConfirmationDialog, {
+      data: { name$: this.name$ },
+    });
+    dialogRef.afterClosed()
+      .map(result => result || AppDeleteDeckConfirmationDialogResult.Cancel)
+      .switchMap(result => {
+        try {
+          switch (result) {
+            case AppDeleteDeckConfirmationDialogResult.Cancel:
+              return Observable.of<void>();
+
+            case AppDeleteDeckConfirmationDialogResult.Ok:
+              return Observable.from(this.databaseService.deleteDeck({
+                uid: this.deck.uid,
+                deckId: this.deck.$key,
+              }));
+
+            default:
+              throw new Error(`Unknown dialog response: ${result}`);
+          }
+        }
+        catch (err) {
+          return this.logError(err, "Could not delete deck");
+        }
+      })
+      .catch(err => this.logError(err, "Could not delete deck"))
+      .subscribe();
   }
 
   logError(err: any, message: string): Observable<any> {
