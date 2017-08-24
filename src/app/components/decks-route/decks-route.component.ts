@@ -62,7 +62,7 @@ export class DecksRouteComponent {
               throw new Error(`Unknown dialog response: ${result}`);
           }
         }
-        catch(err) {
+        catch (err) {
           return this.logError(err, "Could not create deck");
         }
       })

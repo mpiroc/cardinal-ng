@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { IDeckInfo } from '../../models/firebase-models';
 
 export enum DeleteDeckDialogResult {
   Cancel,

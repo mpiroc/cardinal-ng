@@ -17,6 +17,7 @@ import { CardCardComponent } from '../components/card-card/card-card.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
+import { DeleteCardDialog } from '../components/delete-card-dialog/delete-card-dialog.component';
 import { DeleteDeckDialog } from '../components/delete-deck-dialog/delete-deck-dialog.component';
 import { EditCardDialog } from '../components/edit-card-dialog/edit-card-dialog.component';
 import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
@@ -38,6 +39,7 @@ import 'hammerjs';
     DecksRouteComponent,
     DeckCardComponent,
     DeckRouteComponent,
+    DeleteCardDialog,
     DeleteDeckDialog,
     EditCardDialog,
     EditDeckDialog,
@@ -53,6 +55,7 @@ import 'hammerjs';
   providers: [
   ],
   entryComponents: [
+    DeleteCardDialog,
     DeleteDeckDialog,
     EditCardDialog,
     EditDeckDialog,

@@ -10,6 +10,10 @@ import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
 import { IDeckCard } from '../../models/firebase-models';
 import {
+  DeleteCardDialog,
+  DeleteCardDialogResult,
+} from '../delete-card-dialog/delete-card-dialog.component';
+import {
   EditCardDialog,
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
@@ -88,6 +92,35 @@ export class CardCardComponent implements OnInit {
         }
       })
       .catch(err => this.logError(err, "Could not edit card"))
+      .subscribe();
+  }
+
+  onDelete() {
+    const dialogRef: MdDialogRef<DeleteCardDialog> = this.dialog.open(DeleteCardDialog);
+    dialogRef.afterClosed()
+      .map(result => result || DeleteCardDialogResult.Cancel)
+      .switchMap(result => {
+        try {
+          switch (result) {
+            case DeleteCardDialogResult.Cancel:
+              return Observable.of<void>();
+
+            case DeleteCardDialogResult.Ok:
+              return Observable.from(this.databaseService.deleteCard({
+                uid: this.card.uid,
+                deckId: this.card.deckId,
+                cardId: this.card.$key,
+              }));
+
+            default:
+              throw new Error(`Unknown dialog response: ${result}`);
+          }
+        }
+        catch (err) {
+          return this.logError(err, "Could not delete card");
+        }
+      })
+      .catch(err => this.logError(err, "Could not delete card"))
       .subscribe();
   }
 
