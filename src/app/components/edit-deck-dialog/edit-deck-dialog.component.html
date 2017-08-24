@@ -1,11 +1,11 @@
 <div class="main-container">
-  <h1 md-dialog-title>{{title}}</h1>
+  <h1 md-dialog-title>{{data.title}}</h1>
   <div md-dialog-content class="main-content">
     <md-input-container>
-      <input mdInput placeholder="Name" value="{{name$ | async}}" (input)="onNameInput($event)"> 
+      <input mdInput placeholder="Name" value="{{data.name$ | async}}" (input)="onNameInput($event)"> 
     </md-input-container>
     <md-input-container>
-      <textarea mdInput placeholder="Description" rows="3" value="{{description$ | async}}" (input)="onDescriptionInput($event)"></textarea>
+      <textarea mdInput placeholder="Description" rows="3" value="{{data.description$ | async}}" (input)="onDescriptionInput($event)"></textarea>
     </md-input-container>
   </div>
   <div md-dialog-actions>

@@ -20,17 +20,13 @@ interface IEditDeckDialogData {
   styleUrls: [ './edit-deck-dialog.component.css' ],
 })
 export class EditDeckDialog {
-  public title: string;
   public name: string;
   public description: string;
-  public name$: Observable<string>;
-  public description$: Observable<string>;
   dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult;
 
-  constructor(@Inject(MD_DIALOG_DATA) data: IEditDeckDialogData) {
-    this.title = data.title;
-    this.name$ = data.name$.map(name => this.name = name);
-    this.description$ = data.description$.map(description => this.description = description);
+  constructor(@Inject(MD_DIALOG_DATA) public data: IEditDeckDialogData) {
+    data.name$.subscribe(name => this.name = name);
+    data.description$.subscribe(description => this.description = description);
   }
 
   onNameInput($event: any) {

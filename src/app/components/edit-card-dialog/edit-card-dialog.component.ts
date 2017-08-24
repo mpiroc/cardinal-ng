@@ -25,6 +25,8 @@ export class EditCardDialog {
   dialogResult: typeof EditCardDialogResult = EditCardDialogResult;
 
   constructor(@Inject(MD_DIALOG_DATA) public data: IEditCardDialogData) {
+    data.front$.subscribe(front => this.front = front);
+    data.back$.subscribe(back => this.back = back);
   }
 
   onFrontInput($event: any) {
