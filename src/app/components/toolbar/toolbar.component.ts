@@ -4,10 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { IState } from '../../redux/state';
 
 @Component({
-  selector: 'app-toolbar',
-  templateUrl: './app-toolbar.component.html',
-  styleUrls: [ './app-toolbar.component.css' ],
+  selector: 'cardinal-toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: [ './toolbar.component.css' ],
 })
-export class AppToolbarComponent {
+export class ToolbarComponent {
   title = 'Cardinal';
 }

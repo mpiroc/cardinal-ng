@@ -8,18 +8,18 @@ import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
-import { AppComponent } from '../components/app/app.component';
-import { AppSidenavComponent } from '../components/app-sidenav/app-sidenav.component';
-import { AppToolbarComponent } from '../components/app-toolbar/app-toolbar.component';
-import { AppLoginRouteComponent } from '../components/app-login-route/app-login-route.component';
-import { AppLoginButtonComponent } from '../components/app-login-button/app-login-button.component';
-import { AppCardCardComponent } from '../components/app-card-card/app-card-card.component';
-import { AppDecksRouteComponent } from '../components/app-decks-route/app-decks-route.component';
-import { AppDeckCardComponent } from '../components/app-deck-card/app-deck-card.component';
-import { AppDeckRouteComponent } from '../components/app-deck-route/app-deck-route.component';
-import { AppDeleteDeckConfirmationDialog } from '../components/app-delete-deck-confirmation-dialog/app-delete-deck-confirmation-dialog.component';
-import { AppEditDeckDialog } from '../components/app-edit-deck-dialog/app-edit-deck-dialog.component';
-import { AppRoutes } from '../routes/app-routes';
+import { RootComponent } from '../components/root/root.component';
+import { SidenavComponent } from '../components/sidenav/sidenav.component';
+import { ToolbarComponent } from '../components/toolbar/toolbar.component';
+import { LoginRouteComponent } from '../components/login-route/login-route.component';
+import { LoginButtonComponent } from '../components/login-button/login-button.component';
+import { CardCardComponent } from '../components/card-card/card-card.component';
+import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
+import { DeckCardComponent } from '../components/deck-card/deck-card.component';
+import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
+import { DeleteDeckConfirmationDialog } from '../components/delete-deck-confirmation-dialog/delete-deck-confirmation-dialog.component';
+import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
+import { Routes } from '../routes/routes';
 import { configureStore } from '../redux/configureStore';
 import { UserActions } from '../redux/firebase-modules';
 import { IState } from '../redux/state';
@@ -28,33 +28,33 @@ import 'hammerjs';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AppToolbarComponent,
-    AppSidenavComponent,
-    AppLoginRouteComponent,
-    AppLoginButtonComponent,
-    AppCardCardComponent,
-    AppDecksRouteComponent,
-    AppDeckCardComponent,
-    AppDeckRouteComponent,
-    AppDeleteDeckConfirmationDialog,
-    AppEditDeckDialog,
+    RootComponent,
+    ToolbarComponent,
+    SidenavComponent,
+    LoginRouteComponent,
+    LoginButtonComponent,
+    CardCardComponent,
+    DecksRouteComponent,
+    DeckCardComponent,
+    DeckRouteComponent,
+    DeleteDeckConfirmationDialog,
+    EditDeckDialog,
   ],
   imports: [
     BrowserModule,
     MaterialModule,
     FirebaseModule,
-    RouterModule.forRoot(AppRoutes),
+    RouterModule.forRoot(Routes),
     FormsModule,
     NgReduxModule,
   ],
   providers: [
   ],
   entryComponents: [
-    AppEditDeckDialog,
-    AppDeleteDeckConfirmationDialog,
+    EditDeckDialog,
+    DeleteDeckConfirmationDialog,
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ RootComponent ]
 })
 export class AppModule {
   constructor(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {

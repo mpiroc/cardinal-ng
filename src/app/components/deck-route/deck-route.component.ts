@@ -17,11 +17,11 @@ import { IState, isListening } from '../../redux/state';
   localReducer: DeckCardListReducer.reducer.bind(DeckCardListReducer),
 })
 @Component({
-  selector: 'app-deck-route',
-  templateUrl: './app-deck-route.component.html',
-  styleUrls: [ './app-deck-route.component.css' ],
+  selector: 'cardinal-deck-route',
+  templateUrl: './deck-route.component.html',
+  styleUrls: [ './deck-route.component.css' ],
 })
-export class AppDeckRouteComponent implements OnInit {
+export class DeckRouteComponent implements OnInit {
   private uid: string;
   private deckId: string;
 

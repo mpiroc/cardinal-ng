@@ -12,11 +12,11 @@ import { IState } from '../../redux/state';
   localReducer: CardContentObjectReducer.reducer.bind(CardContentObjectReducer),
 })
 @Component({
-  selector: 'app-card-card',
-  templateUrl: 'app-card-card.component.html',
-  styleUrls: [ 'app-card-card.component.css' ],
+  selector: 'cardinal-card-card',
+  templateUrl: './card-card.component.html',
+  styleUrls: [ './card-card.component.css' ],
 })
-export class AppCardCardComponent implements OnInit {
+export class CardCardComponent implements OnInit {
   @Input() card: IDeckCard;
 
   @select(["data", "front"])

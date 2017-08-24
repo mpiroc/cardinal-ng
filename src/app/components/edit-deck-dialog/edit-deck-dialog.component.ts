@@ -4,29 +4,29 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import * as fb from '../../models/firebase-models';
 
-export enum AppEditDeckDialogResult {
+export enum EditDeckDialogResult {
   Cancel,
   Save,
 }
 
-interface IAppEditDeckDialogData {
+interface IEditDeckDialogData {
   name$: Observable<string>;
   description$: Observable<string>;
 }
 
 @Component({
-  selector: 'app-edit-deck-dialog',
-  templateUrl: './app-edit-deck-dialog.component.html',
-  styleUrls: [ './app-edit-deck-dialog.component.css' ],
+  selector: 'cardinal-edit-deck-dialog',
+  templateUrl: './edit-deck-dialog.component.html',
+  styleUrls: [ './edit-deck-dialog.component.css' ],
 })
-export class AppEditDeckDialog {
+export class EditDeckDialog {
   public name: string;
   public description: string;
   public name$: Observable<string>;
   public description$: Observable<string>;
-  dialogResult: typeof AppEditDeckDialogResult = AppEditDeckDialogResult;
+  dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult;
 
-  constructor(@Inject(MD_DIALOG_DATA) data: IAppEditDeckDialogData) {
+  constructor(@Inject(MD_DIALOG_DATA) data: IEditDeckDialogData) {
     this.name$ = data.name$.map(name => this.name = name);
     this.description$ = data.description$.map(description => this.description = description);
   }

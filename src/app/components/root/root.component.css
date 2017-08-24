@@ -6,7 +6,7 @@
   margin: 0;
 }
 
-app-sidenav {
+cardinal-sidenav {
   flex-grow: 1;
   display: flex;
 }

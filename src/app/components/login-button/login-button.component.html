@@ -1,0 +1,2 @@
+<a *ngIf="!(this.isLoggedIn$ | async)" md-button (click)="this.login()">Sign in</a>
+<a *ngIf="this.isLoggedIn$ | async" md-button (click)="this.logout()">Sign Out</a>

@@ -3,11 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login-button',
-  templateUrl: 'app-login-button.component.html',
-  styleUrls: [ 'app-login-button.component.css' ],
+  selector: 'cardinal-login-button',
+  templateUrl: './login-button.component.html',
+  styleUrls: [ './login-button.component.css' ],
 })
-export class AppLoginButtonComponent {
+export class LoginButtonComponent {
   constructor(private authService: AuthService) {
   }
 

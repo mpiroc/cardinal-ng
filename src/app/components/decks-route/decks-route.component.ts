@@ -5,14 +5,17 @@ import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../services/database.service';
 import { IUserDeck } from '../../models/firebase-models';
-import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
+import {
+  EditDeckDialog,
+  EditDeckDialogResult,
+} from '../edit-deck-dialog/edit-deck-dialog.component';
 
 @Component({
-  selector: 'app-decks-route',
-  templateUrl: './app-decks-route.component.html',
-  styleUrls: [ './app-decks-route.component.css' ],
+  selector: 'cardinal-decks-route',
+  templateUrl: './decks-route.component.html',
+  styleUrls: [ './decks-route.component.css' ],
 })
-export class AppDecksRouteComponent {
+export class DecksRouteComponent {
   @select(['user', 'data', 'uid'])
   uid$: Observable<string>;
 
@@ -27,7 +30,7 @@ export class AppDecksRouteComponent {
   }
 
   onNewDeck(): void {
-    const dialogRef: MdDialogRef<AppEditDeckDialog> = this.dialog.open(AppEditDeckDialog, {
+    const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
       data: {
         name$: Observable.of(''),
         description$: Observable.of(''),
@@ -36,17 +39,17 @@ export class AppDecksRouteComponent {
 
     Observable.combineLatest(
       this.uid$,
-      dialogRef.afterClosed().map(result => result || AppEditDeckDialogResult.Cancel))
+      dialogRef.afterClosed().map(result => result || EditDeckDialogResult.Cancel))
       .switchMap(results => {
         const uid = results[0];
         const result = results[1];
 
         try {
           switch (result) {
-            case AppEditDeckDialogResult.Cancel:
+            case EditDeckDialogResult.Cancel:
               return Observable.of<void>();
 
-            case AppEditDeckDialogResult.Save:
+            case EditDeckDialogResult.Save:
               return Observable.from(this.databaseService.createDeck({ uid },
                 dialogRef.componentInstance.name,
                 dialogRef.componentInstance.description,

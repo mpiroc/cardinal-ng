@@ -10,13 +10,13 @@ import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
 import { IUserDeck } from '../../models/firebase-models';
 import {
-  AppEditDeckDialog,
-  AppEditDeckDialogResult,
-} from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
+  EditDeckDialog,
+  EditDeckDialogResult,
+} from '../edit-deck-dialog/edit-deck-dialog.component';
 import {
-  AppDeleteDeckConfirmationDialog,
-  AppDeleteDeckConfirmationDialogResult,
-} from '../app-delete-deck-confirmation-dialog/app-delete-deck-confirmation-dialog.component';
+  DeleteDeckConfirmationDialog,
+  DeleteDeckConfirmationDialogResult,
+} from '../delete-deck-confirmation-dialog/delete-deck-confirmation-dialog.component';
 import {
   DeckCardActions,
   DeckInfoActions,
@@ -29,11 +29,11 @@ import { IState } from '../../redux/state';
   localReducer: DeckInfoObjectReducer.reducer.bind(DeckInfoObjectReducer),
 })
 @Component({
-  selector: 'app-deck-card',
-  templateUrl: 'app-deck-card.component.html',
-  styleUrls: [ 'app-deck-card.component.css' ],
+  selector: 'cardinal-deck-card',
+  templateUrl: './deck-card.component.html',
+  styleUrls: [ './deck-card.component.css' ],
 })
-export class AppDeckCardComponent implements OnInit {
+export class DeckCardComponent implements OnInit {
   @Input() deck: IUserDeck;
   
   count$: Observable<number>;
@@ -65,21 +65,21 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   onEdit() {
-    const dialogRef: MdDialogRef<AppEditDeckDialog> = this.dialog.open(AppEditDeckDialog, {
+    const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
       data: {
         name$: this.name$,
         description$: this.description$,
       },
     });
     dialogRef.afterClosed()
-      .map(result => result || AppEditDeckDialogResult.Cancel)
+      .map(result => result || EditDeckDialogResult.Cancel)
       .switchMap(result => {
         try {
           switch (result) {
-            case AppEditDeckDialogResult.Cancel:
+            case EditDeckDialogResult.Cancel:
               return Observable.of<void>();
             
-            case AppEditDeckDialogResult.Save:
+            case EditDeckDialogResult.Save:
               return Observable.from(this.databaseService.updateDeckInfo({
                   uid: this.deck.uid,
                   deckId: this.deck.$key,
@@ -101,18 +101,18 @@ export class AppDeckCardComponent implements OnInit {
   }
 
   onDelete() {
-    const dialogRef: MdDialogRef<AppDeleteDeckConfirmationDialog> = this.dialog.open(AppDeleteDeckConfirmationDialog, {
+    const dialogRef: MdDialogRef<DeleteDeckConfirmationDialog> = this.dialog.open(DeleteDeckConfirmationDialog, {
       data: { name$: this.name$ },
     });
     dialogRef.afterClosed()
-      .map(result => result || AppDeleteDeckConfirmationDialogResult.Cancel)
+      .map(result => result || DeleteDeckConfirmationDialogResult.Cancel)
       .switchMap(result => {
         try {
           switch (result) {
-            case AppDeleteDeckConfirmationDialogResult.Cancel:
+            case DeleteDeckConfirmationDialogResult.Cancel:
               return Observable.of<void>();
 
-            case AppDeleteDeckConfirmationDialogResult.Ok:
+            case DeleteDeckConfirmationDialogResult.Ok:
               return Observable.from(this.databaseService.deleteDeck({
                 uid: this.deck.uid,
                 deckId: this.deck.$key,
