@@ -52,7 +52,7 @@ export class AppDeckRouteComponent implements OnInit {
 
     Observable.combineLatest(uid$, deckId$)
       .subscribe(results => {
-        const deckCards = this.ngRedux.getState().deckCards;
+        const deckCards = this.ngRedux.getState().deckCard;
 
         this.uid = results[0];
         this.deckId = results[1];

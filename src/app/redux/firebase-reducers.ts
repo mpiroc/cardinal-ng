@@ -69,11 +69,18 @@ export class FirebaseMapReducer<TModel extends IFirebaseModel, TArgs> implements
   reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
-      case this.actions.STOP_LISTENING:
       case this.actions.RECEIVED:
       case this.actions.ERROR:
+      {
         const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
         return state.set(key, this.objectReducer.reducer(state.get(key), action as Action));
+      }
+
+      case this.actions.STOP_LISTENING:
+      {
+        const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
+        return state.remove(key);
+      }
 
       case USER_LOGOUT:
         return state.clear();

@@ -27,11 +27,14 @@ export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
-        // TODO: Also stop listening when object is removed from its master map (i.e. userDecks, deckCards)
         .takeUntil(action$
           .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
+        .catch(err => {
+          console.error(err);
+          return Observable.of(this.actions.error(action.args, err.message))
+        })
       );
   }
 
@@ -53,19 +56,26 @@ export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
 export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private stopActions: string[]) {
+    private stopActions: string[],
+    private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel[], args: TArgs) => Observable<Action>) {
+    if (!handleReceived) {
+      this.handleReceived = (store, data, args) => Observable.of(this.actions.listReceived(args, this.convertToMap(data)));
+    }
   }
 
   public createEpic(fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
-        .map((data: TModel[]) => this.actions.listReceived(action.args, this.convertToMap(data)))
+        .mergeMap((data: TModel[]) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
-        .catch(err => Observable.of(this.actions.error(action.args, err.message)))
+        .catch(err => {
+          console.error(err);
+          return Observable.of(this.actions.error(action.args, err.message))
+        })
       );
   }
 
@@ -83,7 +93,7 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
     }
   }
 
-  private convertToMap(data: TModel[]) : Map<string, TModel> {
+  public convertToMap(data: TModel[]) : Map<string, TModel> {
     return data.reduce((result, current) => result.set(current.$key, current), Map<string, TModel>());
   }
 }
