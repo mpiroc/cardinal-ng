@@ -59,7 +59,7 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
     private stopActions: string[],
     private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel[], args: TArgs) => Observable<Action>) {
     if (!handleReceived) {
-      this.handleReceived = (store, data, args) => Observable.of(this.actions.listReceived(args, this.convertToMap(data)));
+      this.handleReceived = (store, data, args) => Observable.of(this.actions.listReceived(args, convertToMap(data)));
     }
   }
 
@@ -92,8 +92,33 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
         return false;
     }
   }
+}
 
-  public convertToMap(data: TModel[]) : Map<string, TModel> {
-    return data.reduce((result, current) => result.set(current.$key, current), Map<string, TModel>());
+function convertToMap<TModel extends IFirebaseModel>(data: TModel[]) : Map<string, TModel> {
+  return data.reduce((result, current) => result.set(current.$key, current), Map<string, TModel>());
+}
+
+export function createListReceivedHandler<TModel extends IFirebaseModel, TArgs>(
+  actions: FirebaseActions<TModel, TArgs>,
+  selectSubStore: (state: IState) => Map<string, any>,
+  getStopActions: (masterRecord: TModel) => Action[],
+) {
+  return (store: MiddlewareAPI<IState>, data: TModel[], args: TArgs) => {
+    const newObjects: Map<string, TModel> = convertToMap(data);
+    const receivedAction = actions.listReceived(args, newObjects);
+    const subStore = selectSubStore(store.getState());
+    const previousObjects: Map<string, TModel> = subStore.get('data');
+    if (!previousObjects) {
+      return Observable.of(receivedAction);
+    }
+
+    const objectsToRemove = previousObjects.valueSeq().filter(maserRecord => !newObjects.has(maserRecord.$key));
+    const stopListeningActions: Action[] = objectsToRemove
+      .map(getStopActions)
+      .reduce((accumulator, current) => accumulator.concat(current), []);
+    
+    return Observable
+      .from(stopListeningActions)
+      .startWith(receivedAction);
   }
 }

@@ -1,3 +1,5 @@
+import { Map } from 'immutable';
+
 export interface IState {
   user: Map<string, any>;
   userDeck: Map<string, any>;
