@@ -56,7 +56,7 @@ import 'hammerjs';
   ],
   bootstrap: [ RootComponent ]
 })
-export class AppModule {
+export class CardinalModule {
   constructor(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
     const store = configureStore(authService, databaseService);
     ngRedux.provideStore(store);
