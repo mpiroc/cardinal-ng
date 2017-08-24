@@ -10,6 +10,7 @@ export enum EditDeckDialogResult {
 }
 
 interface IEditDeckDialogData {
+  title: string;
   name$: Observable<string>;
   description$: Observable<string>;
 }
@@ -20,6 +21,7 @@ interface IEditDeckDialogData {
   styleUrls: [ './edit-deck-dialog.component.css' ],
 })
 export class EditDeckDialog {
+  public title: string;
   public name: string;
   public description: string;
   public name$: Observable<string>;
@@ -27,6 +29,7 @@ export class EditDeckDialog {
   dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult;
 
   constructor(@Inject(MD_DIALOG_DATA) data: IEditDeckDialogData) {
+    this.title = data.title;
     this.name$ = data.name$.map(name => this.name = name);
     this.description$ = data.description$.map(description => this.description = description);
   }

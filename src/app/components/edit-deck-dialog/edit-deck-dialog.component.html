@@ -1,5 +1,5 @@
 <div class="main-container">
-  <h1 md-dialog-title>Edit Deck</h1>
+  <h1 md-dialog-title>{{title}}</h1>
   <div md-dialog-content class="main-content">
     <md-input-container>
       <input mdInput placeholder="Name" value="{{name$ | async}}" (input)="onNameInput($event)"> 

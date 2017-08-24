@@ -67,6 +67,7 @@ export class DeckCardComponent implements OnInit {
   onEdit() {
     const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
       data: {
+        title: "Edit Deck",
         name$: this.name$,
         description$: this.description$,
       },

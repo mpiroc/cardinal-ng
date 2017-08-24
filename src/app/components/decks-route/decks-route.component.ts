@@ -32,6 +32,7 @@ export class DecksRouteComponent {
   onNewDeck(): void {
     const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
       data: {
+        title: "Create Deck",
         name$: Observable.of(''),
         description$: Observable.of(''),
       },
