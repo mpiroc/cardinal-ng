@@ -42,7 +42,7 @@ export class DatabaseService {
     ]);
   }
 
-  async createCard(args: IDeckArgs): FirebasePromise<void> {
+  async createCard(args: IDeckArgs, front: string, back: string): FirebasePromise<void> {
     const deckCard: { key: string } = await this.getDeckCards(args).push(args);
 
     const cardArgs: ICardArgs = {
@@ -52,7 +52,7 @@ export class DatabaseService {
 
     await FirebasePromise.all([
       this.updateDeckCard(cardArgs),
-      this.updateCardContent(cardArgs, "", ""),
+      this.updateCardContent(cardArgs, front, back),
       this.updateCardHistory(cardArgs, 2.5, 0, 0),
     ]);
   }

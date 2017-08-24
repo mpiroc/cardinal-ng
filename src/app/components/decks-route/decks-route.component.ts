@@ -22,7 +22,9 @@ export class DecksRouteComponent {
   @select(['userDeck', 'data'])
   decks$: Observable<Map<string, IUserDeck>>;
 
-  constructor(private databaseService: DatabaseService, private dialog: MdDialog) {
+  constructor(
+    private databaseService: DatabaseService,
+    private dialog: MdDialog) {
   }
 
   emptyIfNull(decks: Map<string, IUserDeck>): Map<string, IUserDeck> {

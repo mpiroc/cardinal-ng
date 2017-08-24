@@ -36,5 +36,4 @@ export class EditCardDialog {
   onBackInput($event: any) {
     this.back = $event.target.value;
   }
-
 }
