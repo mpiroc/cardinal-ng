@@ -18,6 +18,7 @@ import { DecksRouteComponent } from '../components/decks-route/decks-route.compo
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
 import { DeleteDeckDialog } from '../components/delete-deck-dialog/delete-deck-dialog.component';
+import { EditCardDialog } from '../components/edit-card-dialog/edit-card-dialog.component';
 import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
 import { Routes } from '../routes/routes';
 import { configureStore } from '../redux/configureStore';
@@ -38,6 +39,7 @@ import 'hammerjs';
     DeckCardComponent,
     DeckRouteComponent,
     DeleteDeckDialog,
+    EditCardDialog,
     EditDeckDialog,
   ],
   imports: [
@@ -51,8 +53,9 @@ import 'hammerjs';
   providers: [
   ],
   entryComponents: [
-    EditDeckDialog,
     DeleteDeckDialog,
+    EditCardDialog,
+    EditDeckDialog,
   ],
   bootstrap: [ RootComponent ]
 })

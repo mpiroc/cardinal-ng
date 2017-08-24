@@ -70,7 +70,7 @@ export class DeckCardComponent implements OnInit {
         title: "Edit Deck",
         name$: this.name$,
         description$: this.description$,
-      },
+      }
     });
     dialogRef.afterClosed()
       .map(result => result || EditDeckDialogResult.Cancel)

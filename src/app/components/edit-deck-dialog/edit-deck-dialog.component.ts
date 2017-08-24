@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import * as fb from '../../models/firebase-models';
 
 export enum EditDeckDialogResult {
   Cancel,
