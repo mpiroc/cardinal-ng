@@ -7,7 +7,6 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
-import { Promise } from 'firebase';
 import { DatabaseService } from '../../services/database.service';
 import { IUserDeck } from '../../models/firebase-models';
 import { AppEditDeckDialog, AppEditDeckDialogResult } from '../app-edit-deck-dialog/app-edit-deck-dialog.component';
@@ -58,7 +57,7 @@ export class AppDeckCardComponent implements OnInit {
       .map((cards: Map<string, any>) => cards.size);
   }
 
-  onEdit(): void {
+  onEdit() {
     const dialogRef: MdDialogRef<AppEditDeckDialog> = this.dialog.open(AppEditDeckDialog, {
       data: {
         name$: this.name$,
@@ -92,6 +91,13 @@ export class AppDeckCardComponent implements OnInit {
       })
       .catch(err => this.logError(err, "Could not edit deck"))
       .subscribe();
+  }
+
+  onDelete() {
+    this.databaseService.deleteDeck({
+      uid: this.deck.uid,
+      deckId: this.deck.$key,
+    })
   }
 
   logError(err: any, message: string): Observable<any> {
