@@ -17,7 +17,7 @@ import { CardCardComponent } from '../components/card-card/card-card.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
-import { DeleteDeckConfirmationDialog } from '../components/delete-deck-confirmation-dialog/delete-deck-confirmation-dialog.component';
+import { DeleteDeckDialog } from '../components/delete-deck-dialog/delete-deck-dialog.component';
 import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
 import { Routes } from '../routes/routes';
 import { configureStore } from '../redux/configureStore';
@@ -37,7 +37,7 @@ import 'hammerjs';
     DecksRouteComponent,
     DeckCardComponent,
     DeckRouteComponent,
-    DeleteDeckConfirmationDialog,
+    DeleteDeckDialog,
     EditDeckDialog,
   ],
   imports: [
@@ -52,7 +52,7 @@ import 'hammerjs';
   ],
   entryComponents: [
     EditDeckDialog,
-    DeleteDeckConfirmationDialog,
+    DeleteDeckDialog,
   ],
   bootstrap: [ RootComponent ]
 })

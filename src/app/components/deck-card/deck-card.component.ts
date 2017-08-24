@@ -14,9 +14,9 @@ import {
   EditDeckDialogResult,
 } from '../edit-deck-dialog/edit-deck-dialog.component';
 import {
-  DeleteDeckConfirmationDialog,
-  DeleteDeckConfirmationDialogResult,
-} from '../delete-deck-confirmation-dialog/delete-deck-confirmation-dialog.component';
+  DeleteDeckDialog,
+  DeleteDeckDialogResult,
+} from '../delete-deck-dialog/delete-deck-dialog.component';
 import {
   DeckCardActions,
   DeckInfoActions,
@@ -101,18 +101,18 @@ export class DeckCardComponent implements OnInit {
   }
 
   onDelete() {
-    const dialogRef: MdDialogRef<DeleteDeckConfirmationDialog> = this.dialog.open(DeleteDeckConfirmationDialog, {
+    const dialogRef: MdDialogRef<DeleteDeckDialog> = this.dialog.open(DeleteDeckDialog, {
       data: { name$: this.name$ },
     });
     dialogRef.afterClosed()
-      .map(result => result || DeleteDeckConfirmationDialogResult.Cancel)
+      .map(result => result || DeleteDeckDialogResult.Cancel)
       .switchMap(result => {
         try {
           switch (result) {
-            case DeleteDeckConfirmationDialogResult.Cancel:
+            case DeleteDeckDialogResult.Cancel:
               return Observable.of<void>();
 
-            case DeleteDeckConfirmationDialogResult.Ok:
+            case DeleteDeckDialogResult.Ok:
               return Observable.from(this.databaseService.deleteDeck({
                 uid: this.deck.uid,
                 deckId: this.deck.$key,
