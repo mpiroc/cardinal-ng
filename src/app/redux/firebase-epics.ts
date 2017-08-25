@@ -130,6 +130,6 @@ export function createStopListeningHandler<TModel extends IFirebaseModel, TArgs>
       .map(getStopActions)
       .reduce((accumulator, current) => accumulator.concat(current), []);
 
-    return Observable.from(stopListeningActions);
+    return Observable.from(stopListeningActions.concat(actions.clear(args)));
   }
 }

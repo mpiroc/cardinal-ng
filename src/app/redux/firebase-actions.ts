@@ -30,6 +30,10 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
     return this.prefix + "_STOP_LISTENING";
   }
 
+  get CLEAR() {
+    return this.prefix + "_CLEAR";
+  }
+
   get RECEIVED() {
     return this.prefix + "_RECEIVED";
   }
@@ -50,6 +54,13 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
       type: this.STOP_LISTENING,
       args,
     };
+  }
+
+  clear(args: TArgs) : IHasArgs<TArgs> & Action {
+    return {
+      type: this.CLEAR,
+      args,
+    }
   }
 
   objectReceived(args: TArgs, data: TModel) : IHasArgs<TArgs> & Action & IObjectReceivedAction<TModel> {
