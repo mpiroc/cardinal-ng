@@ -8,6 +8,7 @@ import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import { RedirectService } from '../services/redirect.service';
 import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
@@ -53,6 +54,7 @@ import 'hammerjs';
     NgReduxModule,
   ],
   providers: [
+    RedirectService,
   ],
   entryComponents: [
     DeleteCardDialog,
@@ -63,9 +65,16 @@ import 'hammerjs';
   bootstrap: [ RootComponent ]
 })
 export class CardinalModule {
-  constructor(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
+  constructor(
+    ngRedux: NgRedux<IState>,
+    authService: AuthService,
+    databaseService: DatabaseService,
+    redirectService: RedirectService,
+    ) {
     const store = configureStore(authService, databaseService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.startListening({}));
+    
+    redirectService.startListening();
   }
 }
