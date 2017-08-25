@@ -7,7 +7,6 @@ import {
   IObjectReceivedAction,
   IListReceivedAction,
   IErrorAction,
-  USER_LOGOUT,
 } from './firebase-actions';
 
 export interface IFirebaseReducer {
@@ -82,9 +81,6 @@ export class FirebaseMapReducer<TModel extends IFirebaseModel, TArgs> implements
         return state.remove(key);
       }
 
-      case USER_LOGOUT:
-        return state.clear();
-
       default:
         return state;
     }
@@ -114,7 +110,8 @@ export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implement
         return state
           .set("isListening", false)
           .set("isLoading", false)
-          .set("error", null);
+          .set("error", null)
+          .set("data", state.get("data").clear());
 
       case this.actions.RECEIVED:
         return state
@@ -127,9 +124,6 @@ export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implement
           .set("isListening", false)
           .set("isLoading", false)
           .set("error", (action as IErrorAction).error);
-
-      case USER_LOGOUT:
-        return state.clear();
 
       default:
         return state;

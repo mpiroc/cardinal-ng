@@ -2,14 +2,6 @@ import { Map } from 'immutable';
 import { Action } from 'redux';
 import { IFirebaseModel } from '../models/firebase-models';
 
-export const USER_LOGOUT = "USER_LOGOUT";
-
-export function userLogout() : Action {
-  return {
-    type: USER_LOGOUT,
-  }
-}
-
 export interface IObjectReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;
 }

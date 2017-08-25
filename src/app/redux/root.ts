@@ -44,6 +44,8 @@ export function createRootEpic(authService: AuthService, databaseService: Databa
     CardHistoryEpic.createEpic(databaseService.getCardHistory.bind(databaseService)),
     DeckInfoEpic.createEpic(databaseService.getDeckInfo.bind(databaseService)),
     UserDeckEpic.createEpic(databaseService.getUserDecks.bind(databaseService)),
+    UserDeckEpic.createStopListeningEpic(),
     DeckCardEpic.createEpic(databaseService.getDeckCards.bind(databaseService)),
+    DeckCardEpic.createStopListeningEpic(),
   );
 }

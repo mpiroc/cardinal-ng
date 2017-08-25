@@ -11,7 +11,8 @@ export class AuthService {
   readonly isLoggedIn$: Observable<boolean>;
 
   constructor(private router: Router, private afAuth: AngularFireAuth) {
-    this.user$ = this.afAuth.authState;
+    this.user$ = this.afAuth.authState
+      .distinctUntilChanged();
     this.isLoggedIn$ = this.afAuth.authState
       .map(u => u !== null)
       .distinctUntilChanged();

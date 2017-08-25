@@ -14,7 +14,6 @@ import { FirebaseObjectReducer } from './firebase-reducers';
 export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private stopActions: string[],
     private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>) {
     
     if (!handleReceived) {
@@ -28,7 +27,7 @@ export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
-          .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
+          .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
         .catch(err => {
@@ -39,10 +38,6 @@ export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
   }
 
   private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
-    if (this.stopActions.find(stopAction.type)) {
-      return true;
-    }
-
     switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
         return JSON.stringify(stopAction.args) === JSON.stringify(action.args);
@@ -56,11 +51,8 @@ export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
 export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private stopActions: string[],
-    private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel[], args: TArgs) => Observable<Action>) {
-    if (!handleReceived) {
-      this.handleReceived = (store, data, args) => Observable.of(this.actions.listReceived(args, convertToMap(data)));
-    }
+    private handleReceived: (store: MiddlewareAPI<IState>, data: TModel[], args: TArgs) => Observable<Action>,
+    private handleStopListening: (store: MiddlewareAPI<IState>, args: TArgs) => Observable<Action>) {
   }
 
   public createEpic(fetch: (args: TArgs) => Observable<TModel[]>) {
@@ -69,21 +61,24 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .mergeMap((data: TModel[]) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
-          .ofType(this.stopActions.concat(this.actions.STOP_LISTENING))
+          .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
         .catch(err => {
+          console.error("Error in epic for action " + action.type);
           console.error(err);
           return Observable.of(this.actions.error(action.args, err.message))
         })
       );
   }
 
-  private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
-    if (this.stopActions.find(stopAction.type)) {
-      return true;
-    }
+  public createStopListeningEpic() {
+    return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
+      .ofType(this.actions.STOP_LISTENING)
+      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(store, action.args));
+  }
 
+  private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
     switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
         return JSON.stringify(stopAction.args) === JSON.stringify(action.args);
@@ -112,7 +107,7 @@ export function createListReceivedHandler<TModel extends IFirebaseModel, TArgs>(
       return Observable.of(receivedAction);
     }
 
-    const objectsToRemove = previousObjects.valueSeq().filter(maserRecord => !newObjects.has(maserRecord.$key));
+    const objectsToRemove = previousObjects.valueSeq().filter(masterRecord => !newObjects.has(masterRecord.$key));
     const stopListeningActions: Action[] = objectsToRemove
       .map(getStopActions)
       .reduce((accumulator, current) => accumulator.concat(current), []);
@@ -120,5 +115,21 @@ export function createListReceivedHandler<TModel extends IFirebaseModel, TArgs>(
     return Observable
       .from(stopListeningActions)
       .startWith(receivedAction);
+  }
+}
+
+export function createStopListeningHandler<TModel extends IFirebaseModel, TArgs>(
+  actions: FirebaseActions<TModel, TArgs>,
+  selectSubStore: (state: IState) => Map<string, any>,
+  getStopActions: (masterRecord: TModel) => Action[],
+) {
+  return (store: MiddlewareAPI<IState>, args: TArgs) => {
+    const subStore = selectSubStore(store.getState());
+    const objectsToRemove = subStore.get('data');
+    const stopListeningActions: Action[] = objectsToRemove
+      .map(getStopActions)
+      .reduce((accumulator, current) => accumulator.concat(current), []);
+
+    return Observable.from(stopListeningActions);
   }
 }
