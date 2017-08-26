@@ -87,7 +87,7 @@ function userDeckStopListening(userDeck: IUserDeck) {
     deckId: userDeck.$key,
   };
   return [
-    DeckInfoActions.stopListening(args),
+    DeckCardActions.stopListening(args),
   ];
 }
 export const UserDeckEpic = new FirebaseListEpic(UserDeckActions,
