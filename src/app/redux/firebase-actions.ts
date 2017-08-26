@@ -26,12 +26,12 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
     return this.prefix + "_START_LISTENING";
   }
 
-  get STOP_LISTENING() {
-    return this.prefix + "_STOP_LISTENING";
+  get BEFORE_STOP_LISTENING() {
+    return this.prefix + "_BEFORE_STOP_LISTENING";
   }
 
-  get CLEAR() {
-    return this.prefix + "_CLEAR";
+  get STOP_LISTENING() {
+    return this.prefix + "_STOP_LISTENING";
   }
 
   get RECEIVED() {
@@ -49,18 +49,18 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
     };
   }
 
+  beforeStopListening(args: TArgs): IHasArgs<TArgs> & Action {
+    return {
+      type: this.BEFORE_STOP_LISTENING,
+      args,
+    }
+  }
+
   stopListening(args: TArgs) : IHasArgs<TArgs> & Action {
     return {
       type: this.STOP_LISTENING,
       args,
     };
-  }
-
-  clear(args: TArgs) : IHasArgs<TArgs> & Action {
-    return {
-      type: this.CLEAR,
-      args,
-    }
   }
 
   objectReceived(args: TArgs, data: TModel) : IHasArgs<TArgs> & Action & IObjectReceivedAction<TModel> {

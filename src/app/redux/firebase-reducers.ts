@@ -111,9 +111,6 @@ export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implement
           .set("isListening", false)
           .set("isLoading", false)
           .set("error", null)
-
-      case this.actions.CLEAR:
-        return state
           .set("data", state.get("data").clear());
 
       case this.actions.RECEIVED:

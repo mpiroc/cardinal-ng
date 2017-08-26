@@ -75,7 +75,7 @@ export class FirebaseListEpic<TModel extends IFirebaseModel, TArgs> {
 
   public createStopListeningEpic() {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
-      .ofType(this.actions.STOP_LISTENING)
+      .ofType(this.actions.BEFORE_STOP_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(store, action.args));
   }
 
@@ -96,13 +96,13 @@ function convertToMap<TModel extends IFirebaseModel>(data: TModel[]) : Map<strin
 
 export function createListReceivedHandler<TModel extends IFirebaseModel, TArgs>(
   actions: FirebaseActions<TModel, TArgs>,
-  selectSubStore: (state: IState) => Map<string, any>,
+  selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
   getStopActions: (masterRecord: TModel) => Action[],
 ) {
   return (store: MiddlewareAPI<IState>, data: TModel[], args: TArgs) => {
     const newObjects: Map<string, TModel> = convertToMap(data);
     const receivedAction = actions.listReceived(args, newObjects);
-    const subStore = selectSubStore(store.getState());
+    const subStore = selectSubStore(store.getState(), args);
     const previousObjects: Map<string, TModel> = subStore.get('data');
     if (!previousObjects) {
       return Observable.of(receivedAction);
@@ -121,16 +121,16 @@ export function createListReceivedHandler<TModel extends IFirebaseModel, TArgs>(
 
 export function createStopListeningHandler<TModel extends IFirebaseModel, TArgs>(
   actions: FirebaseActions<TModel, TArgs>,
-  selectSubStore: (state: IState) => Map<string, any>,
+  selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
   getStopActions: (masterRecord: TModel) => Action[],
 ) {
   return (store: MiddlewareAPI<IState>, args: TArgs) => {
-    const subStore = selectSubStore(store.getState());
+    const subStore = selectSubStore(store.getState(), args);
     const objectsToRemove = subStore.get('data');
     const stopListeningActions: Action[] = objectsToRemove
       .map(getStopActions)
       .reduce((accumulator, current) => accumulator.concat(current), []);
 
-    return Observable.from(stopListeningActions.concat(actions.clear(args)));
+    return Observable.from(stopListeningActions);
   }
 }

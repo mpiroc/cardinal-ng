@@ -66,9 +66,12 @@ function deckCardStopListening(deckCard: IDeckCard) {
     CardHistoryActions.stopListening(args),
   ];
 }
+function deckCardSelectStore(state: IState, args: IDeckArgs) {
+  return state.deckCard.get(args.deckId);
+}
 export const DeckCardEpic = new FirebaseListEpic(DeckCardActions,
-  createListReceivedHandler(DeckCardActions, state => state.deckCard, deckCardStopListening),
-  createStopListeningHandler(DeckCardActions, state => state.deckCard, deckCardStopListening),
+  createListReceivedHandler(DeckCardActions, deckCardSelectStore, deckCardStopListening),
+  createStopListeningHandler(DeckCardActions, deckCardSelectStore, deckCardStopListening),
 );
 
 export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeckArgs>("DECK_INFO");
@@ -87,12 +90,17 @@ function userDeckStopListening(userDeck: IUserDeck) {
     deckId: userDeck.$key,
   };
   return [
+    DeckCardActions.beforeStopListening(args),
     DeckCardActions.stopListening(args),
+    DeckInfoActions.stopListening(args),
   ];
 }
+function userDeckSelectStore(state: IState, args: IUserArgs) {
+  return state.userDeck;
+}
 export const UserDeckEpic = new FirebaseListEpic(UserDeckActions,
-  createListReceivedHandler(UserDeckActions, state => state.userDeck, userDeckStopListening),
-  createStopListeningHandler(UserDeckActions, state => state.userDeck, userDeckStopListening),
+  createListReceivedHandler(UserDeckActions, userDeckSelectStore, userDeckStopListening),
+  createStopListeningHandler(UserDeckActions, userDeckSelectStore, userDeckStopListening),
 );
 
 export const UserActions = new FirebaseActions<IUser, {}>("USER");
@@ -104,9 +112,11 @@ export const UserEpic = new FirebaseObjectEpic(UserActions,
     const userStore = store.getState().user;
     const previousUser = userStore.get('data');
     if (previousUser && previousUser.get('uid')) {
-      actions = actions.concat(UserDeckActions.stopListening({
-        uid: previousUser.get('uid'),
-      }));
+      const args: IUserArgs = { uid: previousUser.get('uid') };
+      actions = actions.concat([
+        UserDeckActions.beforeStopListening(args),
+        UserDeckActions.stopListening(args),
+      ]);
     }
 
     actions = actions.concat(UserActions.objectReceived({}, data));
