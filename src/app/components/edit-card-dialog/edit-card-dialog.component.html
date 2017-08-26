@@ -1,12 +1,24 @@
 <div class="main-container">
   <h1 md-dialog-title>{{data.title}}</h1>
   <div md-dialog-content class="main-content">
-    <md-input-container>
-      <textarea mdInput placeholder="Front" rows="5" value="{{data.front$ | async}}" (input)="onFrontInput($event)"></textarea>
-    </md-input-container>
-    <md-input-container>
-      <textarea mdInput placeholder="Back" rows="5" value="{{data.back$ | async}}" (input)="onBackInput($event)"></textarea>
-    </md-input-container>
+    <md-tab-group>
+      <md-tab label="Front">
+        <div>
+          <md-input-container>
+            <textarea mdInput rows="8" value="{{data.front$ | async}}" (input)="onFrontInput($event)"></textarea>
+          </md-input-container>
+          <markdown data="{{front}}"></markdown>
+        </div>
+      </md-tab>
+      <md-tab label="Back">
+        <div>
+          <md-input-container>
+            <textarea mdInput rows="8" value="{{data.back$ | async}}" (input)="onBackInput($event)"></textarea>
+          </md-input-container>
+          <markdown data="{{back}}"></markdown>
+        </div>
+      </md-tab>
+    </md-tab-group>
   </div>
   <div md-dialog-actions>
     <button md-button [md-dialog-close]="dialogResult.Cancel">Cancel</button>

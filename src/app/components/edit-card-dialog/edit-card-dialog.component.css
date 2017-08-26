@@ -7,3 +7,7 @@
 .main-container {
   min-width: 448px;
 }
+
+.mat-input-container {
+  width: 100%;
+}

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux } from '@angular-redux/store';
+import { MarkdownModule } from 'angular2-markdown';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
@@ -49,6 +50,7 @@ import 'hammerjs';
     BrowserModule,
     MaterialModule,
     FirebaseModule,
+    MarkdownModule.forRoot(),
     RouterModule.forRoot(Routes),
     FormsModule,
     NgReduxModule,
