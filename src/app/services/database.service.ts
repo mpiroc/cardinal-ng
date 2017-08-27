@@ -53,7 +53,7 @@ export class DatabaseService {
     await FirebasePromise.all([
       this.updateDeckCard(cardArgs),
       this.updateCardContent(cardArgs, front, back),
-      this.updateCardHistory(cardArgs, 2.5, 0, 0),
+      this.updateCardHistory(cardArgs, 2.5, 0, 0, 0, 0),
     ]);
   }
 
@@ -115,12 +115,21 @@ export class DatabaseService {
     });
   }
 
-  updateCardHistory(args: ICardArgs, difficulty: number, grade: number, repetitions: number) : FirebasePromise<void> {
+  updateCardHistory(
+    args: ICardArgs,
+    difficulty: number,
+    grade: number,
+    repetitions: number,
+    previousReview : number,
+    nextReview: number,
+  ) : FirebasePromise<void> {
     return this.getCardHistory(args).update({
       ...args,
       difficulty,
       grade,
       repetitions,
+      previousReview,
+      nextReview,
     });
   }
 

@@ -28,4 +28,6 @@ export interface ICardHistory extends IDeckCard {
   difficulty: number;
   grade: number;
   repetitions: number;
+  previousReview: number;
+  nextReview: number;
 }
