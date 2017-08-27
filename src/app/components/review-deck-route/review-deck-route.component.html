@@ -1,6 +1,7 @@
 <div class="container">
   <cardinal-card-card
     *ngIf="(card$ | async) ? true : false"
-    [card]='card$ | async'>
+    [card]='card$ | async'
+    [showActions]='false'>
   </cardinal-card-card>
 </div>

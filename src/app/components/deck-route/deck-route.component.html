@@ -1,7 +1,7 @@
 <div class='container'>
   <div class='ng-material-card-list'>
     <div class='container' *ngFor='let card of emptyIfNull(deckCards$ | async).toArray()'>
-      <cardinal-card-card [card]='card'></cardinal-card-card>
+      <cardinal-card-card [card]='card' [showActions]='true'></cardinal-card-card>
     </div>
   </div>
   <div class='ng-material-new-card-button'>

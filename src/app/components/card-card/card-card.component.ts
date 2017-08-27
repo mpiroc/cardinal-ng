@@ -34,6 +34,7 @@ import { IState } from '../../redux/state';
 })
 export class CardCardComponent implements OnInit {
   @Input() card: IDeckCard;
+  @Input() showActions: boolean;
 
   @select(["data", "front"])
   front$: string;
