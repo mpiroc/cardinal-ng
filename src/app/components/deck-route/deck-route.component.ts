@@ -1,13 +1,13 @@
 import { Map } from 'immutable';
 import { Component, OnInit } from '@angular/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
-import { IDeckCard } from '../../models/firebase-models';
+import { IUserDeck, IDeckCard } from '../../models/firebase-models';
 import {
   DeckCardActions,
   DeckCardListReducer,
@@ -28,10 +28,7 @@ import {
   styleUrls: [ './deck-route.component.css' ],
 })
 export class DeckRouteComponent implements OnInit {
-  private uid$: Observable<string>;
-  private deckId$: Observable<string>;
-  private uid: string;
-  private deckId: string;
+  private deck: IUserDeck;
 
   @select(["data"])
   deckCards$: Observable<Map<string, IDeckCard>>;
@@ -44,32 +41,19 @@ export class DeckRouteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.uid$ = this.ngRedux.select<string>(["user", "data", "uid"]);
-    this.deckId$ = this.activatedRoute.paramMap
-      .map(paramMap => paramMap.get('deckId'));
-
-    Observable.combineLatest(this.uid$, this.deckId$)
-      .subscribe(results => {
-        const deckCards = this.ngRedux.getState().deckCard;
-
-        this.uid = results[0];
-        this.deckId = results[1];
-
-        if (this.uid && this.deckId && !isListening(deckCards, this.deckId)) {
-          this.ngRedux.dispatch(DeckCardActions.startListening({
-            uid: this.uid,
-            deckId: this.deckId,
-          }));
-        }
-      });
+    this.deck = this.activatedRoute.snapshot.data['deck'];
+    // TODO: Possible race condition could lead to dual listeners.
+    // Behavior would still be correct, still best to clean this up.
+    if (!isListening(this.ngRedux.getState().deckCard, this.deck.$key)) {
+      this.ngRedux.dispatch(DeckCardActions.startListening({
+        uid: this.deck.uid,
+        deckId: this.deck.$key,
+      }));
+    }
   }
 
   getBasePath() : string[] {
-    if (this.deckId) {
-      return ['deckCard', this.deckId];
-    }
-
-    return null;
+    return ['deckCard', this.deck.$key];
   }
 
   emptyIfNull(cards: Map<string, IDeckCard>): Map<string, IDeckCard> {
@@ -85,22 +69,20 @@ export class DeckRouteComponent implements OnInit {
       },
     });
 
-    Observable.combineLatest(
-      this.uid$,
-      this.deckId$,
-      dialogRef.afterClosed().map(result => result || EditCardDialogResult.Cancel))
-      .switchMap(results => {
-        const uid = results[0];
-        const deckId = results[1];
-        const result = results[2];
-
+    dialogRef.afterClosed()
+      .map(result => result || EditCardDialogResult.Cancel)
+      .switchMap(result => {
         try {
           switch (result) {
             case EditCardDialogResult.Cancel:
               return Observable.of<void>();
 
             case EditCardDialogResult.Save:
-              return Observable.from(this.databaseService.createCard({ uid, deckId },
+              return Observable.from(
+                this.databaseService.createCard({
+                  uid: this.deck.uid,
+                  deckId: this.deck.$key
+                },
                 dialogRef.componentInstance.front,
                 dialogRef.componentInstance.back,
               ));

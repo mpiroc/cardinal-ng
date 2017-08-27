@@ -10,6 +10,7 @@ import { MaterialModule } from './material.module';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
 import { RedirectService } from '../services/redirect.service';
+import { DeckResolver } from '../resolvers/deck.resolver';
 import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
@@ -19,11 +20,12 @@ import { CardCardComponent } from '../components/card-card/card-card.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
+import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
 import { DeleteCardDialog } from '../components/delete-card-dialog/delete-card-dialog.component';
 import { DeleteDeckDialog } from '../components/delete-deck-dialog/delete-deck-dialog.component';
 import { EditCardDialog } from '../components/edit-card-dialog/edit-card-dialog.component';
 import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
-import { Routes } from '../routes/routes';
+import { routes } from '../routes/routes';
 import { configureStore } from '../redux/configureStore';
 import { UserActions } from '../redux/firebase-modules';
 import { IState } from '../redux/state';
@@ -41,6 +43,7 @@ import 'hammerjs';
     DecksRouteComponent,
     DeckCardComponent,
     DeckRouteComponent,
+    ReviewDeckRouteComponent,
     DeleteCardDialog,
     DeleteDeckDialog,
     EditCardDialog,
@@ -51,12 +54,13 @@ import 'hammerjs';
     MaterialModule,
     FirebaseModule,
     MarkdownModule.forRoot(),
-    RouterModule.forRoot(Routes),
+    RouterModule.forRoot(routes),
     FormsModule,
     NgReduxModule,
   ],
   providers: [
     RedirectService,
+    DeckResolver,
   ],
   entryComponents: [
     DeleteCardDialog,

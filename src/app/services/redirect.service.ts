@@ -13,7 +13,7 @@ export class RedirectService {
   }
 
   startListening() {
-   this.router.events
+    this.router.events
       .filter(event => event instanceof GuardsCheckStart)
       .map(event => event as GuardsCheckStart)
       .switchMap(event => this.authService.isLoggedIn$
@@ -23,6 +23,7 @@ export class RedirectService {
         }})
       )
       .subscribe(result => {
+        
         if (result.isLoggedIn && result.event.url === "/login") {
           this.router.navigate(["/decks"]);
         }
