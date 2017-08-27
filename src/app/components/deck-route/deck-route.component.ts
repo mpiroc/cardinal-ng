@@ -20,7 +20,7 @@ import {
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: DeckCardListReducer.reducer.bind(DeckCardListReducer),
+  localReducer: DeckCardListReducer.reducer,
 })
 @Component({
   selector: 'cardinal-deck-route',
@@ -42,8 +42,7 @@ export class DeckRouteComponent implements OnInit {
 
   ngOnInit(): void {
     this.deck = this.activatedRoute.snapshot.data['deck'];
-    // TODO: Possible race condition could lead to dual listeners.
-    // Behavior would still be correct, still best to clean this up.
+
     if (!isListening(this.ngRedux.getState().deckCard, this.deck.$key)) {
       this.ngRedux.dispatch(DeckCardActions.startListening({
         uid: this.deck.uid,

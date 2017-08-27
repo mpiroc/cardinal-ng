@@ -25,7 +25,7 @@ import { IState } from '../../redux/state';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: CardContentObjectReducer.reducer.bind(CardContentObjectReducer),
+  localReducer: CardContentObjectReducer.reducer,
 })
 @Component({
   selector: 'cardinal-card-card',

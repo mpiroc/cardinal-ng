@@ -18,12 +18,12 @@ import {
 } from './firebase-modules';
 
 export const rootReducer = combineReducers({
-  user: UserObjectReducer.reducer.bind(UserObjectReducer),
-  cardContent: CardContentMapReducer.reducer.bind(CardContentMapReducer),  
-  cardHistory: CardHistoryMapReducer.reducer.bind(CardHistoryMapReducer),
-  deckInfo: DeckInfoMapReducer.reducer.bind(DeckInfoMapReducer),
-  userDeck: UserDeckListReducer.reducer.bind(UserDeckListReducer),
-  deckCard: DeckCardMapReducer.reducer.bind(DeckCardMapReducer),
+  user: UserObjectReducer.reducer,
+  cardContent: CardContentMapReducer.reducer,  
+  cardHistory: CardHistoryMapReducer.reducer,
+  deckInfo: DeckInfoMapReducer.reducer,
+  userDeck: UserDeckListReducer.reducer,
+  deckCard: DeckCardMapReducer.reducer,
 });
 
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {

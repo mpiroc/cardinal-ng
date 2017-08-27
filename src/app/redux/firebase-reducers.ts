@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { Action } from 'redux';
+import { Action, Reducer } from 'redux';
 import { IFirebaseModel } from '../models/firebase-models';
 import {
   FirebaseActions,
@@ -10,7 +10,7 @@ import {
 } from './firebase-actions';
 
 export interface IFirebaseReducer {
-  reducer: (state: Map<string, any>, action: Action) => Map<string, any>;
+  reducer: Reducer<Map<string, any>>;
 }
 
 export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
@@ -21,10 +21,13 @@ export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> impleme
     data: null,
   });
 
+  public reducer: Reducer<Map<string, any>>;
+
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
+    this.reducer = this._reducer.bind(this);
   }
 
-  reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
+  _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
         return state
@@ -59,13 +62,16 @@ export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> impleme
 export class FirebaseMapReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
   private initialState = Map<string, TModel>();
 
+  public reducer: Reducer<Map<string, any>>;
+
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
     private objectReducer: IFirebaseReducer,
     private selectKey: (args: TArgs) => string) {
+    this.reducer = this._reducer.bind(this);
   }
 
-  reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
+  _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
       case this.actions.RECEIVED:
@@ -95,10 +101,13 @@ export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implement
     data: Map<string, TModel>(),
   });
 
+  public reducer: Reducer<Map<string, any>>;
+
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
+    this.reducer = this._reducer.bind(this);
   }
 
-  reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
+  private _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
         return state
