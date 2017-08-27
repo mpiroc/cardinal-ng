@@ -4,4 +4,25 @@
     [card]='card$ | async'
     [showActions]='false'>
   </cardinal-card-card>
+  <div class="responseContainer">
+    <md-card>
+      <md-card-title>
+        How well did you remember this card?
+      </md-card-title>
+      <md-card-content>
+        <md-radio-group class="responseGroup" [(ngModel)]="selectedResponse">
+          <md-list>
+            <md-list-item *ngFor="let response of responses">
+              <md-radio-button [value]="response.grade">
+                {{response.text}}
+              </md-radio-button>
+            </md-list-item>
+          </md-list>
+        </md-radio-group>
+      </md-card-content>
+      <md-card-actions>
+        <a md-button>Next</a>
+      </md-card-actions>
+    </md-card>
+  </div>
 </div>

@@ -1,3 +1,14 @@
 .container {
-  margin: 8px;
+  margin: auto;
+  padding: 8px;
+  display: table;
+}
+
+.responseContainer {
+  margin: 8px 0;
+}
+
+.responseGroup {
+  display: flex;
+  flex-direction: column;
 }
