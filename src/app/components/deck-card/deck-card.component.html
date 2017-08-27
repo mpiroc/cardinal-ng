@@ -10,7 +10,7 @@
     </span>
   </md-card-subtitle>
   <md-card-content>
-    {{description$ | async}}
+    <markdown data="{{description$ | async}}"></markdown>
   </md-card-content>
   <md-card-actions>
     <a md-button>Review</a>

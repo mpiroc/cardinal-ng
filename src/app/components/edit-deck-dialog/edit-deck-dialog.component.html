@@ -4,9 +4,12 @@
     <md-input-container>
       <input mdInput placeholder="Name" value="{{data.name$ | async}}" (input)="onNameInput($event)"> 
     </md-input-container>
-    <md-input-container>
-      <textarea mdInput placeholder="Description" rows="3" value="{{data.description$ | async}}" (input)="onDescriptionInput($event)"></textarea>
-    </md-input-container>
+    <div>
+      <md-input-container>
+        <textarea mdInput rows="3" value="{{data.description$ | async}}" (input)="onDescriptionInput($event)"></textarea>
+      </md-input-container>
+      <markdown data="{{description}}"></markdown>
+    </div>
   </div>
   <div md-dialog-actions>
     <button md-button [md-dialog-close]="dialogResult.Cancel">Cancel</button>
