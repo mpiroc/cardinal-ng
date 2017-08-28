@@ -17,10 +17,8 @@ import {
   EditCardDialog,
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
-import {
-  CardContentActions,
-  CardContentObjectReducer,
-} from '../../redux/firebase-modules';
+import { CardContentActions } from '../../redux/actions/firebase';
+import { CardContentObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 
 @WithSubStore({

@@ -8,10 +8,21 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { IUserDeck, IDeckCard, ICardHistory } from '../models/firebase-models';
-import { IState } from './state';
-import { REVIEW_SET_DECK, IReviewSetDeckAction, reviewSetHistory } from './component-reducers';
-import { CardHistoryActions, DeckCardActions } from './firebase-modules';
+import {
+  IUserDeck,
+  IDeckCard,
+  ICardHistory,
+} from '../../models/firebase-models';
+import { IState } from '../state';
+import {
+  REVIEW_SET_DECK,
+  IReviewSetDeckAction,
+  reviewSetHistory,
+} from '../actions/review';
+import {
+  CardHistoryActions,
+  DeckCardActions,
+} from '../actions/firebase';
 
 export function createReviewEpic(ngRedux: NgRedux<IState>) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$

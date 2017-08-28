@@ -11,13 +11,12 @@ import { IUserDeck, IDeckCard, ICardHistory } from '../../models/firebase-models
 import {
   CardHistoryActions,
   DeckCardActions,
-  DeckCardListReducer,
-} from '../../redux/firebase-modules';
+} from '../../redux/actions/firebase';
 import {
   reviewSetDeck,
   reviewSetHistory,
   reviewSelectGrade,
-} from '../../redux/component-reducers';
+} from '../../redux/actions/review';
 import { IState, isListening } from '../../redux/state';
 
 @Component({
@@ -26,10 +25,10 @@ import { IState, isListening } from '../../redux/state';
   styleUrls: [ './review-deck-route.component.css' ],
 })
 export class ReviewDeckRouteComponent implements OnInit {
-  @select(['component', 'review', 'history'])
+  @select(['review', 'history'])
   private history$: Observable<ICardHistory>;
 
-  @select(['component', 'review', 'grade'])
+  @select(['review', 'grade'])
   private grade$: Observable<number>;
 
   constructor(

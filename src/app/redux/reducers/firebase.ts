@@ -1,13 +1,32 @@
 import { Map } from 'immutable';
 import { Action, Reducer } from 'redux';
-import { IFirebaseModel } from '../models/firebase-models';
+import {
+  IUserArgs,
+  IDeckArgs,
+  ICardArgs,
+} from '../../services/database.service';
+import {
+  IFirebaseModel,
+  IUser,
+  ICardContent,
+  ICardHistory,
+  IDeckCard,
+  IDeckInfo,
+  IUserDeck,
+} from '../../models/firebase-models';
 import {
   FirebaseActions,
   IHasArgs,
   IObjectReceivedAction,
   IListReceivedAction,
   IErrorAction,
-} from './firebase-actions';
+  CardContentActions,
+  CardHistoryActions,
+  DeckCardActions,
+  DeckInfoActions,
+  UserDeckActions,
+  UserActions,
+} from '../actions/firebase';
 
 export interface IFirebaseReducer {
   reducer: Reducer<Map<string, any>>;
@@ -139,3 +158,31 @@ export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implement
     }
   }
 }
+
+export const CardContentObjectReducer = new FirebaseObjectReducer<ICardContent, ICardArgs>(CardContentActions);
+export const CardContentMapReducer = new FirebaseMapReducer<ICardContent, ICardArgs>(
+    CardContentActions,
+    CardContentObjectReducer,
+    args => args.cardId);
+
+export const CardHistoryObjectReducer = new FirebaseObjectReducer<ICardHistory, ICardArgs>(CardHistoryActions);
+export const CardHistoryMapReducer = new FirebaseMapReducer<ICardHistory, ICardArgs>(
+  CardHistoryActions,
+  CardHistoryObjectReducer,
+  args => args.cardId);
+
+export const DeckCardListReducer = new FirebaseListReducer<IDeckCard, IDeckArgs>(DeckCardActions);
+export const DeckCardMapReducer = new FirebaseMapReducer<IDeckCard, IDeckArgs>(
+  DeckCardActions,
+  DeckCardListReducer,
+  args => args.deckId);
+
+export const DeckInfoObjectReducer = new FirebaseObjectReducer<IDeckInfo, IDeckArgs>(DeckInfoActions);
+export const DeckInfoMapReducer = new FirebaseMapReducer<IDeckInfo, IDeckArgs>(
+  DeckInfoActions,
+  DeckInfoObjectReducer,
+  args => args.deckId);
+
+export const UserDeckListReducer = new FirebaseListReducer<IUserDeck, IUserArgs>(UserDeckActions);
+
+export const UserObjectReducer = new FirebaseObjectReducer<IUser, {}>(UserActions);

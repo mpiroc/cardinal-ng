@@ -5,20 +5,22 @@ import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
 import {
   UserObjectReducer,
-  UserEpic,
   CardContentMapReducer,
-  CardContentEpic,
   CardHistoryMapReducer,
-  CardHistoryEpic,
   DeckInfoMapReducer,
-  DeckInfoEpic,
   UserDeckListReducer,
-  UserDeckEpic,
   DeckCardMapReducer,
+} from './reducers/firebase';
+import { review } from './reducers/review';
+import {
+  UserEpic,
+  CardContentEpic,
+  CardHistoryEpic,
+  DeckInfoEpic,
+  UserDeckEpic,
   DeckCardEpic,
-} from './firebase-modules';
-import { component } from './component-reducers';
-import { createReviewEpic } from './component-epics';
+} from './epics/firebase';
+import { createReviewEpic } from './epics/review';
 import { IState } from './state';
 
 export const rootReducer = combineReducers({
@@ -28,7 +30,7 @@ export const rootReducer = combineReducers({
   deckInfo: DeckInfoMapReducer.reducer,
   userDeck: UserDeckListReducer.reducer,
   deckCard: DeckCardMapReducer.reducer,
-  component,
+  review,
 });
 
 export function createRootEpic(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {

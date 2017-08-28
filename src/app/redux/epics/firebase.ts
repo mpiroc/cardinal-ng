@@ -7,10 +7,30 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { IState } from './state';
-import { IFirebaseModel } from '../models/firebase-models';
-import { FirebaseActions, IHasArgs } from './firebase-actions';
-import { FirebaseObjectReducer } from './firebase-reducers';
+import { IState } from '../state';
+import {
+  IFirebaseModel,
+  IUser,
+  IDeckCard,
+  IUserDeck,
+} from '../../models/firebase-models';
+
+import {
+  IUserArgs,
+  IDeckArgs,
+  ICardArgs,
+} from '../../services/database.service';
+import {
+  FirebaseActions,
+  IHasArgs,
+  CardContentActions,
+  CardHistoryActions,
+  DeckCardActions,
+  DeckInfoActions,
+  UserDeckActions,
+  UserActions,
+} from '../actions/firebase';
+import { FirebaseObjectReducer } from '../reducers/firebase';
 
 export class FirebaseObjectEpic<TModel extends IFirebaseModel, TArgs> {
   constructor(
@@ -134,3 +154,72 @@ export function createStopListeningHandler<TModel extends IFirebaseModel, TArgs>
     return Observable.from(stopListeningActions);
   }
 }
+
+// Epics
+export const CardContentEpic = new FirebaseObjectEpic(CardContentActions);
+export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions);
+export const DeckInfoEpic = new FirebaseObjectEpic(DeckInfoActions);
+export const DeckCardEpic = new FirebaseListEpic(DeckCardActions,
+  createListReceivedHandler(DeckCardActions, deckCardSelectStore, deckCardStopListening),
+  createStopListeningHandler(DeckCardActions, deckCardSelectStore, deckCardStopListening),
+);
+export const UserDeckEpic = new FirebaseListEpic(UserDeckActions,
+  createListReceivedHandler(UserDeckActions, userDeckSelectStore, userDeckStopListening),
+  createStopListeningHandler(UserDeckActions, userDeckSelectStore, userDeckStopListening),
+);
+export const UserEpic = new FirebaseObjectEpic(UserActions, userHandleReceived);
+
+// Helpers
+function deckCardStopListening(deckCard: IDeckCard) {
+  const args = {
+    uid: deckCard.uid,
+    deckId: deckCard.deckId,
+    cardId: deckCard.$key,
+  }
+  return [
+    CardContentActions.stopListening(args),
+    CardHistoryActions.stopListening(args),
+  ];
+}
+
+function deckCardSelectStore(state: IState, args: IDeckArgs) {
+  return state.deckCard.get(args.deckId);
+}
+
+function userDeckStopListening(userDeck: IUserDeck) {
+  const args = {
+    uid: userDeck.uid,
+    deckId: userDeck.$key,
+  };
+  return [
+    DeckCardActions.beforeStopListening(args),
+    DeckCardActions.stopListening(args),
+    DeckInfoActions.stopListening(args),
+  ];
+}
+
+function userDeckSelectStore(state: IState, args: IUserArgs) {
+  return state.userDeck;
+}
+
+function userHandleReceived(store: MiddlewareAPI<IState>, data: IUser, args: IUserArgs) : Observable<Action> {
+  let actions: Action[] = [];
+
+  const userStore = store.getState().user;
+  const previousUser = userStore.get('data');
+  if (previousUser && previousUser.get('uid')) {
+    const args: IUserArgs = { uid: previousUser.get('uid') };
+    actions = actions.concat([
+      UserDeckActions.beforeStopListening(args),
+      UserDeckActions.stopListening(args),
+    ]);
+  }
+
+  actions = actions.concat(UserActions.objectReceived({}, data));
+
+  if (data) {
+    actions = actions.concat(UserDeckActions.startListening({ uid: data.uid }));
+  }
+
+  return Observable.from(actions);
+} 

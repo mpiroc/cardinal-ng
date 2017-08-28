@@ -20,8 +20,8 @@ import {
 import {
   DeckCardActions,
   DeckInfoActions,
-  DeckInfoObjectReducer,
-} from '../../redux/firebase-modules';
+} from '../../redux/actions/firebase';
+import { DeckInfoObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 
 @WithSubStore({

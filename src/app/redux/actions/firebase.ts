@@ -1,6 +1,19 @@
 import { Map } from 'immutable';
 import { Action } from 'redux';
-import { IFirebaseModel } from '../models/firebase-models';
+import {
+  IFirebaseModel,
+  IUser,
+  ICardContent,
+  ICardHistory,
+  IDeckCard,
+  IDeckInfo,
+  IUserDeck,
+} from '../../models/firebase-models';
+import {
+  IUserArgs,
+  IDeckArgs,
+  ICardArgs,
+} from '../../services/database.service';
 
 export interface IObjectReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;
@@ -88,3 +101,9 @@ export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
   }
 }
 
+export const CardContentActions = new FirebaseActions<ICardContent, ICardArgs>("CARD_CONTENT");
+export const CardHistoryActions = new FirebaseActions<ICardHistory, ICardArgs>("CARD_HISTORY");
+export const DeckCardActions = new FirebaseActions<IDeckCard, IDeckArgs>("DECK_CARD");
+export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeckArgs>("DECK_INFO");
+export const UserDeckActions = new FirebaseActions<IUserDeck, IUserArgs>("USER_DECK");
+export const UserActions = new FirebaseActions<IUser, {}>("USER");

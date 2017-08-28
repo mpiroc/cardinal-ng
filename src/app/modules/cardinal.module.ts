@@ -28,7 +28,7 @@ import { EditCardDialog } from '../components/edit-card-dialog/edit-card-dialog.
 import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
 import { routes } from '../routes/routes';
 import { configureStore } from '../redux/configureStore';
-import { UserActions } from '../redux/firebase-modules';
+import { UserActions } from '../redux/actions/firebase';
 import { IState } from '../redux/state';
 
 import 'hammerjs';

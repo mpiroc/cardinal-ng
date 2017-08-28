@@ -8,10 +8,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
 import { IUserDeck, IDeckCard } from '../../models/firebase-models';
-import {
-  DeckCardActions,
-  DeckCardListReducer,
-} from '../../redux/firebase-modules';
+import { DeckCardActions } from '../../redux/actions/firebase';
+import { DeckCardListReducer } from '../../redux/reducers/firebase';
 import { IState, isListening } from '../../redux/state';
 import {
   EditCardDialog,
