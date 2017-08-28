@@ -1,6 +1,9 @@
 import { Map } from 'immutable';
 import { Action } from 'redux';
 import {
+  IUserArgs,
+  IDeckArgs,
+  ICardArgs,
   IFirebaseModel,
   IUser,
   ICardContent,
@@ -8,12 +11,7 @@ import {
   IDeckCard,
   IDeckInfo,
   IUserDeck,
-} from '../../models/firebase-models';
-import {
-  IUserArgs,
-  IDeckArgs,
-  ICardArgs,
-} from '../../services/database.service';
+} from '../../interfaces/firebase';
 
 export interface IObjectReceivedAction<TModel extends IFirebaseModel> extends Action {
   data: TModel;

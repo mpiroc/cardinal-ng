@@ -8,19 +8,16 @@ import { database } from 'firebase';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import { Promise as FirebasePromise } from 'firebase';
-import * as fb from '../models/firebase-models';
-
-export interface IUserArgs {
-  uid: string;
-}
-
-export interface IDeckArgs extends IUserArgs {
-  deckId: string;
-}
-
-export interface ICardArgs extends IDeckArgs {
-  cardId: string;
-}
+import {
+  IUserArgs,
+  IDeckArgs,
+  ICardArgs,
+  IUserDeck,
+  IDeckInfo,
+  IDeckCard,
+  ICardContent,
+  ICardHistory,
+} from '../interfaces/firebase';
 
 @Injectable()
 export class DatabaseService {
@@ -58,31 +55,31 @@ export class DatabaseService {
   }
 
   // Retrieve
-  getUserDecks(args: IUserArgs): FirebaseListObservable<fb.IUserDeck[]> {
+  getUserDecks(args: IUserArgs): FirebaseListObservable<IUserDeck[]> {
     return this.database.list(this.getUserDeckBasePath(args));
   }
 
-  getUserDeck(args: IDeckArgs): FirebaseObjectObservable<fb.IUserDeck> {
+  getUserDeck(args: IDeckArgs): FirebaseObjectObservable<IUserDeck> {
     return this.database.object(this.getUserDeckPath(args));
   }
 
-  getDeckInfo(args: IDeckArgs): FirebaseObjectObservable<fb.IDeckInfo> {
+  getDeckInfo(args: IDeckArgs): FirebaseObjectObservable<IDeckInfo> {
     return this.database.object(this.getDeckInfoPath(args));
   }
 
-  getDeckCards(args: IDeckArgs): FirebaseListObservable<fb.IDeckCard[]> {
+  getDeckCards(args: IDeckArgs): FirebaseListObservable<IDeckCard[]> {
     return this.database.list(this.getDeckCardBasePath(args));
   }
 
-  getDeckCard(args: ICardArgs): FirebaseObjectObservable<fb.IDeckCard> {
+  getDeckCard(args: ICardArgs): FirebaseObjectObservable<IDeckCard> {
     return this.database.object(this.getDeckCardPath(args));
   }
 
-  getCardContent(args: ICardArgs) : FirebaseObjectObservable<fb.ICardContent> {
+  getCardContent(args: ICardArgs) : FirebaseObjectObservable<ICardContent> {
     return this.database.object(this.getCardContentPath(args));
   }
 
-  getCardHistory(args: ICardArgs) : FirebaseObjectObservable<fb.ICardHistory> {
+  getCardHistory(args: ICardArgs) : FirebaseObjectObservable<ICardHistory> {
     return this.database.object(this.getCardHistoryPath(args));
   }
 

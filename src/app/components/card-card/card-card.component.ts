@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
-import { IDeckCard } from '../../models/firebase-models';
+import { IDeckCard } from '../../interfaces/firebase';
 import {
   DeleteCardDialog,
   DeleteCardDialogResult,

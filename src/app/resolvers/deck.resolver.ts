@@ -10,7 +10,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import { IState } from '../redux/state';
-import { IUserDeck } from '../models/firebase-models';
+import { IUserDeck } from '../interfaces/firebase';
 
 @Injectable()
 export class DeckResolver implements Resolve<IUserDeck> {

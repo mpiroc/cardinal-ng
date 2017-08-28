@@ -1,5 +1,8 @@
 import { Action } from 'redux';
-import { ICardHistory, IUserDeck } from '../../models/firebase-models';
+import {
+  ICardHistory,
+  IUserDeck,
+} from '../../interfaces/firebase';
 
 export const REVIEW_SET_DECK = "REVIEW_SET_DECK";
 export const REVIEW_SET_HISTORY = "REVIEW_SET_HISTORY";

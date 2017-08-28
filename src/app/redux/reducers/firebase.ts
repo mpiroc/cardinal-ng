@@ -4,8 +4,6 @@ import {
   IUserArgs,
   IDeckArgs,
   ICardArgs,
-} from '../../services/database.service';
-import {
   IFirebaseModel,
   IUser,
   ICardContent,
@@ -13,7 +11,7 @@ import {
   IDeckCard,
   IDeckInfo,
   IUserDeck,
-} from '../../models/firebase-models';
+} from '../../interfaces/firebase';
 import {
   FirebaseActions,
   IHasArgs,

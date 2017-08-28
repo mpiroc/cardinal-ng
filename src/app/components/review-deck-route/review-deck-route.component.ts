@@ -5,9 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import { ICardArgs } from '../../services/database.service';
 import { GradingService } from '../../services/grading.service';
-import { IUserDeck, IDeckCard, ICardHistory } from '../../models/firebase-models';
+import {
+  ICardArgs,
+  IUserDeck,
+  IDeckCard,
+  ICardHistory,
+} from '../../interfaces/firebase';
 import {
   CardHistoryActions,
   DeckCardActions,

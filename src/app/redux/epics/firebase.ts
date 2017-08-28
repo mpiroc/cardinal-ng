@@ -9,17 +9,14 @@ import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { IState } from '../state';
 import {
+  IUserArgs,
+  IDeckArgs,
+  ICardArgs,
   IFirebaseModel,
   IUser,
   IDeckCard,
   IUserDeck,
-} from '../../models/firebase-models';
-
-import {
-  IUserArgs,
-  IDeckArgs,
-  ICardArgs,
-} from '../../services/database.service';
+} from '../../interfaces/firebase';
 import {
   FirebaseActions,
   IHasArgs,

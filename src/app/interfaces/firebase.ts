@@ -1,3 +1,17 @@
+// Args
+export interface IUserArgs {
+  uid: string;
+}
+
+export interface IDeckArgs extends IUserArgs {
+  deckId: string;
+}
+
+export interface ICardArgs extends IDeckArgs {
+  cardId: string;
+}
+
+// Models
 export interface IFirebaseModel {
   $key: string;
 }

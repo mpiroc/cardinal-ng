@@ -4,7 +4,7 @@ import { select } from '@angular-redux/store';
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../services/database.service';
-import { IUserDeck } from '../../models/firebase-models';
+import { IUserDeck } from '../../interfaces/firebase';
 import {
   EditDeckDialog,
   EditDeckDialogResult,

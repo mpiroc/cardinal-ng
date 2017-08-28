@@ -12,7 +12,7 @@ import {
   IUserDeck,
   IDeckCard,
   ICardHistory,
-} from '../../models/firebase-models';
+} from '../../interfaces/firebase';
 import { IState } from '../state';
 import {
   REVIEW_SET_DECK,
