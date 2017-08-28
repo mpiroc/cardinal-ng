@@ -12,5 +12,8 @@ export const environment = {
     projectId: "cardinal-ng",
     storageBucket: "cardinal-ng.appspot.com",
     messagingSenderId: "956312128006"
-  }
+  },
+  routing: {
+    enableTracing: true,
+  },
 };
