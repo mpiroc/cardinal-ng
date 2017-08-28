@@ -4,10 +4,12 @@ import {
   FirebaseListObservable,
   FirebaseObjectObservable,
 } from 'angularfire2/database';
-import { database } from 'firebase';
-import { Observable } from 'rxjs/Observable';
+import {
+  database,
+  Promise as FirebasePromise,
+} from 'firebase';
+
 import { AuthService } from './auth.service';
-import { Promise as FirebasePromise } from 'firebase';
 import {
   IUserArgs,
   IDeckArgs,

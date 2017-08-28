@@ -8,11 +8,13 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
+
 import {
   IUserDeck,
   IDeckCard,
   ICardHistory,
 } from '../../interfaces/firebase';
+
 import { IState } from '../state';
 import {
   REVIEW_SET_DECK,

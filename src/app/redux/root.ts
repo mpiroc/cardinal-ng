@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { NgRedux } from '@angular-redux/store';
+
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+
 import {
   UserObjectReducer,
   CardContentMapReducer,

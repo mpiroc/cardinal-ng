@@ -1,9 +1,19 @@
 import { Observable } from 'rxjs/Observable';
 import { NgRedux } from '@angular-redux/store';
-import { createStore, applyMiddleware, compose, Action } from 'redux';
-import { createEpicMiddleware, Options } from 'redux-observable';
+import {
+  createStore,
+  applyMiddleware,
+  compose,
+  Action,
+} from 'redux';
+import {
+  createEpicMiddleware,
+  Options,
+} from 'redux-observable';
+
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+
 import {
   rootReducer,
   createRootEpic,

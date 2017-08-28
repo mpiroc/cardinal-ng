@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Promise as FirebasePromise } from 'firebase';
+import * as moment from 'moment';
+
 import { DatabaseService } from './database.service';
 import { ICardHistory } from '../interfaces/firebase';
-import * as moment from 'moment';
-import { Promise as FirebasePromise } from 'firebase';
 
 const MINIMUM_DIFFICULTY = 1.3;
 const MINIMUM_CORRECT_GRADE = 3;

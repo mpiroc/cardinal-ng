@@ -6,9 +6,9 @@ import {
 } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
+
 import { IState } from '../redux/state';
 import { IUserDeck } from '../interfaces/firebase';
 

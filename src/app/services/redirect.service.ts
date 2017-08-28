@@ -4,7 +4,10 @@ import {
   GuardsCheckStart,
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+
 import { AuthService } from './auth.service';
 
 @Injectable()

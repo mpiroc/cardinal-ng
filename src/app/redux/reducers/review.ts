@@ -1,5 +1,6 @@
 import { Map } from 'immutable';
 import { Action } from 'redux';
+
 import {
   REVIEW_SET_DECK,
   REVIEW_SET_HISTORY,

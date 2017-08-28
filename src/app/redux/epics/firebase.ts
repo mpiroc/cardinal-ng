@@ -7,7 +7,7 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { IState } from '../state';
+
 import {
   IUserArgs,
   IDeckArgs,
@@ -17,6 +17,8 @@ import {
   IDeckCard,
   IUserDeck,
 } from '../../interfaces/firebase';
+
+import { IState } from '../state';
 import {
   FirebaseActions,
   IHasArgs,

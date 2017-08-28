@@ -1,5 +1,6 @@
 import { Map } from 'immutable';
 import { Action, Reducer } from 'redux';
+
 import {
   IUserArgs,
   IDeckArgs,
@@ -12,6 +13,7 @@ import {
   IDeckInfo,
   IUserDeck,
 } from '../../interfaces/firebase';
+
 import {
   FirebaseActions,
   IHasArgs,
