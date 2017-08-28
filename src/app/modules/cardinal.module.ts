@@ -1,17 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { MarkdownModule } from 'angular2-markdown';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
+import { CardinalRoutingModule } from './cardinal-routing.module';
+
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
 import { GradingService } from '../services/grading.service';
-import { RedirectService } from '../services/redirect.service';
-import { DeckResolver } from '../resolvers/deck.resolver';
+
 import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
@@ -26,7 +26,7 @@ import { DeleteCardDialog } from '../components/delete-card-dialog/delete-card-d
 import { DeleteDeckDialog } from '../components/delete-deck-dialog/delete-deck-dialog.component';
 import { EditCardDialog } from '../components/edit-card-dialog/edit-card-dialog.component';
 import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
-import { routes } from '../routes/routes';
+
 import { configureStore } from '../redux/configureStore';
 import { UserActions } from '../redux/actions/firebase';
 import { IState } from '../redux/state';
@@ -55,14 +55,12 @@ import 'hammerjs';
     MaterialModule,
     FirebaseModule,
     MarkdownModule.forRoot(),
-    RouterModule.forRoot(routes),
+    CardinalRoutingModule,
     FormsModule,
     NgReduxModule,
   ],
   providers: [
     GradingService,
-    RedirectService,
-    DeckResolver,
   ],
   entryComponents: [
     DeleteCardDialog,
@@ -77,12 +75,9 @@ export class CardinalModule {
     ngRedux: NgRedux<IState>,
     authService: AuthService,
     databaseService: DatabaseService,
-    redirectService: RedirectService,
     ) {
     const store = configureStore(ngRedux, authService, databaseService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.startListening({}));
-    
-    redirectService.startListening();
   }
 }

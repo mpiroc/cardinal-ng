@@ -7,7 +7,6 @@ import { MaterialModule } from './material.module';
 
 import { environment } from '../../environments/environment';
 import { AuthService } from '../services/auth.service';
-import { AuthGuardService } from '../services/auth-guard.service';
 import { DatabaseService } from '../services/database.service';
 
 @NgModule({
@@ -20,7 +19,6 @@ import { DatabaseService } from '../services/database.service';
   ],
   providers: [
     AuthService,
-    AuthGuardService,
     DatabaseService,
   ],
 })
