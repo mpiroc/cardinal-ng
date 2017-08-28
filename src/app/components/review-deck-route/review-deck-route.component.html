@@ -10,12 +10,10 @@
         How well did you remember this card?
       </md-card-title>
       <md-card-content>
-        <md-radio-group class="responseGroup" [(ngModel)]="selectedResponse">
+        <md-radio-group class="responseGroup" (change)="onSelectGrade($event.value)" [ngModel]="selectedGrade$ | async" >
           <md-list>
-            <md-list-item *ngFor="let response of responses">
-              <md-radio-button [value]="response.grade">
-                {{response.text}}
-              </md-radio-button>
+            <md-list-item *ngFor="let grade of [0, 1, 2, 3, 4, 5]">
+              <md-radio-button [value]="grade">{{getReviewText(grade)}}</md-radio-button>
             </md-list-item>
           </md-list>
         </md-radio-group>

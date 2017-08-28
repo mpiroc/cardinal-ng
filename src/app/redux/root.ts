@@ -16,6 +16,7 @@ import {
   DeckCardMapReducer,
   DeckCardEpic,
 } from './firebase-modules';
+import { component } from './component-reducers';
 
 export const rootReducer = combineReducers({
   user: UserObjectReducer.reducer,
@@ -24,6 +25,7 @@ export const rootReducer = combineReducers({
   deckInfo: DeckInfoMapReducer.reducer,
   userDeck: UserDeckListReducer.reducer,
   deckCard: DeckCardMapReducer.reducer,
+  component,
 });
 
 export function createRootEpic(authService: AuthService, databaseService: DatabaseService) {

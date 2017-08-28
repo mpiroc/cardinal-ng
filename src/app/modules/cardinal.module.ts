@@ -9,6 +9,7 @@ import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import { GradingService } from '../services/grading.service';
 import { RedirectService } from '../services/redirect.service';
 import { DeckResolver } from '../resolvers/deck.resolver';
 import { RootComponent } from '../components/root/root.component';
@@ -59,6 +60,7 @@ import 'hammerjs';
     NgReduxModule,
   ],
   providers: [
+    GradingService,
     RedirectService,
     DeckResolver,
   ],
