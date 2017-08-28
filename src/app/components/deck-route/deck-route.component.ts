@@ -13,7 +13,7 @@ import {
 } from '../../interfaces/firebase';
 import { DeckCardActions } from '../../redux/actions/firebase';
 import { DeckCardListReducer } from '../../redux/reducers/firebase';
-import { IState, isListening } from '../../redux/state';
+import { IState } from '../../redux/state';
 import {
   EditCardDialog,
   EditCardDialogResult,
@@ -44,12 +44,10 @@ export class DeckRouteComponent implements OnInit {
   ngOnInit(): void {
     this.deck = this.activatedRoute.snapshot.data['deck'];
 
-    if (!isListening(this.ngRedux.getState().deckCard, this.deck.$key)) {
-      this.ngRedux.dispatch(DeckCardActions.startListening({
-        uid: this.deck.uid,
-        deckId: this.deck.$key,
-      }));
-    }
+    this.ngRedux.dispatch(DeckCardActions.startListening({
+      uid: this.deck.uid,
+      deckId: this.deck.$key,
+    }));
   }
 
   getBasePath() : string[] {

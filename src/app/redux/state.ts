@@ -9,11 +9,3 @@ export interface IState {
   cardHistory: Map<string, any>;
   review: Map<string, any>;
 }
-
-export function isListening(store: Map<string, any>, ...path: string[]) {
-  const result = path.reduce((current, key) => {
-    return current ? current.get(key) : null;
-  }, store);
-
-  return result ? result.get("isListening") === true : false;
-}

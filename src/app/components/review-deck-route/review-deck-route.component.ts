@@ -21,7 +21,7 @@ import {
   reviewSetHistory,
   reviewSelectGrade,
 } from '../../redux/actions/review';
-import { IState, isListening } from '../../redux/state';
+import { IState } from '../../redux/state';
 
 @Component({
   selector: 'cardinal-review-deck-route',
