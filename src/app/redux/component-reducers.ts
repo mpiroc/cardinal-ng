@@ -1,26 +1,38 @@
 import { Map } from 'immutable';
 import { Action } from 'redux';
-import { IDeckCard } from '../models/firebase-models';
+import { ICardHistory, IUserDeck } from '../models/firebase-models';
 
-const REVIEW_SET_CURRENT = "SET_CURRENT";
-const REVIEW_SELECT_GRADE = "SELECT_GRADE";
+export const REVIEW_SET_DECK = "REVIEW_SET_DECK";
+export const REVIEW_SET_HISTORY = "REVIEW_SET_HISTORY";
+export const REVIEW_SELECT_GRADE = "REVIEW_SELECT_GRADE";
 
-interface ISetCurrentAction extends Action {
-  current: IDeckCard,
+export interface IReviewSetDeckAction extends Action {
+  deck: IUserDeck,
 }
 
-interface ISelectGradeAction extends Action {
+export interface IReviewSetHistoryAction extends Action {
+  history: ICardHistory,
+}
+
+export interface IReviewSelectGradeAction extends Action {
   grade: number;
 }
 
-export function reviewSetCurrent(current: IDeckCard) {
+export function reviewSetDeck(deck: IUserDeck) : IReviewSetDeckAction {
   return {
-    type: REVIEW_SET_CURRENT,
-    current,
+    type: REVIEW_SET_DECK,
+    deck,
   }
 }
 
-export function reviewSelectGrade(grade: number) {
+export function reviewSetHistory(history: ICardHistory) : IReviewSetHistoryAction {
+  return {
+    type: REVIEW_SET_HISTORY,
+    history,
+  }
+}
+
+export function reviewSelectGrade(grade: number) : IReviewSelectGradeAction{
   return {
     type: REVIEW_SELECT_GRADE,
     grade,
@@ -28,17 +40,25 @@ export function reviewSelectGrade(grade: number) {
 }
 
 const initialReviewState = Map<string, any>({
-  current: null,
-  selectedGrade: 0,
+  deck: null,
+  history: null,
+  grade: 0,
 });
 
 export function review(state: Map<string, any> = initialReviewState, action: Action) : Map<string, any> {
   switch (action.type) {
-    case REVIEW_SET_CURRENT:
-      return state.set("current", (action as ISetCurrentAction).current);
+    case REVIEW_SET_DECK:
+      return state
+        .set("deck", (action as IReviewSetDeckAction).deck);
+
+    case REVIEW_SET_HISTORY:
+      return state
+        .set("history", (action as IReviewSetHistoryAction).history)
+        .set("grade", 0);
 
     case REVIEW_SELECT_GRADE:
-      return state.set("selectedGrade", (action as ISelectGradeAction).grade);
+      return state
+        .set("grade", (action as IReviewSelectGradeAction).grade);
 
     default:
       return state;
@@ -52,7 +72,8 @@ const initialComponentState = Map<string, any>({
 export function component(state: Map<string, any> = initialComponentState, action: Action) : Map<string, any> {
   switch (action.type) {
     case REVIEW_SELECT_GRADE:
-    case REVIEW_SET_CURRENT:
+    case REVIEW_SET_DECK:
+    case REVIEW_SET_HISTORY:
       return state.set('review', review(state.get('review'), action));
     
     default:

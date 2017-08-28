@@ -79,7 +79,7 @@ export class CardinalModule {
     databaseService: DatabaseService,
     redirectService: RedirectService,
     ) {
-    const store = configureStore(authService, databaseService);
+    const store = configureStore(ngRedux, authService, databaseService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.startListening({}));
     

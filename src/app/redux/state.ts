@@ -7,6 +7,7 @@ export interface IState {
   deckCard: Map<string, any>;
   cardContent: Map<string, any>;
   cardHistory: Map<string, any>;
+  component: Map<string, any>;
 }
 
 export function isListening(store: Map<string, any>, ...path: string[]) {

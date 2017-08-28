@@ -1,39 +1,36 @@
 import { Map } from 'immutable';
+import { Action } from 'redux';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import { ICardArgs } from '../../services/database.service';
 import { GradingService } from '../../services/grading.service';
-import { IUserDeck, IDeckCard } from '../../models/firebase-models';
+import { IUserDeck, IDeckCard, ICardHistory } from '../../models/firebase-models';
 import {
+  CardHistoryActions,
   DeckCardActions,
   DeckCardListReducer,
 } from '../../redux/firebase-modules';
-import { reviewSelectGrade } from '../../redux/component-reducers';
+import {
+  reviewSetDeck,
+  reviewSetHistory,
+  reviewSelectGrade,
+} from '../../redux/component-reducers';
 import { IState, isListening } from '../../redux/state';
 
-
-interface IResponse {
-  grade: number;
-  text: string;
-}
-
-@WithSubStore({
-  basePathMethodName: "getBasePath",
-  localReducer: DeckCardListReducer.reducer,
-})
 @Component({
   selector: 'cardinal-review-deck-route',
   templateUrl: './review-deck-route.component.html',
   styleUrls: [ './review-deck-route.component.css' ],
 })
 export class ReviewDeckRouteComponent implements OnInit {
-  private deck: IUserDeck;
-  private card$: Observable<IDeckCard>;
-  private selectedGrade$: Observable<number>;
+  @select(['component', 'review', 'history'])
+  private history$: Observable<ICardHistory>;
 
-  @select(["data"])
-  deckCards$: Observable<Map<string, IDeckCard>>;
+  @select(['component', 'review', 'grade'])
+  private grade$: Observable<number>;
 
   constructor(
     private ngRedux: NgRedux<IState>,
@@ -42,25 +39,13 @@ export class ReviewDeckRouteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.deck = this.activatedRoute.snapshot.data['deck'];
-
-    this.card$ = this.deckCards$
-      .filter(deckCards => deckCards ? true : false)
-      .filter(deckCards => deckCards.size > 0)
-      .map(deckCards => deckCards.valueSeq().first());
-
-    this.selectedGrade$ = this.ngRedux.select(['component', 'review', 'selectedGrade']);
-
-    if (!isListening(this.ngRedux.getState().deckCard, this.deck.$key)) {
-      this.ngRedux.dispatch(DeckCardActions.startListening({
-        uid: this.deck.uid,
-        deckId: this.deck.$key,
-      }));
-    }
+    const deck: IUserDeck = this.activatedRoute.snapshot.data['deck'];
+    this.ngRedux.dispatch(reviewSetDeck(deck));
   }
 
-  getBasePath() : string[] {
-    return ['deckCard', this.deck.$key];
+  onNext() {
+    console.log("In onNext");
+    //this.gradingService.submitGrade();
   }
 
   onSelectGrade(grade: number) {

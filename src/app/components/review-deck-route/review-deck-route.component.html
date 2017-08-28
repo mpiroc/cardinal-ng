@@ -1,7 +1,7 @@
 <div class="container">
   <cardinal-card-card
-    *ngIf="(card$ | async) ? true : false"
-    [card]='card$ | async'
+    *ngIf="(history$ | async) ? true : false"
+    [card]='history$ | async'
     [showActions]='false'>
   </cardinal-card-card>
   <div class="responseContainer">
@@ -10,7 +10,7 @@
         How well did you remember this card?
       </md-card-title>
       <md-card-content>
-        <md-radio-group class="responseGroup" (change)="onSelectGrade($event.value)" [ngModel]="selectedGrade$ | async" >
+        <md-radio-group class="responseGroup" (change)="onSelectGrade($event.value)" [ngModel]="grade$ | async" >
           <md-list>
             <md-list-item *ngFor="let grade of [0, 1, 2, 3, 4, 5]">
               <md-radio-button [value]="grade">{{getReviewText(grade)}}</md-radio-button>
@@ -19,7 +19,7 @@
         </md-radio-group>
       </md-card-content>
       <md-card-actions>
-        <a md-button>Next</a>
+        <a md-button (click)="onNext()">Next</a>
       </md-card-actions>
     </md-card>
   </div>
