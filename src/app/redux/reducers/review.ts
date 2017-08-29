@@ -26,7 +26,7 @@ export function review(state: Map<string, any> = initialReviewState, action: Act
       const history = (action as IReviewSetHistoryAction).history;
       return state
         .set("history", history)
-        .set("grade", history.grade);
+        .set("grade", history ? history.grade : 0);
 
     case REVIEW_SELECT_GRADE:
       return state

@@ -36,7 +36,7 @@ export function createReviewEpic(ngRedux: NgRedux<IState>) {
 function handleSetDeckReceived(ngRedux: NgRedux<IState>, deck: IUserDeck) : Observable<Action> {
   return ngRedux
     .select(["deckCard", deck.deckId, "data"])
-    .mergeMap((cards: Map<string, IDeckCard>) => handleDeckCardsReceived(ngRedux, cards))
+    .switchMap((cards: Map<string, IDeckCard>) => handleDeckCardsReceived(ngRedux, cards))
     .startWith(DeckCardActions.startListening({
       uid: deck.uid,
       deckId: deck.deckId,
@@ -64,6 +64,11 @@ function handleDeckCardsReceived(ngRedux: NgRedux<IState>, cards: Map<string, ID
   // Pick a current card:
   // 1. Once when all histories have first loaded.
   // 2. Again each time a history changes.
+  if (cardHistories.length < 1) {
+    return Observable.of(reviewSetHistory(null) as Action)
+      .startWith(...startListeningActions);
+  }
+
   return Observable.combineLatest(cardHistories)
     .map(histories => {
       const index = Math.floor(Math.random() * histories.length);
