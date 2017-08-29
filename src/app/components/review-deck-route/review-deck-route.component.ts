@@ -47,8 +47,7 @@ export class ReviewDeckRouteComponent implements OnInit {
   }
 
   onNext() {
-    console.log("In onNext");
-    //this.gradingService.submitGrade();
+    this.gradingService.submitGrade();
   }
 
   onSelectGrade(grade: number) {

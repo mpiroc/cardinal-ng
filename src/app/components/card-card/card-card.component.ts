@@ -1,6 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { NgRedux, select, WithSubStore } from '@angular-redux/store';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  MdDialog,
+  MdDialogRef,
+} from '@angular/material';
+import {
+  NgRedux,
+  select,
+  WithSubStore,
+} from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -30,7 +42,7 @@ import { IState } from '../../redux/state';
   templateUrl: './card-card.component.html',
   styleUrls: [ './card-card.component.css' ],
 })
-export class CardCardComponent implements OnInit {
+export class CardCardComponent implements OnChanges {
   @Input() card: IDeckCard;
   @Input() showActions: boolean;
 
@@ -47,13 +59,15 @@ export class CardCardComponent implements OnInit {
     return [ "cardContent", this.card.cardId ];
   }
 
-  ngOnInit(): void {
-    const cardArgs = {
-      uid: this.card.uid,
-      deckId: this.card.deckId,
-      cardId: this.card.cardId,
-    };
-    this.ngRedux.dispatch(CardContentActions.startListening(cardArgs));
+  ngOnChanges(changes: SimpleChanges) : void {
+    if (changes.card) {
+      const cardArgs = {
+        uid: this.card.uid,
+        deckId: this.card.deckId,
+        cardId: this.card.cardId,
+      };
+      this.ngRedux.dispatch(CardContentActions.startListening(cardArgs));
+    }
   }
 
   onEdit() {

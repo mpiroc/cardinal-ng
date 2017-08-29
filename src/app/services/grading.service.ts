@@ -1,25 +1,30 @@
 import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import { Promise as FirebasePromise } from 'firebase';
 import * as moment from 'moment';
 
 import { DatabaseService } from './database.service';
 import { ICardHistory } from '../interfaces/firebase';
+import { IState } from '../redux/state';
 
 const MINIMUM_DIFFICULTY = 1.3;
 const MINIMUM_CORRECT_GRADE = 3;
 
 @Injectable()
 export class GradingService {
-  constructor(private databaseService: DatabaseService) {
-
+  constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService) {
   }
 
   isDue(history: ICardHistory, nowMs: number) : boolean {
     return history.grade < MINIMUM_CORRECT_GRADE || !history.nextReview || nowMs >= history.nextReview;
   }
 
-  submitGrade(history: ICardHistory, grade: number) : FirebasePromise<void> {
+  submitGrade() : FirebasePromise<void> {
     const now = moment.now();
+
+    const state: IState = this.ngRedux.getState();
+    const history: ICardHistory = state.review.get('history');
+    const grade: number = state.review.get('grade');
 
     const difficulty = this.computeDifficulty(history, grade);
     const repetitions = this.computeRepetitions(history, grade);
