@@ -8,17 +8,11 @@ import 'rxjs/add/observable/combineLatest';
 import { GradingService } from '../../services/grading.service';
 import {
   ICardArgs,
-  IUserDeck,
-  IDeckCard,
+  IDeck,
   ICardHistory,
 } from '../../interfaces/firebase';
 import {
-  CardHistoryActions,
-  DeckCardActions,
-} from '../../redux/actions/firebase';
-import {
   reviewSetDeck,
-  reviewSetHistory,
   reviewSelectGrade,
 } from '../../redux/actions/review';
 import { IState } from '../../redux/state';
@@ -42,7 +36,7 @@ export class ReviewDeckRouteComponent implements OnInit {
   }
 
   ngOnInit() {
-    const deck: IUserDeck = this.activatedRoute.snapshot.data['deck'];
+    const deck: IDeck = this.activatedRoute.snapshot.data['deck'];
     this.ngRedux.dispatch(reviewSetDeck(deck));
   }
 

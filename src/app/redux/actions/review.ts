@@ -2,7 +2,7 @@ import { Action } from 'redux';
 
 import {
   ICardHistory,
-  IUserDeck,
+  IDeck,
 } from '../../interfaces/firebase';
 
 export const REVIEW_SET_DECK = "REVIEW_SET_DECK";
@@ -10,7 +10,7 @@ export const REVIEW_SET_HISTORY = "REVIEW_SET_HISTORY";
 export const REVIEW_SELECT_GRADE = "REVIEW_SELECT_GRADE";
 
 export interface IReviewSetDeckAction extends Action {
-  deck: IUserDeck,
+  deck: IDeck,
 }
 
 export interface IReviewSetHistoryAction extends Action {
@@ -21,7 +21,7 @@ export interface IReviewSelectGradeAction extends Action {
   grade: number;
 }
 
-export function reviewSetDeck(deck: IUserDeck) : IReviewSetDeckAction {
+export function reviewSetDeck(deck: IDeck) : IReviewSetDeckAction {
   return {
     type: REVIEW_SET_DECK,
     deck,

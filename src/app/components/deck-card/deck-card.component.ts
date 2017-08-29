@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
-import { IUserDeck } from '../../interfaces/firebase';
+import { IDeck } from '../../interfaces/firebase';
 import {
   EditDeckDialog,
   EditDeckDialogResult,
@@ -18,7 +18,7 @@ import {
   DeleteDeckDialogResult,
 } from '../delete-deck-dialog/delete-deck-dialog.component';
 import {
-  DeckCardActions,
+  CardActions,
   DeckInfoActions,
 } from '../../redux/actions/firebase';
 import { DeckInfoObjectReducer } from '../../redux/reducers/firebase';
@@ -34,7 +34,7 @@ import { IState } from '../../redux/state';
   styleUrls: [ './deck-card.component.css' ],
 })
 export class DeckCardComponent implements OnInit {
-  @Input() deck: IUserDeck;
+  @Input() deck: IDeck;
   
   count$: Observable<number>;
 
@@ -57,10 +57,10 @@ export class DeckCardComponent implements OnInit {
       deckId: this.deck.deckId,
     };
     this.ngRedux.dispatch(DeckInfoActions.startListening(deckArgs));
-    this.ngRedux.dispatch(DeckCardActions.startListening(deckArgs));
+    this.ngRedux.dispatch(CardActions.startListening(deckArgs));
 
     this.count$ = this.ngRedux
-      .select(["deckCard", this.deck.deckId, "data"])
+      .select(["card", this.deck.deckId, "data"])
       .map((cards: Map<string, any>) => cards ? cards.size : null);
   }
 

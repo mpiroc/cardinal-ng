@@ -8,11 +8,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
 import {
-  IUserDeck,
-  IDeckCard,
+  IDeck,
+  ICard,
 } from '../../interfaces/firebase';
-import { DeckCardActions } from '../../redux/actions/firebase';
-import { DeckCardListReducer } from '../../redux/reducers/firebase';
+import { CardActions } from '../../redux/actions/firebase';
+import { CardListReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 import {
   EditCardDialog,
@@ -21,7 +21,7 @@ import {
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
-  localReducer: DeckCardListReducer.reducer,
+  localReducer: CardListReducer.reducer,
 })
 @Component({
   selector: 'cardinal-deck-route',
@@ -29,10 +29,10 @@ import {
   styleUrls: [ './deck-route.component.css' ],
 })
 export class DeckRouteComponent implements OnInit {
-  private deck: IUserDeck;
+  private deck: IDeck;
 
   @select(["data"])
-  deckCards$: Observable<Map<string, IDeckCard>>;
+  cards$: Observable<Map<string, ICard>>;
 
   constructor(
     private ngRedux: NgRedux<IState>,
@@ -44,18 +44,18 @@ export class DeckRouteComponent implements OnInit {
   ngOnInit(): void {
     this.deck = this.activatedRoute.snapshot.data['deck'];
 
-    this.ngRedux.dispatch(DeckCardActions.startListening({
+    this.ngRedux.dispatch(CardActions.startListening({
       uid: this.deck.uid,
       deckId: this.deck.deckId,
     }));
   }
 
   getBasePath() : string[] {
-    return ['deckCard', this.deck.deckId];
+    return ['card', this.deck.deckId];
   }
 
-  emptyIfNull(cards: Map<string, IDeckCard>): Map<string, IDeckCard> {
-    return cards || Map<string, IDeckCard>();
+  emptyIfNull(cards: Map<string, ICard>): Map<string, ICard> {
+    return cards || Map<string, ICard>();
   }
 
   onNewCard() {

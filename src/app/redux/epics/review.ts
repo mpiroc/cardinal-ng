@@ -11,8 +11,8 @@ import { ActionsObservable } from 'redux-observable';
 import * as moment from 'moment';
 
 import {
-  IUserDeck,
-  IDeckCard,
+  IDeck,
+  ICard,
   ICardHistory,
 } from '../../interfaces/firebase';
 import { GradingService } from '../../services/grading.service';
@@ -25,7 +25,7 @@ import {
 } from '../actions/review';
 import {
   CardHistoryActions,
-  DeckCardActions,
+  CardActions,
 } from '../actions/firebase';
 
 export function createReviewEpic(ngRedux: NgRedux<IState>, gradingService: GradingService) {
@@ -35,17 +35,17 @@ export function createReviewEpic(ngRedux: NgRedux<IState>, gradingService: Gradi
     .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, action.deck));
 }
 
-function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, deck: IUserDeck) : Observable<Action> {
+function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, deck: IDeck) : Observable<Action> {
   return ngRedux
-    .select(["deckCard", deck.deckId, "data"])
-    .switchMap((cards: Map<string, IDeckCard>) => handleDeckCardsReceived(ngRedux, gradingService, cards))
-    .startWith(DeckCardActions.startListening({
+    .select(["card", deck.deckId, "data"])
+    .switchMap((cards: Map<string, ICard>) => handleCardsReceived(ngRedux, gradingService, cards))
+    .startWith(CardActions.startListening({
       uid: deck.uid,
       deckId: deck.deckId,
     }));
 }
 
-function handleDeckCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, cards: Map<string, IDeckCard>) : Observable<Action> {
+function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, cards: Map<string, ICard>) : Observable<Action> {
   const startListeningActions: Action[] = cards.valueSeq()
     .map(card => CardHistoryActions.startListening({
       uid: card.uid,

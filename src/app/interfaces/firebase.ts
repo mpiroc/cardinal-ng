@@ -15,28 +15,28 @@ export interface ICardArgs extends IDeckArgs {
 export interface IUser extends firebase.UserInfo {
 }
 
-export interface IUserDeck {
+export interface IDeck {
   uid: string;
   deckId: string,
 }
 
-export interface IDeckInfo extends IUserDeck {
+export interface IDeckInfo extends IDeck {
   name: string;
   description: string;
 }
 
-export interface IDeckCard {
+export interface ICard {
   uid: string;
   deckId: string;
   cardId: string,
 }
 
-export interface ICardContent extends IDeckCard {
+export interface ICardContent extends ICard {
   front: string;
   back: string;
 }
 
-export interface ICardHistory extends IDeckCard {
+export interface ICardHistory extends ICard {
   difficulty: number;
   grade: number;
   repetitions: number;

@@ -8,9 +8,9 @@ import {
   IUser,
   ICardContent,
   ICardHistory,
-  IDeckCard,
+  ICard,
   IDeckInfo,
-  IUserDeck,
+  IDeck,
 } from '../../interfaces/firebase';
 
 import {
@@ -21,9 +21,9 @@ import {
   IErrorAction,
   CardContentActions,
   CardHistoryActions,
-  DeckCardActions,
+  CardActions,
   DeckInfoActions,
-  UserDeckActions,
+  DeckActions,
   UserActions,
 } from '../actions/firebase';
 
@@ -170,10 +170,10 @@ export const CardHistoryMapReducer = new FirebaseMapReducer<ICardHistory, ICardA
   CardHistoryObjectReducer,
   args => args.cardId);
 
-export const DeckCardListReducer = new FirebaseListReducer<IDeckCard, IDeckArgs>(DeckCardActions);
-export const DeckCardMapReducer = new FirebaseMapReducer<IDeckCard, IDeckArgs>(
-  DeckCardActions,
-  DeckCardListReducer,
+export const CardListReducer = new FirebaseListReducer<ICard, IDeckArgs>(CardActions);
+export const CardMapReducer = new FirebaseMapReducer<ICard, IDeckArgs>(
+  CardActions,
+  CardListReducer,
   args => args.deckId);
 
 export const DeckInfoObjectReducer = new FirebaseObjectReducer<IDeckInfo, IDeckArgs>(DeckInfoActions);
@@ -182,6 +182,6 @@ export const DeckInfoMapReducer = new FirebaseMapReducer<IDeckInfo, IDeckArgs>(
   DeckInfoObjectReducer,
   args => args.deckId);
 
-export const UserDeckListReducer = new FirebaseListReducer<IUserDeck, IUserArgs>(UserDeckActions);
+export const DeckListReducer = new FirebaseListReducer<IDeck, IUserArgs>(DeckActions);
 
 export const UserObjectReducer = new FirebaseObjectReducer<IUser, {}>(UserActions);

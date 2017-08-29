@@ -4,7 +4,7 @@ import { select } from '@angular-redux/store';
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../services/database.service';
-import { IUserDeck } from '../../interfaces/firebase';
+import { IDeck } from '../../interfaces/firebase';
 import {
   EditDeckDialog,
   EditDeckDialogResult,
@@ -19,16 +19,16 @@ export class DecksRouteComponent {
   @select(['user', 'data', 'uid'])
   uid$: Observable<string>;
 
-  @select(['userDeck', 'data'])
-  decks$: Observable<Map<string, IUserDeck>>;
+  @select(['deck', 'data'])
+  decks$: Observable<Map<string, IDeck>>;
 
   constructor(
     private databaseService: DatabaseService,
     private dialog: MdDialog) {
   }
 
-  emptyIfNull(decks: Map<string, IUserDeck>): Map<string, IUserDeck> {
-    return decks || Map<string, IUserDeck>();
+  emptyIfNull(decks: Map<string, IDeck>): Map<string, IDeck> {
+    return decks || Map<string, IDeck>();
   }
 
   onNewDeck(): void {

@@ -14,8 +14,8 @@ import {
   CardContentMapReducer,
   CardHistoryMapReducer,
   DeckInfoMapReducer,
-  UserDeckListReducer,
-  DeckCardMapReducer,
+  DeckListReducer,
+  CardMapReducer,
 } from './reducers/firebase';
 import { review } from './reducers/review';
 import {
@@ -23,8 +23,8 @@ import {
   CardContentEpic,
   CardHistoryEpic,
   DeckInfoEpic,
-  UserDeckEpic,
-  DeckCardEpic,
+  DeckEpic,
+  CardEpic,
 } from './epics/firebase';
 import { createReviewEpic } from './epics/review';
 import { IState } from './state';
@@ -34,8 +34,8 @@ export const rootReducer = combineReducers({
   cardContent: CardContentMapReducer.reducer,  
   cardHistory: CardHistoryMapReducer.reducer,
   deckInfo: DeckInfoMapReducer.reducer,
-  userDeck: UserDeckListReducer.reducer,
-  deckCard: DeckCardMapReducer.reducer,
+  deck: DeckListReducer.reducer,
+  card: CardMapReducer.reducer,
   review,
 });
 
@@ -61,10 +61,10 @@ export function createRootEpic(
     CardContentEpic.createEpic(databaseService.getCardContent.bind(databaseService)),
     CardHistoryEpic.createEpic(databaseService.getCardHistory.bind(databaseService)),
     DeckInfoEpic.createEpic(databaseService.getDeckInfo.bind(databaseService)),
-    UserDeckEpic.createEpic(databaseService.getUserDecks.bind(databaseService)),
-    UserDeckEpic.createStopListeningEpic(),
-    DeckCardEpic.createEpic(databaseService.getDeckCards.bind(databaseService)),
-    DeckCardEpic.createStopListeningEpic(),
+    DeckEpic.createEpic(databaseService.getDecks.bind(databaseService)),
+    DeckEpic.createStopListeningEpic(),
+    CardEpic.createEpic(databaseService.getCards.bind(databaseService)),
+    CardEpic.createStopListeningEpic(),
     createReviewEpic(ngRedux, gradingService),
   );
 }

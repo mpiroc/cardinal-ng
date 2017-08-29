@@ -10,14 +10,14 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 
 import { IState } from '../redux/state';
-import { IUserDeck } from '../interfaces/firebase';
+import { IDeck } from '../interfaces/firebase';
 
 @Injectable()
-export class DeckResolver implements Resolve<IUserDeck> {
+export class DeckResolver implements Resolve<IDeck> {
   constructor(private ngRedux: NgRedux<IState>) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IUserDeck> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IDeck> {
     const deckId: string = route.paramMap.get('deckId');
 
     return this.ngRedux

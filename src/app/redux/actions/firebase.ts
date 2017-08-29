@@ -8,9 +8,9 @@ import {
   IUser,
   ICardContent,
   ICardHistory,
-  IDeckCard,
+  ICard,
   IDeckInfo,
-  IUserDeck,
+  IDeck,
 } from '../../interfaces/firebase';
 
 export interface IObjectReceivedAction<TModel> extends Action {
@@ -101,7 +101,7 @@ export class FirebaseActions<TModel, TArgs> {
 
 export const CardContentActions = new FirebaseActions<ICardContent, ICardArgs>("CARD_CONTENT");
 export const CardHistoryActions = new FirebaseActions<ICardHistory, ICardArgs>("CARD_HISTORY");
-export const DeckCardActions = new FirebaseActions<IDeckCard, IDeckArgs>("DECK_CARD");
+export const CardActions = new FirebaseActions<ICard, IDeckArgs>("CARD");
 export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeckArgs>("DECK_INFO");
-export const UserDeckActions = new FirebaseActions<IUserDeck, IUserArgs>("USER_DECK");
+export const DeckActions = new FirebaseActions<IDeck, IUserArgs>("DECK");
 export const UserActions = new FirebaseActions<IUser, {}>("USER");

@@ -13,8 +13,8 @@ import {
   IDeckArgs,
   ICardArgs,
   IUser,
-  IDeckCard,
-  IUserDeck,
+  ICard,
+  IDeck,
 } from '../../interfaces/firebase';
 
 import { IState } from '../state';
@@ -23,9 +23,9 @@ import {
   IHasArgs,
   CardContentActions,
   CardHistoryActions,
-  DeckCardActions,
+  CardActions,
   DeckInfoActions,
-  UserDeckActions,
+  DeckActions,
   UserActions,
 } from '../actions/firebase';
 import { FirebaseObjectReducer } from '../reducers/firebase';
@@ -148,15 +148,15 @@ export const CardContentEpic = new FirebaseObjectEpic(CardContentActions);
 export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions);
 export const DeckInfoEpic = new FirebaseObjectEpic(DeckInfoActions);
 
-export const DeckCardEpic = new FirebaseListEpic(
-  DeckCardActions,
-  deckCard => deckCard.cardId,
-  (state, args) => state.deckCard.get(args.deckId),
-  deckCard => {
+export const CardEpic = new FirebaseListEpic(
+  CardActions,
+  card => card.cardId,
+  (state, args) => state.card.get(args.deckId),
+  card => {
     const args = {
-      uid: deckCard.uid,
-      deckId: deckCard.deckId,
-      cardId: deckCard.deckId,
+      uid: card.uid,
+      deckId: card.deckId,
+      cardId: card.cardId,
     }
     return [
       CardContentActions.stopListening(args),
@@ -165,18 +165,18 @@ export const DeckCardEpic = new FirebaseListEpic(
   },
 );
 
-export const UserDeckEpic = new FirebaseListEpic(
-  UserDeckActions,
-  userDeck => userDeck.deckId,
-  (state, args) => state.userDeck,
-  userDeck => {
+export const DeckEpic = new FirebaseListEpic(
+  DeckActions,
+  deck => deck.deckId,
+  (state, args) => state.deck,
+  deck => {
     const args = {
-      uid: userDeck.uid,
-      deckId: userDeck.deckId,
+      uid: deck.uid,
+      deckId: deck.deckId,
     };
     return [
-      DeckCardActions.beforeStopListening(args),
-      DeckCardActions.stopListening(args),
+      CardActions.beforeStopListening(args),
+      CardActions.stopListening(args),
       DeckInfoActions.stopListening(args),
     ];
   },
@@ -190,15 +190,15 @@ export const UserEpic = new FirebaseObjectEpic(UserActions, (store, data, args) 
   if (previousUser && previousUser.get('uid')) {
     const args: IUserArgs = { uid: previousUser.get('uid') };
     actions = actions.concat([
-      UserDeckActions.beforeStopListening(args),
-      UserDeckActions.stopListening(args),
+      DeckActions.beforeStopListening(args),
+      DeckActions.stopListening(args),
     ]);
   }
 
   actions = actions.concat(UserActions.objectReceived({}, data));
 
   if (data) {
-    actions = actions.concat(UserDeckActions.startListening({ uid: data.uid }));
+    actions = actions.concat(DeckActions.startListening({ uid: data.uid }));
   }
 
   return Observable.from(actions);
