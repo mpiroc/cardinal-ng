@@ -61,7 +61,7 @@ function handleDeckCardsReceived(ngRedux: NgRedux<IState>, gradingService: Gradi
       .filter(history => history ? true : false)
       .map(history => history as Map<string, any>)
       .map(history => history.toJS() as ICardHistory)
-      .filter(history => gradingService.isDue(history, now))
+      
     )
     .toArray();
 
@@ -74,6 +74,7 @@ function handleDeckCardsReceived(ngRedux: NgRedux<IState>, gradingService: Gradi
   }
 
   return Observable.combineLatest(cardHistories)
+    .map(histories => histories.filter(history => gradingService.isDue(history, now)))
     .map(histories => {
       const index = Math.floor(Math.random() * histories.length);
       return reviewSetHistory(histories[index]) as Action;
