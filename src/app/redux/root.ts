@@ -4,6 +4,7 @@ import { NgRedux } from '@angular-redux/store';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import { GradingService } from '../services/grading.service';
 import {
   IUser,
 } from '../interfaces/firebase';
@@ -38,7 +39,12 @@ export const rootReducer = combineReducers({
   review,
 });
 
-export function createRootEpic(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
+export function createRootEpic(
+  ngRedux: NgRedux<IState>,
+  authService: AuthService,
+  databaseService: DatabaseService,
+  gradingService: GradingService,
+  ) {
   return combineEpics(
     // We need to remove non-serializble members from user,
     // so we strip the properties not in firebase.UserInfo.
@@ -59,6 +65,6 @@ export function createRootEpic(ngRedux: NgRedux<IState>, authService: AuthServic
     UserDeckEpic.createStopListeningEpic(),
     DeckCardEpic.createEpic(databaseService.getDeckCards.bind(databaseService)),
     DeckCardEpic.createStopListeningEpic(),
-    createReviewEpic(ngRedux),
+    createReviewEpic(ngRedux, gradingService),
   );
 }

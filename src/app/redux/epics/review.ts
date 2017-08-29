@@ -8,12 +8,14 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
+import * as moment from 'moment';
 
 import {
   IUserDeck,
   IDeckCard,
   ICardHistory,
 } from '../../interfaces/firebase';
+import { GradingService } from '../../services/grading.service';
 
 import { IState } from '../state';
 import {
@@ -26,24 +28,24 @@ import {
   DeckCardActions,
 } from '../actions/firebase';
 
-export function createReviewEpic(ngRedux: NgRedux<IState>) {
+export function createReviewEpic(ngRedux: NgRedux<IState>, gradingService: GradingService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(REVIEW_SET_DECK)
     .map(action => action as IReviewSetDeckAction)
-    .switchMap(action => handleSetDeckReceived(ngRedux, action.deck));
+    .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, action.deck));
 }
 
-function handleSetDeckReceived(ngRedux: NgRedux<IState>, deck: IUserDeck) : Observable<Action> {
+function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, deck: IUserDeck) : Observable<Action> {
   return ngRedux
     .select(["deckCard", deck.deckId, "data"])
-    .switchMap((cards: Map<string, IDeckCard>) => handleDeckCardsReceived(ngRedux, cards))
+    .switchMap((cards: Map<string, IDeckCard>) => handleDeckCardsReceived(ngRedux, gradingService, cards))
     .startWith(DeckCardActions.startListening({
       uid: deck.uid,
       deckId: deck.deckId,
     }));
 }
 
-function handleDeckCardsReceived(ngRedux: NgRedux<IState>, cards: Map<string, IDeckCard>) : Observable<Action> {
+function handleDeckCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, cards: Map<string, IDeckCard>) : Observable<Action> {
   const startListeningActions: Action[] = cards.valueSeq()
     .map(card => CardHistoryActions.startListening({
       uid: card.uid,
@@ -52,12 +54,14 @@ function handleDeckCardsReceived(ngRedux: NgRedux<IState>, cards: Map<string, ID
     }))
     .toArray();
 
+  const now = moment.now();
   const cardHistories: Observable<ICardHistory>[] = cards.valueSeq()
     .map(card => ngRedux
       .select(['cardHistory', card.cardId, 'data'])
       .filter(history => history ? true : false)
       .map(history => history as Map<string, any>)
       .map(history => history.toJS() as ICardHistory)
+      .filter(history => gradingService.isDue(history, now))
     )
     .toArray();
 

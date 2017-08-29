@@ -13,6 +13,7 @@ import {
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import { GradingService } from '../services/grading.service';
 
 import {
   rootReducer,
@@ -27,7 +28,11 @@ function logAction(prefix: string, action: Action): Action {
   return action;
 }
 
-export function configureStore(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
+export function configureStore(
+  ngRedux: NgRedux<IState>,
+  authService: AuthService,
+  databaseService: DatabaseService,
+  gradingService: GradingService) {
   const options: Options = {
     adapter: {
       input: (action$: Observable<Action>) => action$.map(action => logAction("INPUT: ", action)),
@@ -35,7 +40,7 @@ export function configureStore(ngRedux: NgRedux<IState>, authService: AuthServic
     }
   }
 
-  const rootEpic = createRootEpic(ngRedux, authService, databaseService);
+  const rootEpic = createRootEpic(ngRedux, authService, databaseService, gradingService);
   const epicMiddleware = createEpicMiddleware(rootEpic, options);
 
   return createStore(
