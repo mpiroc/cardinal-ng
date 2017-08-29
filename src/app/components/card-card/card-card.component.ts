@@ -44,14 +44,14 @@ export class CardCardComponent implements OnInit {
   }
 
   getBasePath() {
-    return [ "cardContent", this.card.$key ];
+    return [ "cardContent", this.card.cardId ];
   }
 
   ngOnInit(): void {
     const cardArgs = {
       uid: this.card.uid,
       deckId: this.card.deckId,
-      cardId: this.card.$key,
+      cardId: this.card.cardId,
     };
     this.ngRedux.dispatch(CardContentActions.startListening(cardArgs));
   }
@@ -76,7 +76,7 @@ export class CardCardComponent implements OnInit {
               return Observable.from(this.databaseService.updateCardContent({
                   uid: this.card.uid,
                   deckId: this.card.deckId,
-                  cardId: this.card.$key,
+                  cardId: this.card.cardId,
                 },
                 dialogRef.componentInstance.front,
                 dialogRef.componentInstance.back,
@@ -108,7 +108,7 @@ export class CardCardComponent implements OnInit {
               return Observable.from(this.databaseService.deleteCard({
                 uid: this.card.uid,
                 deckId: this.card.deckId,
-                cardId: this.card.$key,
+                cardId: this.card.cardId,
               }));
 
             default:

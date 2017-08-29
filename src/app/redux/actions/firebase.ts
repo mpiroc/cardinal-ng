@@ -5,7 +5,6 @@ import {
   IUserArgs,
   IDeckArgs,
   ICardArgs,
-  IFirebaseModel,
   IUser,
   ICardContent,
   ICardHistory,
@@ -14,11 +13,11 @@ import {
   IUserDeck,
 } from '../../interfaces/firebase';
 
-export interface IObjectReceivedAction<TModel extends IFirebaseModel> extends Action {
+export interface IObjectReceivedAction<TModel> extends Action {
   data: TModel;
 }
 
-export interface IListReceivedAction<TModel extends IFirebaseModel> extends Action {
+export interface IListReceivedAction<TModel> extends Action {
   data: Map<string, TModel>;
 }
 
@@ -30,7 +29,7 @@ export interface IHasArgs<TArgs> {
   args: TArgs,
 }
 
-export class FirebaseActions<TModel extends IFirebaseModel, TArgs> {
+export class FirebaseActions<TModel, TArgs> {
   constructor(public prefix: string) {
   }
 

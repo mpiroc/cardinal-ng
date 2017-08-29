@@ -35,11 +35,11 @@ export function createReviewEpic(ngRedux: NgRedux<IState>) {
 
 function handleSetDeckReceived(ngRedux: NgRedux<IState>, deck: IUserDeck) : Observable<Action> {
   return ngRedux
-    .select(["deckCard", deck.$key, "data"])
+    .select(["deckCard", deck.deckId, "data"])
     .mergeMap((cards: Map<string, IDeckCard>) => handleDeckCardsReceived(ngRedux, cards))
     .startWith(DeckCardActions.startListening({
       uid: deck.uid,
-      deckId: deck.$key,
+      deckId: deck.deckId,
     }));
 }
 
@@ -48,23 +48,16 @@ function handleDeckCardsReceived(ngRedux: NgRedux<IState>, cards: Map<string, ID
     .map(card => CardHistoryActions.startListening({
       uid: card.uid,
       deckId: card.deckId,
-      cardId: card.$key,
+      cardId: card.cardId,
     }))
     .toArray();
 
   const cardHistories: Observable<ICardHistory>[] = cards.valueSeq()
     .map(card => ngRedux
-      .select(['cardHistory', card.$key, 'data'])
+      .select(['cardHistory', card.cardId, 'data'])
       .filter(history => history ? true : false)
       .map(history => history as Map<string, any>)
-      .map(history => ({
-          uid: history.get('uid'),
-          deckId: history.get('deckId'),
-          $key: history.get('cardId'),
-          difficulty: history.get('difficulty'),
-          grade: history.get('grade'),
-          repetitions: history.get('repetitions'),
-        } as ICardHistory))
+      .map(history => history.toJS() as ICardHistory)
     )
     .toArray();
 

@@ -46,12 +46,12 @@ export class DeckRouteComponent implements OnInit {
 
     this.ngRedux.dispatch(DeckCardActions.startListening({
       uid: this.deck.uid,
-      deckId: this.deck.$key,
+      deckId: this.deck.deckId,
     }));
   }
 
   getBasePath() : string[] {
-    return ['deckCard', this.deck.$key];
+    return ['deckCard', this.deck.deckId];
   }
 
   emptyIfNull(cards: Map<string, IDeckCard>): Map<string, IDeckCard> {
@@ -79,7 +79,7 @@ export class DeckRouteComponent implements OnInit {
               return Observable.from(
                 this.databaseService.createCard({
                   uid: this.deck.uid,
-                  deckId: this.deck.$key
+                  deckId: this.deck.deckId,
                 },
                 dialogRef.componentInstance.front,
                 dialogRef.componentInstance.back,

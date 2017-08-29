@@ -12,15 +12,12 @@ export interface ICardArgs extends IDeckArgs {
 }
 
 // Models
-export interface IFirebaseModel {
-  $key: string;
+export interface IUser extends firebase.UserInfo {
 }
 
-export interface IUser extends IFirebaseModel, firebase.UserInfo {
-}
-
-export interface IUserDeck extends IFirebaseModel {
+export interface IUserDeck {
   uid: string;
+  deckId: string,
 }
 
 export interface IDeckInfo extends IUserDeck {
@@ -28,9 +25,10 @@ export interface IDeckInfo extends IUserDeck {
   description: string;
 }
 
-export interface IDeckCard extends IFirebaseModel {
+export interface IDeckCard {
   uid: string;
   deckId: string;
+  cardId: string,
 }
 
 export interface ICardContent extends IDeckCard {

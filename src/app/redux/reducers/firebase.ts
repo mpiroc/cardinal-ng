@@ -5,7 +5,6 @@ import {
   IUserArgs,
   IDeckArgs,
   ICardArgs,
-  IFirebaseModel,
   IUser,
   ICardContent,
   ICardHistory,
@@ -32,7 +31,7 @@ export interface IFirebaseReducer {
   reducer: Reducer<Map<string, any>>;
 }
 
-export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
+export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
     isLoading: false,
@@ -78,7 +77,7 @@ export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> impleme
   }
 }
 
-export class FirebaseMapReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
+export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState = Map<string, TModel>();
 
   public reducer: Reducer<Map<string, any>>;
@@ -112,7 +111,7 @@ export class FirebaseMapReducer<TModel extends IFirebaseModel, TArgs> implements
   }
 }
 
-export class FirebaseListReducer<TModel extends IFirebaseModel, TArgs> implements IFirebaseReducer {
+export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
     isLoading: false,

@@ -29,7 +29,7 @@ export class GradingService {
       {
         uid: history.uid,
         deckId: history.deckId,
-        cardId: history.$key,
+        cardId: history.cardId,
       },
       difficulty,
       grade,

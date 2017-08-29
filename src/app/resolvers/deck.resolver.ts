@@ -24,7 +24,7 @@ export class DeckResolver implements Resolve<IUserDeck> {
       .select<string>(["user", "data", "uid"])
       .map(uid => ({
         uid,
-        $key: deckId,
+        deckId,
       }))
       .first();
   }

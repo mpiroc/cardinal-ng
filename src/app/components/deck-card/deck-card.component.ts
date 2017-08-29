@@ -48,19 +48,19 @@ export class DeckCardComponent implements OnInit {
   }
 
   getBasePath() {
-    return ["deckInfo", this.deck.$key];
+    return ["deckInfo", this.deck.deckId];
   }
 
   ngOnInit(): void {
     const deckArgs = {
       uid: this.deck.uid,
-      deckId: this.deck.$key,
+      deckId: this.deck.deckId,
     };
     this.ngRedux.dispatch(DeckInfoActions.startListening(deckArgs));
     this.ngRedux.dispatch(DeckCardActions.startListening(deckArgs));
 
     this.count$ = this.ngRedux
-      .select(["deckCard", this.deck.$key, "data"])
+      .select(["deckCard", this.deck.deckId, "data"])
       .map((cards: Map<string, any>) => cards ? cards.size : null);
   }
 
@@ -83,7 +83,7 @@ export class DeckCardComponent implements OnInit {
             case EditDeckDialogResult.Save:
               return Observable.from(this.databaseService.updateDeckInfo({
                   uid: this.deck.uid,
-                  deckId: this.deck.$key,
+                  deckId: this.deck.deckId,
                 },
                 dialogRef.componentInstance.name,
                 dialogRef.componentInstance.description,
@@ -116,7 +116,7 @@ export class DeckCardComponent implements OnInit {
             case DeleteDeckDialogResult.Ok:
               return Observable.from(this.databaseService.deleteDeck({
                 uid: this.deck.uid,
-                deckId: this.deck.$key,
+                deckId: this.deck.deckId,
               }));
 
             default:

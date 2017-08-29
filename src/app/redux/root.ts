@@ -40,10 +40,10 @@ export const rootReducer = combineReducers({
 
 export function createRootEpic(ngRedux: NgRedux<IState>, authService: AuthService, databaseService: DatabaseService) {
   return combineEpics(
-    // We need to 1. remove non-serializble members from user; 2. add $key to user.
+    // We need to remove non-serializble members from user,
+    // so we strip the properties not in firebase.UserInfo.
     UserEpic.createEpic(args => authService.user$.map(user => {
       return user ? {
-        $key: user.uid,
         displayName: user.displayName,
         email: user.email,
         phoneNumber: user.phoneNumber,
