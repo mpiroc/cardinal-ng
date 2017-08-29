@@ -46,18 +46,7 @@ export function createRootEpic(
   gradingService: GradingService,
   ) {
   return combineEpics(
-    // We need to remove non-serializble members from user,
-    // so we strip the properties not in firebase.UserInfo.
-    UserEpic.createEpic(args => authService.user$.map(user => {
-      return user ? {
-        displayName: user.displayName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        photoURL: user.photoURL,
-        providerId: user.providerId,
-        uid: user.uid,
-      } as IUser : null;
-    })),
+    UserEpic.createEpic(_ => authService.user$.map(user => user ? { uid: user.uid } as IUser : null)),
     CardContentEpic.createEpic(databaseService.getCardContent.bind(databaseService)),
     CardHistoryEpic.createEpic(databaseService.getCardHistory.bind(databaseService)),
     DeckInfoEpic.createEpic(databaseService.getDeckInfo.bind(databaseService)),

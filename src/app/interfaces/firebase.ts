@@ -1,23 +1,10 @@
-// Args
-export interface IUserArgs {
-  uid: string;
-}
-
-export interface IDeckArgs extends IUserArgs {
-  deckId: string;
-}
-
-export interface ICardArgs extends IDeckArgs {
-  cardId: string;
-}
-
 // Models
-export interface IUser extends firebase.UserInfo {
+export interface IUser {
+  uid: string;
 }
 
-export interface IDeck {
-  uid: string;
-  deckId: string,
+export interface IDeck extends IUser {
+  deckId: string;
 }
 
 export interface IDeckInfo extends IDeck {
@@ -25,9 +12,7 @@ export interface IDeckInfo extends IDeck {
   description: string;
 }
 
-export interface ICard {
-  uid: string;
-  deckId: string;
+export interface ICard extends IDeck {
   cardId: string,
 }
 

@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { GradingService } from '../../services/grading.service';
 import {
-  ICardArgs,
   IDeck,
   ICardHistory,
 } from '../../interfaces/firebase';

@@ -8,14 +8,7 @@ import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 
-import {
-  IUserArgs,
-  IDeckArgs,
-  ICardArgs,
-  IUser,
-  ICard,
-  IDeck,
-} from '../../interfaces/firebase';
+import { IUser } from '../../interfaces/firebase';
 
 import { IState } from '../state';
 import {
@@ -188,7 +181,7 @@ export const UserEpic = new FirebaseObjectEpic(UserActions, (store, data, args) 
   const userStore = store.getState().user;
   const previousUser: Map<string, any> = userStore.get('data');
   if (previousUser && previousUser.get('uid')) {
-    const args: IUserArgs = { uid: previousUser.get('uid') };
+    const args: IUser = { uid: previousUser.get('uid') };
     actions = actions.concat([
       DeckActions.beforeStopListening(args),
       DeckActions.stopListening(args),

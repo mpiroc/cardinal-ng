@@ -11,9 +11,7 @@ import {
 
 import { AuthService } from './auth.service';
 import {
-  IUserArgs,
-  IDeckArgs,
-  ICardArgs,
+  IUser,
   IDeck,
   IDeckInfo,
   ICard,
@@ -27,10 +25,10 @@ export class DatabaseService {
   }
 
   // Create
-  async createDeck(args: IUserArgs, name: string, description: string,) : FirebasePromise<void> {
+  async createDeck(args: IUser, name: string, description: string,) : FirebasePromise<void> {
     const deck: { key: string } = await this.getDecks(args).push(args);
 
-    const deckArgs: IDeckArgs = {
+    const deckArgs: IDeck = {
       ...args,
       deckId: deck.key,
     };
@@ -41,10 +39,10 @@ export class DatabaseService {
     ]);
   }
 
-  async createCard(args: IDeckArgs, front: string, back: string): FirebasePromise<void> {
+  async createCard(args: IDeck, front: string, back: string): FirebasePromise<void> {
     const card: { key: string } = await this.getCards(args).push(args);
 
-    const cardArgs: ICardArgs = {
+    const cardArgs: ICard = {
       ...args,
       cardId: card.key,
     };
@@ -57,42 +55,42 @@ export class DatabaseService {
   }
 
   // Retrieve
-  getDecks(args: IUserArgs): FirebaseListObservable<IDeck[]> {
+  getDecks(args: IUser): FirebaseListObservable<IDeck[]> {
     return this.database.list(this.getDeckBasePath(args));
   }
 
-  getDeck(args: IDeckArgs): FirebaseObjectObservable<IDeck> {
+  getDeck(args: IDeck): FirebaseObjectObservable<IDeck> {
     return this.database.object(this.getDeckPath(args));
   }
 
-  getDeckInfo(args: IDeckArgs): FirebaseObjectObservable<IDeckInfo> {
+  getDeckInfo(args: IDeck): FirebaseObjectObservable<IDeckInfo> {
     return this.database.object(this.getDeckInfoPath(args));
   }
 
-  getCards(args: IDeckArgs): FirebaseListObservable<ICard[]> {
+  getCards(args: IDeck): FirebaseListObservable<ICard[]> {
     return this.database.list(this.getCardBasePath(args));
   }
 
-  getCard(args: ICardArgs): FirebaseObjectObservable<ICard> {
+  getCard(args: ICard): FirebaseObjectObservable<ICard> {
     return this.database.object(this.getCardPath(args));
   }
 
-  getCardContent(args: ICardArgs) : FirebaseObjectObservable<ICardContent> {
+  getCardContent(args: ICard) : FirebaseObjectObservable<ICardContent> {
     return this.database.object(this.getCardContentPath(args));
   }
 
-  getCardHistory(args: ICardArgs) : FirebaseObjectObservable<ICardHistory> {
+  getCardHistory(args: ICard) : FirebaseObjectObservable<ICardHistory> {
     return this.database.object(this.getCardHistoryPath(args));
   }
 
   // Update
-  updateDeck(args: IDeckArgs) : FirebasePromise<void> {
+  updateDeck(args: IDeck) : FirebasePromise<void> {
     return this.getDeck(args).update({
       ...args,
     });
   }
 
-  updateDeckInfo(args: IDeckArgs, name: string, description: string) : FirebasePromise<void> {
+  updateDeckInfo(args: IDeck, name: string, description: string) : FirebasePromise<void> {
     return this.getDeckInfo(args).update({
       ...args,
       name,
@@ -100,13 +98,13 @@ export class DatabaseService {
     });
   }
 
-  updateCard(args: ICardArgs) : FirebasePromise<void> {
+  updateCard(args: ICard) : FirebasePromise<void> {
     return this.getCard(args).update({
       ...args,
     });
   }
 
-  updateCardContent(args: ICardArgs, front: string, back: string) : FirebasePromise<void> {
+  updateCardContent(args: ICard, front: string, back: string) : FirebasePromise<void> {
     return this.getCardContent(args).update({
       ...args,
       front,
@@ -115,7 +113,7 @@ export class DatabaseService {
   }
 
   updateCardHistory(
-    args: ICardArgs,
+    args: ICard,
     difficulty: number,
     grade: number,
     repetitions: number,
@@ -133,14 +131,14 @@ export class DatabaseService {
   }
 
   // Delete
-  deleteDeck(args: IDeckArgs): FirebasePromise<any[]> {
+  deleteDeck(args: IDeck): FirebasePromise<any[]> {
     return FirebasePromise.all([
       this.getDecks(args).remove(args.deckId),
       this.database.list(this.getDeckInfoBasePath(args)).remove(args.deckId),
     ]);
   }
 
-  async deleteCard(args: ICardArgs): FirebasePromise<any[]> {
+  async deleteCard(args: ICard): FirebasePromise<any[]> {
     return FirebasePromise.all([
       this.getCards(args).remove(args.cardId),
       this.database.list(this.getCardContentBasePath(args)).remove(args.cardId),
@@ -149,44 +147,44 @@ export class DatabaseService {
   }
 
   // Base path helpers
-  private getDeckBasePath(args: IUserArgs): string {
+  private getDeckBasePath(args: IUser): string {
     return `deck/${args.uid}`;
   }
 
-  private getDeckInfoBasePath(args: IUserArgs): string {
+  private getDeckInfoBasePath(args: IUser): string {
     return `deckInfo/${args.uid}`;
   }
 
-  private getCardBasePath(args: IDeckArgs): string {
+  private getCardBasePath(args: IDeck): string {
     return `card/${args.uid}/${args.deckId}`;
   }
 
-  private getCardContentBasePath(args: IDeckArgs): string {
+  private getCardContentBasePath(args: IDeck): string {
     return `cardContent/${args.uid}/${args.deckId}`;
   }
 
-  private getCardHistoryBasePath(args: IDeckArgs): string {
+  private getCardHistoryBasePath(args: IDeck): string {
     return `cardHistory/${args.uid}/${args.deckId}`;
   }
 
   // Full path helpers
-  private getDeckPath(args: IDeckArgs): string {
+  private getDeckPath(args: IDeck): string {
     return `${this.getDeckBasePath(args)}/${args.deckId}`;
   }
 
-  private getDeckInfoPath(args: IDeckArgs): string {
+  private getDeckInfoPath(args: IDeck): string {
     return `${this.getDeckInfoBasePath(args)}/${args.deckId}`;
   }
 
-  private getCardPath(args: ICardArgs): string {
+  private getCardPath(args: ICard): string {
     return `${this.getCardBasePath(args)}/${args.cardId}`;
   }
 
-  private getCardContentPath(args: ICardArgs): string {
+  private getCardContentPath(args: ICard): string {
     return `${this.getCardContentBasePath(args)}/${args.cardId}`;
   }
 
-  private getCardHistoryPath(args: ICardArgs): string {
+  private getCardHistoryPath(args: ICard): string {
     return `${this.getCardHistoryBasePath(args)}/${args.cardId}`;
   }
 }

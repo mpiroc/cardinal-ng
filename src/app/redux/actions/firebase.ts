@@ -2,9 +2,6 @@ import { Map } from 'immutable';
 import { Action } from 'redux';
 
 import {
-  IUserArgs,
-  IDeckArgs,
-  ICardArgs,
   IUser,
   ICardContent,
   ICardHistory,
@@ -99,9 +96,9 @@ export class FirebaseActions<TModel, TArgs> {
   }
 }
 
-export const CardContentActions = new FirebaseActions<ICardContent, ICardArgs>("CARD_CONTENT");
-export const CardHistoryActions = new FirebaseActions<ICardHistory, ICardArgs>("CARD_HISTORY");
-export const CardActions = new FirebaseActions<ICard, IDeckArgs>("CARD");
-export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeckArgs>("DECK_INFO");
-export const DeckActions = new FirebaseActions<IDeck, IUserArgs>("DECK");
+export const CardContentActions = new FirebaseActions<ICardContent, ICard>("CARD_CONTENT");
+export const CardHistoryActions = new FirebaseActions<ICardHistory, ICard>("CARD_HISTORY");
+export const CardActions = new FirebaseActions<ICard, IDeck>("CARD");
+export const DeckInfoActions = new FirebaseActions<IDeckInfo, IDeck>("DECK_INFO");
+export const DeckActions = new FirebaseActions<IDeck, IUser>("DECK");
 export const UserActions = new FirebaseActions<IUser, {}>("USER");
