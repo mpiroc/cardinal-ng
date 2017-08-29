@@ -31,11 +31,7 @@ export class GradingService {
     const nextReview = this.computeNextReview(history, difficulty, repetitions, now);
 
     return this.databaseService.updateCardHistory(
-      {
-        uid: history.uid,
-        deckId: history.deckId,
-        cardId: history.cardId,
-      },
+      history,
       difficulty,
       grade,
       repetitions,

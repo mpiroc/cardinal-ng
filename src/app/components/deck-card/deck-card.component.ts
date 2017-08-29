@@ -52,12 +52,8 @@ export class DeckCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const deckArgs = {
-      uid: this.deck.uid,
-      deckId: this.deck.deckId,
-    };
-    this.ngRedux.dispatch(DeckInfoActions.startListening(deckArgs));
-    this.ngRedux.dispatch(CardActions.startListening(deckArgs));
+    this.ngRedux.dispatch(DeckInfoActions.startListening(this.deck));
+    this.ngRedux.dispatch(CardActions.startListening(this.deck));
 
     this.count$ = this.ngRedux
       .select(["card", this.deck.deckId, "data"])
@@ -81,10 +77,8 @@ export class DeckCardComponent implements OnInit {
               return Observable.of<void>();
             
             case EditDeckDialogResult.Save:
-              return Observable.from(this.databaseService.updateDeckInfo({
-                  uid: this.deck.uid,
-                  deckId: this.deck.deckId,
-                },
+              return Observable.from(this.databaseService.updateDeckInfo(
+                this.deck,
                 dialogRef.componentInstance.name,
                 dialogRef.componentInstance.description,
               ));
@@ -114,10 +108,7 @@ export class DeckCardComponent implements OnInit {
               return Observable.of<void>();
 
             case DeleteDeckDialogResult.Ok:
-              return Observable.from(this.databaseService.deleteDeck({
-                uid: this.deck.uid,
-                deckId: this.deck.deckId,
-              }));
+              return Observable.from(this.databaseService.deleteDeck(this.deck));
 
             default:
               throw new Error(`Unknown dialog response: ${result}`);

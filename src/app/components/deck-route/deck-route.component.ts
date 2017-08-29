@@ -44,10 +44,7 @@ export class DeckRouteComponent implements OnInit {
   ngOnInit(): void {
     this.deck = this.activatedRoute.snapshot.data['deck'];
 
-    this.ngRedux.dispatch(CardActions.startListening({
-      uid: this.deck.uid,
-      deckId: this.deck.deckId,
-    }));
+    this.ngRedux.dispatch(CardActions.startListening(this.deck));
   }
 
   getBasePath() : string[] {
@@ -77,10 +74,8 @@ export class DeckRouteComponent implements OnInit {
 
             case EditCardDialogResult.Save:
               return Observable.from(
-                this.databaseService.createCard({
-                  uid: this.deck.uid,
-                  deckId: this.deck.deckId,
-                },
+                this.databaseService.createCard(
+                this.deck,
                 dialogRef.componentInstance.front,
                 dialogRef.componentInstance.back,
               ));

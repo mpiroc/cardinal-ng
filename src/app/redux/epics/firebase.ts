@@ -145,37 +145,24 @@ export const CardEpic = new FirebaseListEpic(
   CardActions,
   card => card.cardId,
   (state, args) => state.card.get(args.deckId),
-  card => {
-    const args = {
-      uid: card.uid,
-      deckId: card.deckId,
-      cardId: card.cardId,
-    }
-    return [
-      CardContentActions.stopListening(args),
-      CardHistoryActions.stopListening(args),
-    ];
-  },
+  card => [
+    CardContentActions.stopListening(card),
+    CardHistoryActions.stopListening(card),
+  ],
 );
 
 export const DeckEpic = new FirebaseListEpic(
   DeckActions,
   deck => deck.deckId,
   (state, args) => state.deck,
-  deck => {
-    const args = {
-      uid: deck.uid,
-      deckId: deck.deckId,
-    };
-    return [
-      CardActions.beforeStopListening(args),
-      CardActions.stopListening(args),
-      DeckInfoActions.stopListening(args),
-    ];
-  },
+  deck => [
+    CardActions.beforeStopListening(deck),
+    CardActions.stopListening(deck),
+    DeckInfoActions.stopListening(deck),
+  ],
 );
 
-export const UserEpic = new FirebaseObjectEpic(UserActions, (store, data, args) => {
+export const UserEpic = new FirebaseObjectEpic(UserActions, (store, user, args) => {
   let actions: Action[] = [];
 
   const userStore = store.getState().user;
@@ -188,10 +175,10 @@ export const UserEpic = new FirebaseObjectEpic(UserActions, (store, data, args) 
     ]);
   }
 
-  actions = actions.concat(UserActions.objectReceived({}, data));
+  actions = actions.concat(UserActions.objectReceived({}, user));
 
-  if (data) {
-    actions = actions.concat(DeckActions.startListening({ uid: data.uid }));
+  if (user) {
+    actions = actions.concat(DeckActions.startListening(user));
   }
 
   return Observable.from(actions);

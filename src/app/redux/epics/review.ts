@@ -39,19 +39,12 @@ function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: Grading
   return ngRedux
     .select(["card", deck.deckId, "data"])
     .switchMap((cards: Map<string, ICard>) => handleCardsReceived(ngRedux, gradingService, cards))
-    .startWith(CardActions.startListening({
-      uid: deck.uid,
-      deckId: deck.deckId,
-    }));
+    .startWith(CardActions.startListening(deck));
 }
 
 function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, cards: Map<string, ICard>) : Observable<Action> {
   const startListeningActions: Action[] = cards.valueSeq()
-    .map(card => CardHistoryActions.startListening({
-      uid: card.uid,
-      deckId: card.deckId,
-      cardId: card.cardId,
-    }))
+    .map(card => CardHistoryActions.startListening(card))
     .toArray();
 
   const now = moment.now();

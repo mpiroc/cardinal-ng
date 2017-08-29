@@ -61,12 +61,7 @@ export class CardCardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) : void {
     if (changes.card) {
-      const cardArgs = {
-        uid: this.card.uid,
-        deckId: this.card.deckId,
-        cardId: this.card.cardId,
-      };
-      this.ngRedux.dispatch(CardContentActions.startListening(cardArgs));
+      this.ngRedux.dispatch(CardContentActions.startListening(this.card));
     }
   }
 
@@ -87,11 +82,8 @@ export class CardCardComponent implements OnChanges {
               return Observable.of<void>();
 
             case EditCardDialogResult.Save:
-              return Observable.from(this.databaseService.updateCardContent({
-                  uid: this.card.uid,
-                  deckId: this.card.deckId,
-                  cardId: this.card.cardId,
-                },
+              return Observable.from(this.databaseService.updateCardContent(
+                this.card,
                 dialogRef.componentInstance.front,
                 dialogRef.componentInstance.back,
               ));
@@ -119,11 +111,7 @@ export class CardCardComponent implements OnChanges {
               return Observable.of<void>();
 
             case DeleteCardDialogResult.Ok:
-              return Observable.from(this.databaseService.deleteCard({
-                uid: this.card.uid,
-                deckId: this.card.deckId,
-                cardId: this.card.cardId,
-              }));
+              return Observable.from(this.databaseService.deleteCard(this.card));
 
             default:
               throw new Error(`Unknown dialog response: ${result}`);
