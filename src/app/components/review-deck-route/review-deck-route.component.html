@@ -4,6 +4,11 @@
     [card]='history$ | async'
     [showActions]='false'>
   </cardinal-card-card>
+  <md-card *ngIf="(history$ | async) ? false : true">
+    <md-card-content>
+      All done! You have no more cards to review right now.
+    </md-card-content>
+  </md-card>
   <div class="responseContainer">
     <md-card>
       <md-card-title>
