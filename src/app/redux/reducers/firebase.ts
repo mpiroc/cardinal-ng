@@ -64,7 +64,7 @@ export class FirebaseObjectReducer<TModel extends IFirebaseModel, TArgs> impleme
         return state
           .set("isLoading", false) 
           .set("error", null)
-          .set("data", (action as IObjectReceivedAction<TModel>).data);
+          .set("data", Map<string, any>((action as IObjectReceivedAction<TModel>).data));
 
       case this.actions.ERROR:
         return state
