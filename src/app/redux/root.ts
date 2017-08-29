@@ -43,8 +43,7 @@ export function createRootEpic(
   ngRedux: NgRedux<IState>,
   authService: AuthService,
   databaseService: DatabaseService,
-  gradingService: GradingService,
-  ) {
+  gradingService: GradingService) {
   return combineEpics(
     UserEpic.createEpic(_ => authService.user$.map(user => user ? { uid: user.uid } as IUser : null)),
     CardContentEpic.createEpic(databaseService.getCardContent.bind(databaseService)),
