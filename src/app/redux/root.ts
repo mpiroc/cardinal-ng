@@ -4,6 +4,9 @@ import { NgRedux } from '@angular-redux/store';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import {
+  IUser,
+} from '../interfaces/firebase';
 
 import {
   UserObjectReducer,
@@ -47,7 +50,7 @@ export function createRootEpic(ngRedux: NgRedux<IState>, authService: AuthServic
         photoURL: user.photoURL,
         providerId: user.providerId,
         uid: user.uid,
-      } : null;
+      } as IUser : null;
     })),
     CardContentEpic.createEpic(databaseService.getCardContent.bind(databaseService)),
     CardHistoryEpic.createEpic(databaseService.getCardHistory.bind(databaseService)),

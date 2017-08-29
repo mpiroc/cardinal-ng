@@ -145,7 +145,7 @@ export function createStopListeningHandler<TModel extends IFirebaseModel, TArgs>
 ) {
   return (store: MiddlewareAPI<IState>, args: TArgs) => {
     const subStore = selectSubStore(store.getState(), args);
-    const objectsToRemove = subStore.get('data');
+    const objectsToRemove: Map<string, TModel> = subStore.get('data');
     const stopListeningActions: Action[] = objectsToRemove
       .map(getStopActions)
       .reduce((accumulator, current) => accumulator.concat(current), []);
@@ -169,7 +169,7 @@ export const UserDeckEpic = new FirebaseListEpic(UserDeckActions,
 export const UserEpic = new FirebaseObjectEpic(UserActions, userHandleReceived);
 
 // Helpers
-function deckCardStopListening(deckCard: IDeckCard) {
+function deckCardStopListening(deckCard: IDeckCard) : Action[] {
   const args = {
     uid: deckCard.uid,
     deckId: deckCard.deckId,
@@ -181,11 +181,11 @@ function deckCardStopListening(deckCard: IDeckCard) {
   ];
 }
 
-function deckCardSelectStore(state: IState, args: IDeckArgs) {
+function deckCardSelectStore(state: IState, args: IDeckArgs) : Map<string, IDeckCard> {
   return state.deckCard.get(args.deckId);
 }
 
-function userDeckStopListening(userDeck: IUserDeck) {
+function userDeckStopListening(userDeck: IUserDeck) : Action[] {
   const args = {
     uid: userDeck.uid,
     deckId: userDeck.$key,
@@ -197,7 +197,7 @@ function userDeckStopListening(userDeck: IUserDeck) {
   ];
 }
 
-function userDeckSelectStore(state: IState, args: IUserArgs) {
+function userDeckSelectStore(state: IState, args: IUserArgs) : Map<string, IUserDeck> {
   return state.userDeck;
 }
 
@@ -205,7 +205,7 @@ function userHandleReceived(store: MiddlewareAPI<IState>, data: IUser, args: IUs
   let actions: Action[] = [];
 
   const userStore = store.getState().user;
-  const previousUser = userStore.get('data');
+  const previousUser: Map<string, any> = userStore.get('data');
   if (previousUser && previousUser.get('uid')) {
     const args: IUserArgs = { uid: previousUser.get('uid') };
     actions = actions.concat([

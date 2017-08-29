@@ -39,10 +39,10 @@ export class DeckCardComponent implements OnInit {
   count$: Observable<number>;
 
   @select(["data", "name"])
-  name$: string;
+  name$: Observable<string>;
 
   @select(["data", "description"])
-  description$: string;
+  description$: Observable<string>;
 
   constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private dialog: MdDialog) {
   }
