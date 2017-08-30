@@ -1,4 +1,4 @@
-// Models
+// Firebase
 export interface IUser {
   uid: string;
 }

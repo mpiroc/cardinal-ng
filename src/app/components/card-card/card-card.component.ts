@@ -20,6 +20,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
+import { ErrorService } from '../../services/error.service';
 import { ICard } from '../../interfaces/firebase';
 import {
   DeleteCardDialog,
@@ -52,7 +53,11 @@ export class CardCardComponent implements OnChanges {
   @select(["data", "back"])
   back$: string;
 
-  constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private dialog: MdDialog) {
+  constructor(
+    private ngRedux: NgRedux<IState>,
+    private databaseService: DatabaseService,
+    private dialog: MdDialog,
+    private errorService: ErrorService) {
   }
 
   getBasePath() {
@@ -91,7 +96,7 @@ export class CardCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(err => this.logError(err, "Could not edit card"))
+      .catch(error => this.errorService.handleError(error))
       .subscribe();
   }
 
@@ -111,12 +116,7 @@ export class CardCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(err => this.logError(err, "Could not delete card"))
+      .catch(error => this.errorService.handleError(error))
       .subscribe();
-  }
-
-  logError(err: any, message: string): Observable<any> {
-    console.error(err);
-    return Observable.of();
   }
 }

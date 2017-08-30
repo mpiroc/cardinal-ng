@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
+import { ErrorService } from '../../services/error.service';
 import {
   IDeck,
   ICard,
@@ -38,7 +39,8 @@ export class DeckRouteComponent implements OnInit {
     private ngRedux: NgRedux<IState>,
     private activatedRoute: ActivatedRoute,
     private databaseService: DatabaseService,
-    private dialog: MdDialog) {
+    private dialog: MdDialog,
+    private errorService: ErrorService) {
   }
 
   ngOnInit(): void {
@@ -83,12 +85,7 @@ export class DeckRouteComponent implements OnInit {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(err => this.logError(err, "Could not create card"))
+      .catch(error => this.errorService.handleError(error))
       .subscribe();
-  }
-
-  logError(err: any, message: string): Observable<any> {
-    console.error(err);
-    return Observable.of();
   }
 }

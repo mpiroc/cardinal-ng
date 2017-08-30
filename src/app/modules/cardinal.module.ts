@@ -10,6 +10,7 @@ import { CardinalRoutingModule } from './cardinal-routing.module';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import { ErrorService } from '../services/error.service';
 import { GradingService } from '../services/grading.service';
 
 import { RootComponent } from '../components/root/root.component';
@@ -60,6 +61,7 @@ import 'hammerjs';
     NgReduxModule,
   ],
   providers: [
+    ErrorService,
     GradingService,
   ],
   entryComponents: [
@@ -75,9 +77,10 @@ export class CardinalModule {
     ngRedux: NgRedux<IState>,
     authService: AuthService,
     databaseService: DatabaseService,
+    errorService: ErrorService,
     gradingService: GradingService,
   ) {
-    const store = configureStore(ngRedux, authService, databaseService, gradingService);
+    const store = configureStore(ngRedux, authService, databaseService, errorService, gradingService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.startListening({}));
   }

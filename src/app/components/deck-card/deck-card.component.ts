@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
+import { ErrorService } from '../../services/error.service';
 import { IDeck } from '../../interfaces/firebase';
 import {
   EditDeckDialog,
@@ -44,7 +45,11 @@ export class DeckCardComponent implements OnInit {
   @select(["data", "description"])
   description$: Observable<string>;
 
-  constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService, private dialog: MdDialog) {
+  constructor(
+    private ngRedux: NgRedux<IState>,
+    private databaseService: DatabaseService,
+    private dialog: MdDialog,
+    private errorService: ErrorService) {
   }
 
   getBasePath() {
@@ -86,7 +91,7 @@ export class DeckCardComponent implements OnInit {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(err => this.logError(err, "Could not edit deck"))
+      .catch(error => this.errorService.handleError(error))
       .subscribe();
   }
 
@@ -108,12 +113,7 @@ export class DeckCardComponent implements OnInit {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(err => this.logError(err, "Could not delete deck"))
+      .catch(error => this.errorService.handleError(error))
       .subscribe();
-  }
-
-  logError(err: any, message: string): Observable<any> {
-    console.error(err);
-    return Observable.of();
   }
 }

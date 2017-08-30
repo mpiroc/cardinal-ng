@@ -13,6 +13,7 @@ import {
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
+import { ErrorService } from '../services/error.service';
 import { GradingService } from '../services/grading.service';
 
 import {
@@ -32,6 +33,7 @@ export function configureStore(
   ngRedux: NgRedux<IState>,
   authService: AuthService,
   databaseService: DatabaseService,
+  errorService: ErrorService,
   gradingService: GradingService) {
   const options: Options = {
     adapter: {
@@ -40,7 +42,7 @@ export function configureStore(
     }
   }
 
-  const rootEpic = createRootEpic(ngRedux, authService, databaseService, gradingService);
+  const rootEpic = createRootEpic(ngRedux, authService, databaseService, errorService, gradingService);
   const epicMiddleware = createEpicMiddleware(rootEpic, options);
 
   return createStore(

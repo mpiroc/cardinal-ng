@@ -9,8 +9,8 @@ import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 
 import { IUser } from '../../interfaces/firebase';
-
 import { IState } from '../state';
+import { ErrorService } from '../../services/error.service';
 import {
   FirebaseActions,
   IHasArgs,
@@ -33,7 +33,7 @@ export class FirebaseObjectEpic<TModel, TArgs> {
     }
   }
 
-  public createEpic(fetch: (args: TArgs) => Observable<TModel>) {
+  public createEpic(errorService: ErrorService, fetch: (args: TArgs) => Observable<TModel>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
@@ -42,17 +42,14 @@ export class FirebaseObjectEpic<TModel, TArgs> {
           .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
-        .catch(err => {
-          console.error(err);
-          return Observable.of(this.actions.error(action.args, err.message))
-        })
+        .catch(err => errorService.handleError(err, message => this.actions.error(action.args, message)))
       );
   }
 
   private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
     switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
-        return JSON.stringify(stopAction.args) === JSON.stringify(action.args);
+        return (!stopAction.args && !action.args) || JSON.stringify(stopAction.args) === JSON.stringify(action.args);
 
       default:
         return false;
@@ -68,7 +65,7 @@ export class FirebaseListEpic<TModel, TArgs> {
     private getStopActions: (masterRecord: TModel) => Action[]) {
   }
 
-  public createEpic(fetch: (args: TArgs) => Observable<TModel[]>) {
+  public createEpic(errorService: ErrorService, fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
@@ -77,11 +74,7 @@ export class FirebaseListEpic<TModel, TArgs> {
           .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
-        .catch(err => {
-          console.error("Error in epic for action " + action.type);
-          console.error(err);
-          return Observable.of(this.actions.error(action.args, err.message))
-        })
+        .catch(err => errorService.handleError(err, message => this.actions.error(action.args, message)))
       );
   }
 
@@ -103,32 +96,33 @@ export class FirebaseListEpic<TModel, TArgs> {
     const stopListeningActions: Action[] = objectsToRemove
       .map(this.getStopActions)
       .reduce((accumulator, current) => accumulator.concat(current), []);
-    
+
     return Observable
       .from(stopListeningActions)
       .startWith(receivedAction);
   }
 
-  public createStopListeningEpic() {
+  public createStopListeningEpic(errorService: ErrorService) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_STOP_LISTENING)
-      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(store, action.args));
+      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(errorService, store, action.args));
   }
 
-  private handleStopListening(store: MiddlewareAPI<IState>, args: TArgs) {
+  private handleStopListening(errorService: ErrorService, store: MiddlewareAPI<IState>, args: TArgs) {
     const subStore = this.selectSubStore(store.getState(), args);
     const objectsToRemove: Map<string, TModel> = subStore.get('data');
     const stopListeningActions: Action[] = objectsToRemove
       .map(this.getStopActions)
       .reduce((accumulator, current) => accumulator.concat(current), []);
 
-    return Observable.from(stopListeningActions);
+    return Observable.from(stopListeningActions)
+      .catch(err => errorService.handleError(err, message => this.actions.error(args, message)));
   }
 
   private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
     switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
-        return JSON.stringify(stopAction.args) === JSON.stringify(action.args);
+        return (!stopAction.args && !action.args) || JSON.stringify(stopAction.args) === JSON.stringify(action.args);
 
       default:
         return false;
