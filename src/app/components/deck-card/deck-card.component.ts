@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
-import { ErrorService } from '../../services/error.service';
+import { LogService } from '../../services/log.service';
 import { IDeck } from '../../interfaces/firebase';
 import {
   EditDeckDialog,
@@ -49,7 +49,7 @@ export class DeckCardComponent implements OnInit {
     private ngRedux: NgRedux<IState>,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private errorService: ErrorService) {
+    private logService: LogService) {
   }
 
   getBasePath() {
@@ -91,7 +91,10 @@ export class DeckCardComponent implements OnInit {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => this.errorService.handleError(error))
+      .catch(error => { 
+        this.logService.error(error);
+        return Observable.of();
+      })
       .subscribe();
   }
 
@@ -113,7 +116,10 @@ export class DeckCardComponent implements OnInit {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => this.errorService.handleError(error))
+      .catch(error => { 
+        this.logService.error(error);
+        return Observable.of();
+      })
       .subscribe();
   }
 }

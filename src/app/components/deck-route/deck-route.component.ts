@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
-import { ErrorService } from '../../services/error.service';
+import { LogService } from '../../services/log.service';
 import {
   IDeck,
   ICard,
@@ -40,7 +40,7 @@ export class DeckRouteComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private errorService: ErrorService) {
+    private logService: LogService) {
   }
 
   ngOnInit(): void {
@@ -85,7 +85,10 @@ export class DeckRouteComponent implements OnInit {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => this.errorService.handleError(error))
+      .catch(error => {
+        this.logService.error(error);
+        return Observable.of();
+      })
       .subscribe();
   }
 }

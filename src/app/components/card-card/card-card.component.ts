@@ -20,7 +20,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import { DatabaseService } from '../../services/database.service';
-import { ErrorService } from '../../services/error.service';
+import { LogService } from '../../services/log.service';
 import { ICard } from '../../interfaces/firebase';
 import {
   DeleteCardDialog,
@@ -57,7 +57,7 @@ export class CardCardComponent implements OnChanges {
     private ngRedux: NgRedux<IState>,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private errorService: ErrorService) {
+    private logService: LogService) {
   }
 
   getBasePath() {
@@ -96,7 +96,10 @@ export class CardCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => this.errorService.handleError(error))
+      .catch(error => { 
+        this.logService.error(error);
+        return Observable.of();
+      })
       .subscribe();
   }
 
@@ -116,7 +119,10 @@ export class CardCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => this.errorService.handleError(error))
+      .catch(error => { 
+        this.logService.error(error);
+        return Observable.of();
+      })
       .subscribe();
   }
 }

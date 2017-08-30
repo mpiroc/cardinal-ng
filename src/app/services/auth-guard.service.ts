@@ -12,16 +12,19 @@ import 'rxjs/add/operator/toPromise';
 
 import { UserActions } from '../redux/actions/firebase';
 import { AuthService } from './auth.service';
-import { ErrorService } from './error.service';
+import { LogService } from './log.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
-  constructor(private authService: AuthService, private errorService: ErrorService) {
+  constructor(private authService: AuthService, private logService: LogService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.checkUrl(state.url)
-      .catch(error => this.errorService.handleError(error, message => UserActions.error({}, message)));
+      .catch(error => { 
+        this.logService.error(error);
+        return Observable.of(UserActions.error({}, error.message));
+      });
   }
 
   private checkUrl(url: string): Observable<boolean> {

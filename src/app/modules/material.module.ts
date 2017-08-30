@@ -16,6 +16,7 @@ import {
   MdTabsModule,
   MdToolbarModule,
 } from '@angular/material';
+import { LogModule } from './log.module';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import {
     MdSnackBarModule,
     MdTabsModule,
     MdToolbarModule,
+    LogModule,
   ],
 })
 export class MaterialModule { }

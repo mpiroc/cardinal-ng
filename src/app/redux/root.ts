@@ -4,7 +4,7 @@ import { NgRedux } from '@angular-redux/store';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
-import { ErrorService } from '../services/error.service';
+import { LogService } from '../services/log.service';
 import { GradingService } from '../services/grading.service';
 import {
   IUser,
@@ -44,17 +44,17 @@ export function createRootEpic(
   ngRedux: NgRedux<IState>,
   authService: AuthService,
   databaseService: DatabaseService,
-  errorService: ErrorService,
-  gradingService: GradingService) {
+  gradingService: GradingService,
+  logService: LogService) {
   return combineEpics(
-    UserEpic.createEpic(errorService, _ => authService.user$.map(user => user ? { uid: user.uid } as IUser : null)),
-    CardContentEpic.createEpic(errorService, databaseService.getCardContent.bind(databaseService)),
-    CardHistoryEpic.createEpic(errorService, databaseService.getCardHistory.bind(databaseService)),
-    DeckInfoEpic.createEpic(errorService, databaseService.getDeckInfo.bind(databaseService)),
-    DeckEpic.createEpic(errorService, databaseService.getDecks.bind(databaseService)),
-    DeckEpic.createStopListeningEpic(errorService),
-    CardEpic.createEpic(errorService, databaseService.getCards.bind(databaseService)),
-    CardEpic.createStopListeningEpic(errorService),
-    createReviewEpic(ngRedux, gradingService),
+    UserEpic.createEpic(logService, _ => authService.user$.map(user => user ? { uid: user.uid } as IUser : null)),
+    CardContentEpic.createEpic(logService, databaseService.getCardContent.bind(databaseService)),
+    CardHistoryEpic.createEpic(logService, databaseService.getCardHistory.bind(databaseService)),
+    DeckInfoEpic.createEpic(logService, databaseService.getDeckInfo.bind(databaseService)),
+    DeckEpic.createEpic(logService, databaseService.getDecks.bind(databaseService)),
+    DeckEpic.createStopListeningEpic(logService),
+    CardEpic.createEpic(logService, databaseService.getCards.bind(databaseService)),
+    CardEpic.createStopListeningEpic(logService),
+    createReviewEpic(logService, ngRedux, gradingService),
   );
 }

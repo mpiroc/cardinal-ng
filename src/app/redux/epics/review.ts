@@ -16,6 +16,7 @@ import {
   ICardHistory,
 } from '../../interfaces/firebase';
 import { GradingService } from '../../services/grading.service';
+import { LogService } from '../../services/log.service';
 
 import { IState } from '../state';
 import {
@@ -28,11 +29,17 @@ import {
   CardActions,
 } from '../actions/firebase';
 
-export function createReviewEpic(ngRedux: NgRedux<IState>, gradingService: GradingService) {
+export function createReviewEpic(logService: LogService, ngRedux: NgRedux<IState>, gradingService: GradingService) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(REVIEW_SET_DECK)
     .map(action => action as IReviewSetDeckAction)
-    .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, action.deck));
+    .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, action.deck))
+    .catch(error => { 
+      logService.error(error.message);
+
+      // TODO: log this error in redux store.
+      return Observable.of();
+    });
 }
 
 function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, deck: IDeck) : Observable<Action> {

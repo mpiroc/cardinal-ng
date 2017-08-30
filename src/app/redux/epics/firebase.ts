@@ -10,7 +10,7 @@ import { ActionsObservable } from 'redux-observable';
 
 import { IUser } from '../../interfaces/firebase';
 import { IState } from '../state';
-import { ErrorService } from '../../services/error.service';
+import { LogService } from '../../services/log.service';
 import {
   FirebaseActions,
   IHasArgs,
@@ -33,7 +33,7 @@ export class FirebaseObjectEpic<TModel, TArgs> {
     }
   }
 
-  public createEpic(errorService: ErrorService, fetch: (args: TArgs) => Observable<TModel>) {
+  public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
@@ -42,7 +42,10 @@ export class FirebaseObjectEpic<TModel, TArgs> {
           .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
-        .catch(err => errorService.handleError(err, message => this.actions.error(action.args, message)))
+        .catch(error => {
+          logService.error(error)
+          return Observable.of(this.actions.error(action.args, error.message));
+        })
       );
   }
 
@@ -65,7 +68,7 @@ export class FirebaseListEpic<TModel, TArgs> {
     private getStopActions: (masterRecord: TModel) => Action[]) {
   }
 
-  public createEpic(errorService: ErrorService, fetch: (args: TArgs) => Observable<TModel[]>) {
+  public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
@@ -74,7 +77,10 @@ export class FirebaseListEpic<TModel, TArgs> {
           .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
-        .catch(err => errorService.handleError(err, message => this.actions.error(action.args, message)))
+        .catch(error => {
+          logService.error(error)
+          return Observable.of(this.actions.error(action.args, error.message));
+        })
       );
   }
 
@@ -102,13 +108,13 @@ export class FirebaseListEpic<TModel, TArgs> {
       .startWith(receivedAction);
   }
 
-  public createStopListeningEpic(errorService: ErrorService) {
+  public createStopListeningEpic(logService: LogService) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_STOP_LISTENING)
-      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(errorService, store, action.args));
+      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(logService, store, action.args));
   }
 
-  private handleStopListening(errorService: ErrorService, store: MiddlewareAPI<IState>, args: TArgs) {
+  private handleStopListening(logService: LogService, store: MiddlewareAPI<IState>, args: TArgs) {
     const subStore = this.selectSubStore(store.getState(), args);
     const objectsToRemove: Map<string, TModel> = subStore.get('data');
     const stopListeningActions: Action[] = objectsToRemove
@@ -116,7 +122,10 @@ export class FirebaseListEpic<TModel, TArgs> {
       .reduce((accumulator, current) => accumulator.concat(current), []);
 
     return Observable.from(stopListeningActions)
-      .catch(err => errorService.handleError(err, message => this.actions.error(args, message)));
+      .catch(error => {
+        logService.error(error)
+        return Observable.of(this.actions.error(args, error.message));
+      });
   }
 
   private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {

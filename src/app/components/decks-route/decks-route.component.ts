@@ -4,7 +4,7 @@ import { select } from '@angular-redux/store';
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../services/database.service';
-import { ErrorService } from '../../services/error.service';
+import { LogService } from '../../services/log.service';
 import { IDeck } from '../../interfaces/firebase';
 import {
   EditDeckDialog,
@@ -26,7 +26,7 @@ export class DecksRouteComponent {
   constructor(
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private errorService: ErrorService) {
+    private logService: LogService) {
   }
 
   emptyIfNull(decks: Map<string, IDeck>): Map<string, IDeck> {
@@ -63,7 +63,10 @@ export class DecksRouteComponent {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => this.errorService.handleError(error))
+      .catch(error => {
+        this.logService.error(error);
+        return Observable.of();
+      })
       .subscribe();
   }
 }

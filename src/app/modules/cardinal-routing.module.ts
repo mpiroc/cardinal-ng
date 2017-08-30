@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LogModule } from './log.module';
 
 import { AuthGuardService } from '../services/auth-guard.service';
 import { RedirectService } from '../services/redirect.service';
@@ -48,6 +49,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, environment.routing),
+    LogModule,
   ],
   exports: [
     RouterModule,

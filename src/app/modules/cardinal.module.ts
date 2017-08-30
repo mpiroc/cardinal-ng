@@ -3,15 +3,17 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { MarkdownModule } from 'angular2-markdown';
+import { MdSnackBar } from '@angular/material';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
 import { CardinalRoutingModule } from './cardinal-routing.module';
+import { LogModule } from './log.module';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
-import { ErrorService } from '../services/error.service';
 import { GradingService } from '../services/grading.service';
+import { LogService } from '../services/log.service';
 
 import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
@@ -59,9 +61,9 @@ import 'hammerjs';
     CardinalRoutingModule,
     FormsModule,
     NgReduxModule,
+    LogModule,
   ],
   providers: [
-    ErrorService,
     GradingService,
   ],
   entryComponents: [
@@ -77,10 +79,13 @@ export class CardinalModule {
     ngRedux: NgRedux<IState>,
     authService: AuthService,
     databaseService: DatabaseService,
-    errorService: ErrorService,
     gradingService: GradingService,
+    logService: LogService,
+    snackbarService: MdSnackBar,
   ) {
-    const store = configureStore(ngRedux, authService, databaseService, errorService, gradingService);
+    logService.error$.subscribe(error => snackbarService.open(error.message, "Dismiss", { duration: 5000 }));
+    
+    const store = configureStore(ngRedux, authService, databaseService, gradingService, logService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.startListening({}));
   }
