@@ -34,7 +34,6 @@ abstract class FirebaseEpic<TModel, TArgs> {
     const subStore: Map<string, any> = this.selectSubStore(store.getState(), action.args);
     const isListening: boolean = !!subStore && subStore.get("isListening");
 
-    console.log(this.actions.prefix + " isListening: " + isListening);
     return isListening;
   }
 

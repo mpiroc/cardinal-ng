@@ -35,7 +35,8 @@ import { IState } from '../../redux/state';
   styleUrls: [ './deck-card.component.css' ],
 })
 export class DeckCardComponent implements OnInit {
-  @Input() deck: IDeck;
+  @Input()
+  deck: IDeck;
   
   count$: Observable<number>;
 
