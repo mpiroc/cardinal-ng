@@ -23,10 +23,31 @@ import {
 } from '../actions/firebase';
 import { FirebaseObjectReducer } from '../reducers/firebase';
 
-export class FirebaseObjectEpic<TModel, TArgs> {
+abstract class FirebaseEpic<TModel, TArgs> {
   constructor(
-    private actions: FirebaseActions<TModel, TArgs>,
-    private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>) {
+    protected actions: FirebaseActions<TModel, TArgs>,
+    protected selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
+  ) {
+  }
+
+  protected filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
+    switch (stopAction.type) {
+      case this.actions.STOP_LISTENING:
+        return (!stopAction.args && !action.args) || JSON.stringify(stopAction.args) === JSON.stringify(action.args);
+
+      default:
+        return false;
+    }
+  }
+}
+
+export class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
+  constructor(
+    actions: FirebaseActions<TModel, TArgs>,
+    selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
+    private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>
+  ) {
+    super(actions, selectSubStore);
     
     if (!handleReceived) {
       this.handleReceived = (store, data, args) => Observable.of(this.actions.objectReceived(args, data));
@@ -49,24 +70,16 @@ export class FirebaseObjectEpic<TModel, TArgs> {
         })
       );
   }
-
-  private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
-    switch (stopAction.type) {
-      case this.actions.STOP_LISTENING:
-        return (!stopAction.args && !action.args) || JSON.stringify(stopAction.args) === JSON.stringify(action.args);
-
-      default:
-        return false;
-    }
-  }
 }
 
-export class FirebaseListEpic<TModel, TArgs> {
+export class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
   constructor(
-    private actions: FirebaseActions<TModel, TArgs>,
+    actions: FirebaseActions<TModel, TArgs>,
     private selectKey: (data: TModel) => string,
-    private selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
-    private getStopActions: (masterRecord: TModel) => Action[]) {
+    selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
+    private getStopActions: (masterRecord: TModel) => Action[]
+  ) {
+    super(actions, selectSubStore);
   }
 
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel[]>) {
@@ -129,22 +142,12 @@ export class FirebaseListEpic<TModel, TArgs> {
         return Observable.of(this.actions.error(args, error.message));
       });
   }
-
-  private filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
-    switch (stopAction.type) {
-      case this.actions.STOP_LISTENING:
-        return (!stopAction.args && !action.args) || JSON.stringify(stopAction.args) === JSON.stringify(action.args);
-
-      default:
-        return false;
-    }
-  }
 }
 
 // Epics
-export const CardContentEpic = new FirebaseObjectEpic(CardContentActions);
-export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions);
-export const DeckInfoEpic = new FirebaseObjectEpic(DeckInfoActions);
+export const CardContentEpic = new FirebaseObjectEpic(CardContentActions, (state, args) => state.cardContent.get(args.cardId));
+export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions, (state, args) => state.cardHistory.get(args.cardId));
+export const DeckInfoEpic = new FirebaseObjectEpic(DeckInfoActions, (state, args) => state.deckInfo.get(args.deckId));
 
 export const CardEpic = new FirebaseListEpic(
   CardActions,
@@ -167,24 +170,28 @@ export const DeckEpic = new FirebaseListEpic(
   ],
 );
 
-export const UserEpic = new FirebaseObjectEpic(UserActions, (store, user, args) => {
-  let actions: Action[] = [];
+export const UserEpic = new FirebaseObjectEpic(
+  UserActions,
+  (state, args) => state.user,
+  (store, user, args) => {
+    let actions: Action[] = [];
 
-  const userStore = store.getState().user;
-  const previousUser: Map<string, any> = userStore.get('data');
-  if (previousUser && previousUser.get('uid')) {
-    const args: IUser = { uid: previousUser.get('uid') };
-    actions = actions.concat([
-      DeckActions.beforeStopListening(args),
-      DeckActions.stopListening(args),
-    ]);
+    const userStore = store.getState().user;
+    const previousUser: Map<string, any> = userStore.get('data');
+    if (previousUser && previousUser.get('uid')) {
+      const args: IUser = { uid: previousUser.get('uid') };
+      actions = actions.concat([
+        DeckActions.beforeStopListening(args),
+        DeckActions.stopListening(args),
+      ]);
+    }
+
+    actions = actions.concat(UserActions.objectReceived({}, user));
+
+    if (user) {
+      actions = actions.concat(DeckActions.beforeStartListening(user));
+    }
+
+    return Observable.from(actions);
   }
-
-  actions = actions.concat(UserActions.objectReceived({}, user));
-
-  if (user) {
-    actions = actions.concat(DeckActions.beforeStartListening(user));
-  }
-
-  return Observable.from(actions);
-});
+);
