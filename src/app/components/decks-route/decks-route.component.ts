@@ -47,23 +47,18 @@ export class DecksRouteComponent {
         const uid = results[0];
         const result = results[1];
 
-        try {
-          switch (result) {
-            case EditDeckDialogResult.Cancel:
-              return Observable.of<void>();
+        switch (result) {
+          case EditDeckDialogResult.Cancel:
+            return Observable.of<void>();
 
-            case EditDeckDialogResult.Save:
-              return Observable.from(this.databaseService.createDeck({ uid },
-                dialogRef.componentInstance.name,
-                dialogRef.componentInstance.description,
-              ));
+          case EditDeckDialogResult.Save:
+            return Observable.from(this.databaseService.createDeck({ uid },
+              dialogRef.componentInstance.name,
+              dialogRef.componentInstance.description,
+            ));
 
-            default:
-              throw new Error(`Unknown dialog response: ${result}`);
-          }
-        }
-        catch (err) {
-          return this.logError(err, "Could not create deck");
+          default:
+            throw new Error(`Unknown dialog response: ${result}`);
         }
       })
       .catch(err => this.logError(err, "Could not create deck"))

@@ -76,24 +76,19 @@ export class CardCardComponent implements OnChanges {
     dialogRef.afterClosed()
       .map(result => result || EditCardDialogResult.Cancel)
       .switchMap(result => {
-        try {
-          switch (result) {
-            case EditCardDialogResult.Cancel:
-              return Observable.of<void>();
+        switch (result) {
+          case EditCardDialogResult.Cancel:
+            return Observable.of<void>();
 
-            case EditCardDialogResult.Save:
-              return Observable.from(this.databaseService.updateCardContent(
-                this.card,
-                dialogRef.componentInstance.front,
-                dialogRef.componentInstance.back,
-              ));
+          case EditCardDialogResult.Save:
+            return Observable.from(this.databaseService.updateCardContent(
+              this.card,
+              dialogRef.componentInstance.front,
+              dialogRef.componentInstance.back,
+            ));
 
-            default:
-              throw new Error(`Unknown dialog response: ${result}`);
-          }
-        }
-        catch (err) {
-          return this.logError(err, "Could not edit card");
+          default:
+            throw new Error(`Unknown dialog response: ${result}`);
         }
       })
       .catch(err => this.logError(err, "Could not edit card"))
@@ -105,20 +100,15 @@ export class CardCardComponent implements OnChanges {
     dialogRef.afterClosed()
       .map(result => result || DeleteCardDialogResult.Cancel)
       .switchMap(result => {
-        try {
-          switch (result) {
-            case DeleteCardDialogResult.Cancel:
-              return Observable.of<void>();
+        switch (result) {
+          case DeleteCardDialogResult.Cancel:
+            return Observable.of<void>();
 
-            case DeleteCardDialogResult.Ok:
-              return Observable.from(this.databaseService.deleteCard(this.card));
+          case DeleteCardDialogResult.Ok:
+            return Observable.from<any>(this.databaseService.deleteCard(this.card));
 
-            default:
-              throw new Error(`Unknown dialog response: ${result}`);
-          }
-        }
-        catch (err) {
-          return this.logError(err, "Could not delete card");
+          default:
+            throw new Error(`Unknown dialog response: ${result}`);
         }
       })
       .catch(err => this.logError(err, "Could not delete card"))

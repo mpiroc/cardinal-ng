@@ -71,24 +71,19 @@ export class DeckCardComponent implements OnInit {
     dialogRef.afterClosed()
       .map(result => result || EditDeckDialogResult.Cancel)
       .switchMap(result => {
-        try {
-          switch (result) {
-            case EditDeckDialogResult.Cancel:
-              return Observable.of<void>();
-            
-            case EditDeckDialogResult.Save:
-              return Observable.from(this.databaseService.updateDeckInfo(
-                this.deck,
-                dialogRef.componentInstance.name,
-                dialogRef.componentInstance.description,
-              ));
+        switch (result) {
+          case EditDeckDialogResult.Cancel:
+            return Observable.of<void>();
+          
+          case EditDeckDialogResult.Save:
+            return Observable.from(this.databaseService.updateDeckInfo(
+              this.deck,
+              dialogRef.componentInstance.name,
+              dialogRef.componentInstance.description,
+            ));
 
-            default:
-              throw new Error(`Unknown dialog response: ${result}`);
-          }
-        }
-        catch (err) {
-          return this.logError(err, "Could not edit deck");
+          default:
+            throw new Error(`Unknown dialog response: ${result}`);
         }
       })
       .catch(err => this.logError(err, "Could not edit deck"))
@@ -102,20 +97,15 @@ export class DeckCardComponent implements OnInit {
     dialogRef.afterClosed()
       .map(result => result || DeleteDeckDialogResult.Cancel)
       .switchMap(result => {
-        try {
-          switch (result) {
-            case DeleteDeckDialogResult.Cancel:
-              return Observable.of<void>();
+        switch (result) {
+          case DeleteDeckDialogResult.Cancel:
+            return Observable.of<void>();
 
-            case DeleteDeckDialogResult.Ok:
-              return Observable.from(this.databaseService.deleteDeck(this.deck));
+          case DeleteDeckDialogResult.Ok:
+            return Observable.from<any>(this.databaseService.deleteDeck(this.deck));
 
-            default:
-              throw new Error(`Unknown dialog response: ${result}`);
-          }
-        }
-        catch (err) {
-          return this.logError(err, "Could not delete deck");
+          default:
+            throw new Error(`Unknown dialog response: ${result}`);
         }
       })
       .catch(err => this.logError(err, "Could not delete deck"))

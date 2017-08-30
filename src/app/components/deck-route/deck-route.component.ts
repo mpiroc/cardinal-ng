@@ -67,25 +67,20 @@ export class DeckRouteComponent implements OnInit {
     dialogRef.afterClosed()
       .map(result => result || EditCardDialogResult.Cancel)
       .switchMap(result => {
-        try {
-          switch (result) {
-            case EditCardDialogResult.Cancel:
-              return Observable.of<void>();
+        switch (result) {
+          case EditCardDialogResult.Cancel:
+            return Observable.of<void>();
 
-            case EditCardDialogResult.Save:
-              return Observable.from(
-                this.databaseService.createCard(
-                this.deck,
-                dialogRef.componentInstance.front,
-                dialogRef.componentInstance.back,
-              ));
+          case EditCardDialogResult.Save:
+            return Observable.from(
+              this.databaseService.createCard(
+              this.deck,
+              dialogRef.componentInstance.front,
+              dialogRef.componentInstance.back,
+            ));
 
-            default:
-              throw new Error(`Unknown dialog response: ${result}`);
-          }
-        }
-        catch (err) {
-          return this.logError(err, "Could not create card");
+          default:
+            throw new Error(`Unknown dialog response: ${result}`);
         }
       })
       .catch(err => this.logError(err, "Could not create card"))
