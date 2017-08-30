@@ -30,6 +30,14 @@ abstract class FirebaseEpic<TModel, TArgs> {
   ) {
   }
 
+  protected isListening(store: MiddlewareAPI<IState>, action: Action & IHasArgs<TArgs>) {
+    const subStore: Map<string, any> = this.selectSubStore(store.getState(), action.args);
+    const isListening: boolean = !!subStore && subStore.get("isListening");
+
+    console.log(this.actions.prefix + " isListening: " + isListening);
+    return isListening;
+  }
+
   protected filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
     switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
@@ -57,7 +65,9 @@ export class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArg
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_START_LISTENING)
-      .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
+      .map(action => action as (Action & IHasArgs<TArgs>))
+      .filter(action => !this.isListening(store, action))
+      .mergeMap(action => fetch(action.args)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
@@ -85,7 +95,9 @@ export class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs>
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_START_LISTENING)
-      .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
+      .map(action => action as (Action & IHasArgs<TArgs>))
+      .filter(action => !this.isListening(store, action))
+      .mergeMap(action => fetch(action.args)
         .mergeMap((data: TModel[]) => this.handleListReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
