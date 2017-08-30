@@ -66,7 +66,7 @@ export class CardCardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) : void {
     if (changes.card) {
-      this.ngRedux.dispatch(CardContentActions.startListening(this.card));
+      this.ngRedux.dispatch(CardContentActions.beforeStartListening(this.card));
     }
   }
 

@@ -35,13 +35,14 @@ export class FirebaseObjectEpic<TModel, TArgs> {
 
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
-      .ofType(this.actions.START_LISTENING)
+      .ofType(this.actions.BEFORE_START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
+        .startWith(this.actions.startListening(action.args))
         .catch(error => {
           logService.error(error)
           return Observable.of(this.actions.error(action.args, error.message));
@@ -70,13 +71,14 @@ export class FirebaseListEpic<TModel, TArgs> {
 
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
-      .ofType(this.actions.START_LISTENING)
+      .ofType(this.actions.BEFORE_START_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => fetch(action.args)
         .mergeMap((data: TModel[]) => this.handleListReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
           .filter(stopAction => this.filterStopAction(stopAction as Action & IHasArgs<TArgs>, action))
         )
+        .startWith(this.actions.startListening(action.args))
         .catch(error => {
           logService.error(error)
           return Observable.of(this.actions.error(action.args, error.message));
@@ -181,7 +183,7 @@ export const UserEpic = new FirebaseObjectEpic(UserActions, (store, user, args) 
   actions = actions.concat(UserActions.objectReceived({}, user));
 
   if (user) {
-    actions = actions.concat(DeckActions.startListening(user));
+    actions = actions.concat(DeckActions.beforeStartListening(user));
   }
 
   return Observable.from(actions);

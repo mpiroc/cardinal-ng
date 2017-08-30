@@ -46,12 +46,12 @@ function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: Grading
   return ngRedux
     .select(["card", deck.deckId, "data"])
     .switchMap((cards: Map<string, ICard>) => handleCardsReceived(ngRedux, gradingService, cards))
-    .startWith(CardActions.startListening(deck));
+    .startWith(CardActions.beforeStartListening(deck));
 }
 
 function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, cards: Map<string, ICard>) : Observable<Action> {
-  const startListeningActions: Action[] = cards.valueSeq()
-    .map(card => CardHistoryActions.startListening(card))
+  const beforeStartListeningActions: Action[] = cards.valueSeq()
+    .map(card => CardHistoryActions.beforeStartListening(card))
     .toArray();
 
   const now = moment.now();
@@ -70,7 +70,7 @@ function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingSe
   // 2. Again each time a history changes.
   if (cardHistories.length < 1) {
     return Observable.of(reviewSetHistory(null) as Action)
-      .startWith(...startListeningActions);
+      .startWith(...beforeStartListeningActions);
   }
 
   return Observable.combineLatest(cardHistories)
@@ -79,5 +79,5 @@ function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingSe
       const index = Math.floor(Math.random() * histories.length);
       return reviewSetHistory(histories[index]) as Action;
     })
-    .startWith(...startListeningActions);
+    .startWith(...beforeStartListeningActions);
 }

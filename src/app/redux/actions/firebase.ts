@@ -30,6 +30,10 @@ export class FirebaseActions<TModel, TArgs> {
   constructor(public prefix: string) {
   }
 
+  get BEFORE_START_LISTENING() {
+    return this.prefix + "_BEFORE_START_LISTENING";
+  }
+
   get START_LISTENING() {
     return this.prefix + "_START_LISTENING";
   }
@@ -48,6 +52,13 @@ export class FirebaseActions<TModel, TArgs> {
 
   get ERROR() {
     return this.prefix + "_ERROR";
+  }
+
+  beforeStartListening(args: TArgs) : IHasArgs<TArgs> & Action {
+    return {
+      type: this.BEFORE_START_LISTENING,
+      args,
+    }
   }
 
   startListening(args: TArgs) : IHasArgs<TArgs> & Action {

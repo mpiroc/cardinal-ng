@@ -46,7 +46,7 @@ export class DeckRouteComponent implements OnInit {
   ngOnInit(): void {
     this.deck = this.activatedRoute.snapshot.data['deck'];
 
-    this.ngRedux.dispatch(CardActions.startListening(this.deck));
+    this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
   }
 
   getBasePath() : string[] {

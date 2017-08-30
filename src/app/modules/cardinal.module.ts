@@ -87,6 +87,6 @@ export class CardinalModule {
     
     const store = configureStore(ngRedux, authService, databaseService, gradingService, logService);
     ngRedux.provideStore(store);
-    store.dispatch(UserActions.startListening({}));
+    store.dispatch(UserActions.beforeStartListening({}));
   }
 }

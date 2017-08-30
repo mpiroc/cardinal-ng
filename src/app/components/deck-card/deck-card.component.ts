@@ -57,8 +57,8 @@ export class DeckCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ngRedux.dispatch(DeckInfoActions.startListening(this.deck));
-    this.ngRedux.dispatch(CardActions.startListening(this.deck));
+    this.ngRedux.dispatch(DeckInfoActions.beforeStartListening(this.deck));
+    this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
 
     this.count$ = this.ngRedux
       .select(["card", this.deck.deckId, "data"])
