@@ -38,7 +38,10 @@ export class DeckCardComponent implements OnInit {
   @Input()
   deck: IDeck;
   
-  count$: Observable<number>;
+  count$: Observable<any>;
+
+  @select(["isLoading"])
+  isLoading$: Observable<boolean>;
 
   @select(["data", "name"])
   name$: Observable<string>;
@@ -62,8 +65,23 @@ export class DeckCardComponent implements OnInit {
     this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
 
     this.count$ = this.ngRedux
-      .select(["card", this.deck.deckId, "data"])
-      .map((cards: Map<string, any>) => cards ? cards.size : null);
+      .select(["card", this.deck.deckId])
+      .map<Map<string, any>, any>(cards => {
+        if (!cards) {
+          return null;
+        }
+
+        if (cards.get('isLoading')) {
+          return null;
+        }
+
+        const data: Map<string, any> = cards.get('data');
+        if (!data) {
+          return null;
+        }
+
+        return data.size;
+      });
   }
 
   onEdit() {

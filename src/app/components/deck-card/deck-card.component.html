@@ -1,21 +1,24 @@
 <md-card>
-  <md-card-title>
+  <md-card-title *ngIf="!(isLoading$ | async)">
     {{name$ | async}}
   </md-card-title>
-  <md-card-subtitle>
+  <md-card-subtitle *ngIf="!(isLoading$ | async) && (count$ | async) !== null">
     <span>{{count$ | async}}</span>
-    <span [ngPlural]="(count$ | async) || ''" *ngIf="(count$ | async) !== null">
+    <span [ngPlural]="(count$ | async) || ''">
       <ng-template ngPluralCase="=1">card</ng-template>
       <ng-template ngPluralCase="other">cards</ng-template>
     </span>
   </md-card-subtitle>
   <md-card-content>
-    <markdown data="{{description$ | async}}"></markdown>
+    <cardinal-loading-spinner [isLoading$]="isLoading$">
+      <markdown data="{{description$ | async}}"></markdown>
+    </cardinal-loading-spinner>
   </md-card-content>
-  <md-card-actions>
+  <md-card-actions *ngIf="!(isLoading$ | async)">
     <a md-button routerLink='/review/{{deck.deckId}}'>Review</a>
     <a md-button routerLink='/deck/{{deck.deckId}}'>View</a>
     <a md-button (click)='this.onEdit()'>Edit</a>
     <a md-button (click)='this.onDelete()'>Delete</a>
   </md-card-actions>
 </md-card>
+
