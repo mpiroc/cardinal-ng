@@ -1,6 +1,7 @@
-<div class='centered-container'>
-  <div class='centered-content' >
-    <span *ngIf="!(isLoading$ | async)" class='mat-headline'>Please Sign In</span>
-    <md-progress-spinner *ngIf="(isLoading$ | async)" mode='indeterminate'></md-progress-spinner>
+<cardinal-loading-spinner [isLoading]="isLoading$ | async">
+  <div class='centered-container'>
+    <div class='centered-content'>
+      <span *ngIf="!(isLoading$ | async)" class='mat-headline'>Please Sign In</span>
+    </div>
   </div>
-</div>
+</cardinal-loading-spinner>

@@ -23,6 +23,9 @@ export class DecksRouteComponent {
   @select(['deck', 'data'])
   decks$: Observable<Map<string, IDeck>>;
 
+  @select(['deck', 'isLoading'])
+  isLoading$: Observable<boolean>;
+
   constructor(
     private databaseService: DatabaseService,
     private dialog: MdDialog,

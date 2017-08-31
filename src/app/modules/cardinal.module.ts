@@ -19,6 +19,7 @@ import { LogService } from '../services/log.service';
 import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
+import { LoadingSpinnerComponent } from '../components/loading-spinner/loading-spinner.component';
 import { LoginRouteComponent } from '../components/login-route/login-route.component';
 import { LoginButtonComponent } from '../components/login-button/login-button.component';
 import { CardCardComponent } from '../components/card-card/card-card.component';
@@ -42,6 +43,7 @@ import 'hammerjs';
     RootComponent,
     ToolbarComponent,
     SidenavComponent,
+    LoadingSpinnerComponent,
     LoginRouteComponent,
     LoginButtonComponent,
     CardCardComponent,

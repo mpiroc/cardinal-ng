@@ -1,0 +1,8 @@
+.centered-container {
+  height: 100%;
+  display: flex;
+}
+
+.centered-content {
+  margin: auto;
+}
