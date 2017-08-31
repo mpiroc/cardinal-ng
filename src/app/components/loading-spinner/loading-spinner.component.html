@@ -1,6 +1,6 @@
-<div class='centered-container' *ngIf="isLoading">
+<div class='centered-container' *ngIf="isLoadingDebounced$ | async">
   <div class='centered-content'>
     <md-progress-spinner mode='indeterminate'></md-progress-spinner>
   </div>
 </div>
-<ng-content *ngIf="!isLoading"></ng-content>
+<ng-content *ngIf="!(isLoading$ | async)"></ng-content>
