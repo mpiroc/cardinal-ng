@@ -5,9 +5,6 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/map';
 
 import { IState } from '../redux/state';
 import { IDeck } from '../interfaces/firebase';
@@ -17,15 +14,15 @@ export class DeckResolver implements Resolve<IDeck> {
   constructor(private ngRedux: NgRedux<IState>) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IDeck> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IDeck {
     const deckId: string = route.paramMap.get('deckId');
 
-    return this.ngRedux
-      .select<string>(["user", "data", "uid"])
-      .map(uid => ({
-        uid,
-        deckId,
-      }))
-      .first();
+    // The AuthGuard will prevent this route from being resolved if the user is not logged in, so this is safe.
+    const uid: string = this.ngRedux.getState().user.get("data").get("uid");
+
+    return {
+      uid,
+      deckId,
+    };
   }
 }

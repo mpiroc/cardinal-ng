@@ -1,2 +1,4 @@
-<a *ngIf="!(this.isLoggedIn$ | async)" md-button (click)="this.login()">Sign in</a>
-<a *ngIf="this.isLoggedIn$ | async" md-button (click)="this.logout()">Sign Out</a>
+<span [ngSwitch]="this.authService.isLoggedIn$ | async">
+  <a *ngSwitchCase="false" md-button (click)="this.login()">Sign in</a>
+  <a *ngSwitchCase="true" md-button (click)="this.logout()">Sign out</a>
+</span>

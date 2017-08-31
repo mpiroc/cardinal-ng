@@ -11,10 +11,6 @@ export class LoginButtonComponent {
   constructor(private authService: AuthService) {
   }
 
-  get isLoggedIn$(): Observable<boolean> {
-    return this.authService.isLoggedIn$;
-  }
-
   login(): void {
     this.authService.login();
   }
