@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { select } from '@angular-redux/store';
 
 @Component({
   selector: 'cardinal-login-route',
@@ -6,4 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: [ './login-route.component.css' ],
 })
 export class LoginRouteComponent {
+  @select(["user", "isLoading"])
+  isLoading$: Observable<boolean>;
 }

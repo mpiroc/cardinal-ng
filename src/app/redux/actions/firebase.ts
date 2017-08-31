@@ -18,6 +18,10 @@ export interface IListReceivedAction<TModel> extends Action {
   data: Map<string, TModel>;
 }
 
+export interface ISetIsLoadingAction extends Action {
+  isLoading: boolean;
+}
+
 export interface IErrorAction extends Action {
   error: string;
 }
@@ -48,6 +52,10 @@ export class FirebaseActions<TModel, TArgs> {
 
   get RECEIVED() {
     return this.prefix + "_RECEIVED";
+  }
+
+  get SET_IS_LOADING() {
+    return this.prefix + "_SET_IS_LOADING";
   }
 
   get ERROR() {
@@ -96,6 +104,14 @@ export class FirebaseActions<TModel, TArgs> {
       args,
       data,
     };
+  }
+
+  setIsLoading(args: TArgs, isLoading: boolean) : IHasArgs<TArgs> & Action & ISetIsLoadingAction {
+    return {
+      type: this.SET_IS_LOADING,
+      args,
+      isLoading,
+    }
   }
 
   error(args: TArgs, error: string) : IHasArgs<TArgs> & Action & IErrorAction {

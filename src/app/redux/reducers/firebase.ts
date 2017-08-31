@@ -15,6 +15,7 @@ import {
   IHasArgs,
   IObjectReceivedAction,
   IListReceivedAction,
+  ISetIsLoadingAction,
   IErrorAction,
   CardContentActions,
   CardHistoryActions,
@@ -62,6 +63,10 @@ export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
           .set("error", null)
           .set("data", Map<string, any>((action as IObjectReceivedAction<TModel>).data));
 
+      case this.actions.SET_IS_LOADING:
+        return state
+          .set("isLoading", (action as ISetIsLoadingAction).isLoading);
+
       case this.actions.ERROR:
         return state
           .set("isListening", false)
@@ -90,6 +95,7 @@ export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
     switch (action.type) {
       case this.actions.START_LISTENING:
       case this.actions.RECEIVED:
+      case this.actions.SET_IS_LOADING:
       case this.actions.ERROR:
       {
         const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
@@ -142,6 +148,10 @@ export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
           .set("isLoading", false) 
           .set("error", null)
           .set("data", (action as IListReceivedAction<TModel>).data);
+
+      case this.actions.SET_IS_LOADING:
+        return state
+          .set("isLoading", (action as ISetIsLoadingAction).isLoading);
 
       case this.actions.ERROR:
         return state

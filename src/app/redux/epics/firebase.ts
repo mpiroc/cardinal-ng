@@ -1,6 +1,7 @@
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
@@ -22,6 +23,8 @@ import {
   UserActions,
 } from '../actions/firebase';
 import { FirebaseObjectReducer } from '../reducers/firebase';
+
+const ARTIFICIAL_LATENCY = 0;
 
 abstract class FirebaseEpic<TModel, TArgs> {
   constructor(
@@ -66,7 +69,7 @@ export class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArg
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
-      .mergeMap(action => fetch(action.args)
+      .mergeMap(action => fetch(action.args).delay(ARTIFICIAL_LATENCY)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
@@ -96,7 +99,7 @@ export class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs>
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
-      .mergeMap(action => fetch(action.args)
+      .mergeMap(action => fetch(action.args).delay(ARTIFICIAL_LATENCY)
         .mergeMap((data: TModel[]) => this.handleListReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
