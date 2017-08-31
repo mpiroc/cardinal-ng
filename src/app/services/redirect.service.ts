@@ -16,23 +16,23 @@ export class RedirectService {
   }
 
   startListening() {
-    this.router.events
+    const guardsCheckStart$ = this.router.events
       .filter(event => event instanceof GuardsCheckStart)
-      .map(event => event as GuardsCheckStart)
-      .switchMap(event => this.authService.isLoggedIn$
-        .map(isLoggedIn => ({
-          event,
-          isLoggedIn,
-        }))
-      )
-      .subscribe(result => {
-        if (result.isLoggedIn && result.event.url === "/login") {
-          this.router.navigate(["/decks"]);
-        }
+      .map(event => event as GuardsCheckStart);
 
-        if (!result.isLoggedIn && result.event.url !== "/login") {
-          this.router.navigate(["/login"]);
-        }
-      });
+    Observable.combineLatest(
+      guardsCheckStart$,
+      this.authService.isLoggedIn$,
+    ).subscribe(results => this.redirect(results[0].url, results[1]));
+  }
+
+  redirect(url: string, isLoggedIn: boolean) {
+    if (isLoggedIn && url === "/login") {
+      this.router.navigate(["/decks"]);
+    }
+
+    if (!isLoggedIn && url !== "/login") {
+      this.router.navigate(["/login"]);
+    }
   }
 }

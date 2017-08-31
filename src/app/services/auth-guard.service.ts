@@ -20,6 +20,7 @@ export class AuthGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    // TODO: There is a memory leak here. What is causing it?
     return this.checkUrl(state.url)
       .catch(error => { 
         this.logService.error(error);
