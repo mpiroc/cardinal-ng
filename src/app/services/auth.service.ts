@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { User, auth } from 'firebase/app';
+import { NgRedux } from '@angular-redux/store';
+import { auth } from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { IState } from '../redux/state';
 
 @Injectable()
 export class AuthService {
-  readonly user$: Observable<User>;
-  readonly isLoggedIn$: Observable<boolean>;
+  isLoggedIn$: Observable<boolean>;
 
-  constructor(private router: Router, private afAuth: AngularFireAuth) {
-    this.user$ = this.afAuth.authState;
-    this.isLoggedIn$ = this.user$.map(u => u !== null);
+  constructor(private afAuth: AngularFireAuth, ngRedux: NgRedux<IState>) {
+    this.isLoggedIn$ = ngRedux
+      .select(["user", "data", "uid"])
+      .map(uid => uid ? true : false);
   }
 
   login(): void {

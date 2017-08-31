@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { MarkdownModule } from 'angular2-markdown';
 import { MdSnackBar } from '@angular/material';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
@@ -76,6 +77,7 @@ import 'hammerjs';
 })
 export class CardinalModule {
   constructor(
+    afAuth: AngularFireAuth,
     ngRedux: NgRedux<IState>,
     authService: AuthService,
     databaseService: DatabaseService,
@@ -85,7 +87,7 @@ export class CardinalModule {
   ) {
     logService.error$.subscribe(error => snackbarService.open(error.message, "Dismiss", { duration: 5000 }));
     
-    const store = configureStore(ngRedux, authService, databaseService, gradingService, logService);
+    const store = configureStore(afAuth, ngRedux, authService, databaseService, gradingService, logService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.beforeStartListening({}));
   }

@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { NgRedux } from '@angular-redux/store';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
@@ -41,13 +42,14 @@ export const rootReducer = combineReducers({
 });
 
 export function createRootEpic(
+  afAuth: AngularFireAuth,
   ngRedux: NgRedux<IState>,
   authService: AuthService,
   databaseService: DatabaseService,
   gradingService: GradingService,
   logService: LogService) {
   return combineEpics(
-    UserEpic.createEpic(logService, _ => authService.user$.map(user => user ? { uid: user.uid } as IUser : null)),
+    UserEpic.createEpic(logService, _ => afAuth.authState.map(user => user ? { uid: user.uid } as IUser : null)),
     CardContentEpic.createEpic(logService, databaseService.getCardContent.bind(databaseService)),
     CardHistoryEpic.createEpic(logService, databaseService.getCardHistory.bind(databaseService)),
     DeckInfoEpic.createEpic(logService, databaseService.getDeckInfo.bind(databaseService)),

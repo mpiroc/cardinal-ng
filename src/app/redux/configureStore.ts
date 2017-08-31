@@ -10,6 +10,7 @@ import {
   createEpicMiddleware,
   Options,
 } from 'redux-observable';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
@@ -30,6 +31,7 @@ function logAction(logService: LogService, prefix: string, action: Action): Acti
 }
 
 export function configureStore(
+  afAuth: AngularFireAuth,
   ngRedux: NgRedux<IState>,
   authService: AuthService,
   databaseService: DatabaseService,
@@ -42,7 +44,7 @@ export function configureStore(
     }
   }
 
-  const rootEpic = createRootEpic(ngRedux, authService, databaseService, gradingService, logService);
+  const rootEpic = createRootEpic(afAuth, ngRedux, authService, databaseService, gradingService, logService);
   const epicMiddleware = createEpicMiddleware(rootEpic, options);
 
   return createStore(
