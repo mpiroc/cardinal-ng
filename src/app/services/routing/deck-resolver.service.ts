@@ -6,22 +6,24 @@ import {
 } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
 
+import { UserResolver } from './user-resolver.service';
 import { IState } from '../../redux/state';
 import { IDeck } from '../../interfaces/firebase';
 
 @Injectable()
 export class DeckResolver implements Resolve<IDeck> {
-  constructor(private ngRedux: NgRedux<IState>) {
+  constructor(
+    private ngRedux: NgRedux<IState>,
+    private userResolver: UserResolver
+  ) {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : IDeck {
+    const user = this.userResolver.resolve(route, state);
     const deckId: string = route.paramMap.get('deckId');
 
-    // The AuthGuard will prevent this route from being resolved if the user is not logged in, so this is safe.
-    const uid: string = this.ngRedux.getState().user.get("data").get("uid");
-
     return {
-      uid,
+      ...user,
       deckId,
     };
   }
