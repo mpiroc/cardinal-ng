@@ -19,6 +19,8 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/finally';
+import { Action } from 'redux';
 import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import { ICard } from '../../interfaces/firebase';
@@ -30,6 +32,10 @@ import {
   EditCardDialog,
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
+import {
+  editCardSetFront,
+  editCardSetBack,
+} from '../../redux/actions/edit-card';
 import { CardContentActions } from '../../redux/actions/firebase';
 import { CardContentObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
@@ -74,26 +80,31 @@ export class CardCardComponent implements OnChanges {
   }
 
   onEdit() {
+    const frontSubscription = this.front$.subscribe(front =>
+      this.ngRedux.dispatch(editCardSetFront(front)));
+    const backSubscription = this.back$.subscribe(back =>
+      this.ngRedux.dispatch(editCardSetBack(back)));
+
     const dialogRef: MdDialogRef<EditCardDialog> = this.dialog.open(EditCardDialog, {
-      data: {
-        title: "Edit Card",
-        front$: this.front$,
-        back$: this.back$,
-      }
+      data: { title: "Edit Card" },
     });
-    dialogRef.afterClosed()
+    const dialogSubscription = dialogRef.afterClosed()
       .map(result => result || EditCardDialogResult.Cancel)
-      .switchMap(result => {
+      .do(result => {
+        const state: IState = this.ngRedux.getState();
+        this.ngRedux.dispatch(editCardSetFront(null));
+        this.ngRedux.dispatch(editCardSetBack(null));
+
         switch (result) {
           case EditCardDialogResult.Cancel:
-            return Observable.of<void>();
+            return;
 
           case EditCardDialogResult.Save:
-            return Observable.from(this.databaseService.updateCardContent(
+            this.databaseService.updateCardContent(
               this.card,
-              dialogRef.componentInstance.front,
-              dialogRef.componentInstance.back,
-            ));
+              state.editCard.get('front'),
+              state.editCard.get('back'),
+            );
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);
@@ -102,6 +113,11 @@ export class CardCardComponent implements OnChanges {
       .catch(error => { 
         this.logService.error(error);
         return Observable.of();
+      })
+      .finally(() => {
+        frontSubscription.unsubscribe();
+        backSubscription.unsubscribe();
+        dialogSubscription.unsubscribe();
       })
       .subscribe();
   }

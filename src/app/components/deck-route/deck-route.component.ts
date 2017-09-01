@@ -19,6 +19,10 @@ import {
   EditCardDialog,
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
+import {
+  editCardSetFront,
+  editCardSetBack,
+} from '../../redux/actions/edit-card';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",
@@ -61,28 +65,30 @@ export class DeckRouteComponent implements OnInit {
   }
 
   onNewCard() {
+    this.ngRedux.dispatch(editCardSetFront(""));
+    this.ngRedux.dispatch(editCardSetBack(""));
+
     const dialogRef: MdDialogRef<EditCardDialog> = this.dialog.open(EditCardDialog, {
-      data: {
-        title: "Create Card",
-        front$: Observable.of(''),
-        back$: Observable.of(''),
-      },
+      data: { title: "Create Card" },
     });
 
-    dialogRef.afterClosed()
+    const dialogSubscription = dialogRef.afterClosed()
       .map(result => result || EditCardDialogResult.Cancel)
-      .switchMap(result => {
+      .do(result => {
+        const state = this.ngRedux.getState();
+        this.ngRedux.dispatch(editCardSetFront(null));
+        this.ngRedux.dispatch(editCardSetBack(null));
+
         switch (result) {
           case EditCardDialogResult.Cancel:
-            return Observable.of<void>();
+            return;
 
           case EditCardDialogResult.Save:
-            return Observable.from(
-              this.databaseService.createCard(
+            this.databaseService.createCard(
               this.deck,
-              dialogRef.componentInstance.front,
-              dialogRef.componentInstance.back,
-            ));
+              state.editCard.get('front'),
+              state.editCard.get('back'),
+            );
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);
@@ -91,6 +97,9 @@ export class DeckRouteComponent implements OnInit {
       .catch(error => {
         this.logService.error(error);
         return Observable.of();
+      })
+      .finally(() => {
+        dialogSubscription.unsubscribe();
       })
       .subscribe();
   }

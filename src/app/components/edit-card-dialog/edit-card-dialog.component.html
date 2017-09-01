@@ -5,17 +5,17 @@
       <md-tab label="Front">
         <div>
           <md-input-container>
-            <textarea mdInput rows="8" value="{{data.front$ | async}}" (input)="onFrontInput($event)"></textarea>
+            <textarea mdInput rows="8" value="{{front$ | async}}" (input)="onFrontInput($event)"></textarea>
           </md-input-container>
-          <markdown data="{{front}}"></markdown>
+          <markdown data="{{front$ | async}}"></markdown>
         </div>
       </md-tab>
       <md-tab label="Back">
         <div>
           <md-input-container>
-            <textarea mdInput rows="8" value="{{data.back$ | async}}" (input)="onBackInput($event)"></textarea>
+            <textarea mdInput rows="8" value="{{back$ | async}}" (input)="onBackInput($event)"></textarea>
           </md-input-container>
-          <markdown data="{{back}}"></markdown>
+          <markdown data="{{back$ | async}}"></markdown>
         </div>
       </md-tab>
     </md-tab-group>

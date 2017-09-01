@@ -1,7 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {
+  editCardSetFront,
+  editCardSetBack,
+} from '../../redux/actions/edit-card';
+import { IState } from '../../redux/state';
 
 export enum EditCardDialogResult {
   Cancel,
@@ -10,8 +16,6 @@ export enum EditCardDialogResult {
 
 interface IEditCardDialogData {
   title: string;
-  front$: Observable<string>;
-  back$: Observable<string>;
 }
 
 @Component({
@@ -20,20 +24,24 @@ interface IEditCardDialogData {
   styleUrls: [ './edit-card-dialog.component.css' ],
 })
 export class EditCardDialog {
-  front: string;
-  back: string;
+  @select(["editCard", "front"])
+  front$: Observable<string>;
+
+  @select(["editCard", "back"])
+  back$: Observable<string>;
+
   dialogResult: typeof EditCardDialogResult = EditCardDialogResult;
 
-  constructor(@Inject(MD_DIALOG_DATA) public data: IEditCardDialogData) {
-    data.front$.subscribe(front => this.front = front);
-    data.back$.subscribe(back => this.back = back);
+  constructor(
+    @Inject(MD_DIALOG_DATA) public data: IEditCardDialogData,
+    private ngRedux: NgRedux<IState>) {
   }
 
   onFrontInput($event: any) {
-    this.front = $event.target.value;
+    this.ngRedux.dispatch(editCardSetFront($event.target.value));
   }
 
   onBackInput($event: any) {
-    this.back = $event.target.value;
+    this.ngRedux.dispatch(editCardSetBack($event.target.value));
   }
 }

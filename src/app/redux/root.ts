@@ -20,6 +20,7 @@ import {
   CardMapReducer,
 } from './reducers/firebase';
 import { review } from './reducers/review';
+import { editCard } from './reducers/edit-card';
 import {
   UserEpic,
   CardContentEpic,
@@ -39,6 +40,7 @@ export const rootReducer = combineReducers({
   deck: DeckListReducer.reducer,
   card: CardMapReducer.reducer,
   review,
+  editCard,
 });
 
 export function createRootEpic(
