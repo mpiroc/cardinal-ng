@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from '../../services/firebase/auth.service';
 
 @Component({
   selector: 'cardinal-sidenav',
@@ -13,6 +14,9 @@ import { RouterOutlet } from '@angular/router';
 export class SidenavComponent implements OnInit {
   _isLoading$: Subject<boolean> = new Subject<boolean>();
   isLoading$: Observable<boolean>;
+
+  constructor(private authService: AuthService) {
+  }
 
   ngOnInit() {
     this._isLoading$ = new Subject<boolean>();

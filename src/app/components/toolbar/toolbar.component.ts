@@ -9,5 +9,8 @@ import { IState } from '../../redux/state';
   styleUrls: [ './toolbar.component.css' ],
 })
 export class ToolbarComponent {
-  title = 'Cardinal';
+  private title = 'Cardinal';
+  
+  @select(["user", "isLoading"])
+  isLoading$: Observable<boolean>;
 }

@@ -1,6 +1,6 @@
 <md-toolbar color="primary" class="ng-material-nav-toolbar mat-elevation-z6">
   <a md-button class="ng-material-app-title" routerLink='/'>{{title}}</a>
   <span class="ng-material-flex-spacer"></span>
-  <a md-button routerLink='/'>Home</a>
+  <a disabled="{{isLoading$ | async}}" md-button routerLink='/'>Home</a>
   <cardinal-login-button></cardinal-login-button>
 </md-toolbar>
