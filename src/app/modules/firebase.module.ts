@@ -7,8 +7,8 @@ import { MaterialModule } from './material.module';
 import { LogModule } from './log.module';
 
 import { environment } from '../../environments/environment';
-import { AuthService } from '../services/auth.service';
-import { DatabaseService } from '../services/database.service';
+import { AuthService } from '../services/firebase/auth.service';
+import { DatabaseService } from '../services/firebase/database.service';
 
 @NgModule({
   imports: [

@@ -12,8 +12,8 @@ import {
 } from 'redux-observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 
-import { AuthService } from '../services/auth.service';
-import { DatabaseService } from '../services/database.service';
+import { AuthService } from '../services/firebase/auth.service';
+import { DatabaseService } from '../services/firebase/database.service';
 import { GradingService } from '../services/grading.service';
 import { LogService } from '../services/log.service';
 

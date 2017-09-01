@@ -17,7 +17,7 @@ import {
   ICard,
   ICardContent,
   ICardHistory,
-} from '../interfaces/firebase';
+} from '../../interfaces/firebase';
 
 @Injectable()
 export class DatabaseService {

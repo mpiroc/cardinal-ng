@@ -3,8 +3,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { NgRedux } from '@angular-redux/store';
 import { auth } from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
-import { IState } from '../redux/state';
-import { UserActions } from '../redux/actions/firebase';
+import { IState } from '../../redux/state';
+import { UserActions } from '../../redux/actions/firebase';
 
 @Injectable()
 export class AuthService {

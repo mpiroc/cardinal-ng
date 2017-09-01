@@ -11,8 +11,8 @@ import { MaterialModule } from './material.module';
 import { CardinalRoutingModule } from './cardinal-routing.module';
 import { LogModule } from './log.module';
 
-import { AuthService } from '../services/auth.service';
-import { DatabaseService } from '../services/database.service';
+import { AuthService } from '../services/firebase/auth.service';
+import { DatabaseService } from '../services/firebase/database.service';
 import { GradingService } from '../services/grading.service';
 import { LogService } from '../services/log.service';
 

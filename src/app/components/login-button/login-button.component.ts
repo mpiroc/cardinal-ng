@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/firebase/auth.service';
 
 @Component({
   selector: 'cardinal-login-button',

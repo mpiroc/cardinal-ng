@@ -3,8 +3,8 @@ import { combineEpics } from 'redux-observable';
 import { NgRedux } from '@angular-redux/store';
 import { AngularFireAuth } from 'angularfire2/auth';
 
-import { AuthService } from '../services/auth.service';
-import { DatabaseService } from '../services/database.service';
+import { AuthService } from '../services/firebase/auth.service';
+import { DatabaseService } from '../services/firebase/database.service';
 import { LogService } from '../services/log.service';
 import { GradingService } from '../services/grading.service';
 import {

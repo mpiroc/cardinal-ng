@@ -3,7 +3,7 @@ import { NgRedux } from '@angular-redux/store';
 import { Promise as FirebasePromise } from 'firebase';
 import * as moment from 'moment';
 
-import { DatabaseService } from './database.service';
+import { DatabaseService } from './firebase/database.service';
 import { ICardHistory } from '../interfaces/firebase';
 import { IState } from '../redux/state';
 

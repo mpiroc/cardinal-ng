@@ -3,7 +3,7 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 import { select } from '@angular-redux/store';
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
-import { DatabaseService } from '../../services/database.service';
+import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import { IDeck } from '../../interfaces/firebase';
 import {

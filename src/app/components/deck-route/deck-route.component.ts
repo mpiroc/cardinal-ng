@@ -6,7 +6,7 @@ import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
-import { DatabaseService } from '../../services/database.service';
+import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import {
   IDeck,
