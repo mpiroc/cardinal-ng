@@ -6,8 +6,8 @@ import {
 } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
 
-import { IState } from '../redux/state';
-import { IDeck } from '../interfaces/firebase';
+import { IState } from '../../redux/state';
+import { IDeck } from '../../interfaces/firebase';
 
 @Injectable()
 export class DeckResolver implements Resolve<IDeck> {

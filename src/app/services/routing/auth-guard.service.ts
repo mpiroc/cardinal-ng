@@ -10,9 +10,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { UserActions } from '../redux/actions/firebase';
-import { AuthService } from './auth.service';
-import { LogService } from './log.service';
+import { UserActions } from '../../redux/actions/firebase';
+import { AuthService } from '../auth.service';
+import { LogService } from '../log.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {

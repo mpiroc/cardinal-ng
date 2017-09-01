@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LogModule } from './log.module';
 
-import { AuthGuardService } from '../services/auth-guard.service';
+import { AuthGuardService } from '../services/routing/auth-guard.service';
 import { RedirectService } from '../services/redirect.service';
-import { DeckResolver } from '../resolvers/deck.resolver';
+import { DeckResolver } from '../services/routing/deck-resolver.service';
 
 import { LoginRouteComponent } from '../components/login-route/login-route.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
