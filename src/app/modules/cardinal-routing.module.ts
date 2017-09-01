@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LogModule } from './log.module';
 
 import { AuthGuardService } from '../services/routing/auth-guard.service';
-import { RedirectService } from '../services/redirect.service';
+import { RedirectService } from '../services/routing/redirect.service';
 import { DeckResolver } from '../services/routing/deck-resolver.service';
 
 import { LoginRouteComponent } from '../components/login-route/login-route.component';
