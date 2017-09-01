@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
@@ -8,13 +8,13 @@ import 'rxjs/add/operator/debounce';
   templateUrl: './loading-spinner.component.html',
   styleUrls: [ './loading-spinner.component.css' ],
 })
-export class LoadingSpinnerComponent implements OnInit {
+export class LoadingSpinnerComponent implements OnChanges {
   @Input()
   isLoading$: Observable<boolean>;
 
   isLoadingDebounced$: Observable<boolean>;
 
-  ngOnInit() {
+  ngOnChanges() {
     this.isLoadingDebounced$ = this.isLoading$
       .debounce(isLoading => isLoading ?
         Observable.timer(300) :

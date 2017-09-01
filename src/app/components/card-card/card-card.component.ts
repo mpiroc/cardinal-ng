@@ -48,7 +48,7 @@ export class CardCardComponent implements OnChanges {
   @Input() showActions: boolean;
 
   @select(["isLoading"])
-  isLoading$: Observable<boolean>
+  isLoading$: Observable<boolean>;
 
   @select(["data", "front"])
   front$: Observable<string>;

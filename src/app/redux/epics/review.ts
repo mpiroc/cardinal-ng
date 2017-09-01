@@ -68,14 +68,20 @@ function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingSe
   // Pick a current card:
   // 1. Once when all histories have first loaded.
   // 2. Again each time a history changes.
-  if (cardHistories.length < 1) {
-    return Observable.of(reviewSetHistory(null) as Action)
-      .startWith(...beforeStartListeningActions);
-  }
-
   return Observable.combineLatest(cardHistories)
     .map(histories => histories.filter(history => gradingService.isDue(history, now)))
     .map(histories => {
+      if (histories.length === 0) {
+        return reviewSetHistory(null) as Action;
+      }
+      if (histories.length === 1) {
+        return reviewSetHistory(histories[0]) as Action;
+      }
+
+      const currentHistory = ngRedux.getState().review.get('history')
+      const currentCardId = currentHistory ? currentHistory.cardId : null;
+      histories = histories.filter(history => history.cardId !== currentCardId);
+
       const index = Math.floor(Math.random() * histories.length);
       return reviewSetHistory(histories[index]) as Action;
     })

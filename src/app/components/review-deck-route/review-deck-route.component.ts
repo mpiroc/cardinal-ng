@@ -22,6 +22,9 @@ import { IState } from '../../redux/state';
   styleUrls: [ './review-deck-route.component.css' ],
 })
 export class ReviewDeckRouteComponent implements OnInit {
+  @select(['review', 'isLoading'])
+  private isLoading$: Observable<boolean>;
+
   @select(['review', 'history'])
   private history$: Observable<ICardHistory>;
 

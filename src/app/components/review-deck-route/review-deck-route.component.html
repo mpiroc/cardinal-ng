@@ -1,33 +1,35 @@
-<div class="container">
-  <cardinal-card-card
-    *ngIf="(history$ | async) ? true : false"
-    [card]='history$ | async'
-    [showActions]='false'>
-  </cardinal-card-card>
-  <div class="responseContainer" *ngIf="(history$ | async) ? true : false">
-    <md-card>
-      <md-card-title>
-        How well did you remember this card?
-      </md-card-title>
+<cardinal-loading-spinner [isLoading$]='isLoading$'>
+  <div class="container">
+    <cardinal-card-card
+      *ngIf="(history$ | async) ? true : false"
+      [card]='history$ | async'
+      [showActions]='false'>
+    </cardinal-card-card>
+    <div class="responseContainer" *ngIf="(history$ | async) ? true : false">
+      <md-card>
+        <md-card-title>
+          How well did you remember this card?
+        </md-card-title>
+        <md-card-content>
+          <md-list>
+            <md-list-item *ngFor="let grade of [0, 1, 2, 3, 4, 5]">
+              <md-radio-button
+                (change)=(onSelectGrade(grade))
+                [checked]="(grade$ | async) === grade">
+                {{getReviewText(grade)}}
+              </md-radio-button>
+            </md-list-item>
+          </md-list>
+        </md-card-content>
+        <md-card-actions>
+          <a md-button (click)="onNext()">Next</a>
+        </md-card-actions>
+      </md-card>
+    </div>
+    <md-card *ngIf="(history$ | async) ? false : true">
       <md-card-content>
-        <md-list>
-          <md-list-item *ngFor="let grade of [0, 1, 2, 3, 4, 5]">
-            <md-radio-button
-              (change)=(onSelectGrade(grade))
-              [checked]="(grade$ | async) === grade">
-              {{getReviewText(grade)}}
-            </md-radio-button>
-          </md-list-item>
-        </md-list>
+        All done! You have no more cards to review right now.
       </md-card-content>
-      <md-card-actions>
-        <a md-button (click)="onNext()">Next</a>
-      </md-card-actions>
     </md-card>
   </div>
-  <md-card *ngIf="(history$ | async) ? false : true">
-    <md-card-content>
-      All done! You have no more cards to review right now.
-    </md-card-content>
-  </md-card>
-</div>
+</cardinal-loading-spinner>

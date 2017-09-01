@@ -93,7 +93,9 @@ export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
 
   _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
     switch (action.type) {
+      case this.actions.BEFORE_START_LISTENING:
       case this.actions.START_LISTENING:
+      case this.actions.BEFORE_STOP_LISTENING:
       case this.actions.RECEIVED:
       case this.actions.SET_IS_LOADING:
       case this.actions.ERROR:
