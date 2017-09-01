@@ -47,11 +47,14 @@ export class CardCardComponent implements OnChanges {
   @Input() card: ICard;
   @Input() showActions: boolean;
 
+  @select(["isLoading"])
+  isLoading$: Observable<boolean>
+
   @select(["data", "front"])
-  front$: string;
+  front$: Observable<string>;
 
   @select(["data", "back"])
-  back$: string;
+  back$: Observable<string>;
 
   constructor(
     private ngRedux: NgRedux<IState>,

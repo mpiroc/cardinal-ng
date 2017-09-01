@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 import {
   Router,
   GuardsCheckStart,
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
 
 import { AuthService } from '../firebase/auth.service';
 
 @Injectable()
 export class RedirectService {
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService) {
   }
 
   startListening() {
@@ -20,10 +24,13 @@ export class RedirectService {
       .filter(event => event instanceof GuardsCheckStart)
       .map(event => event as GuardsCheckStart);
 
-    Observable.combineLatest(
-      guardsCheckStart$,
-      this.authService.isLoggedIn$,
-    ).subscribe(results => this.redirect(results[0].url, results[1]));
+    guardsCheckStart$
+      .switchMap(event => this.authService.isLoading$
+        .filter(isLoading => !isLoading)
+        .switchMap(isLoading => this.authService.isLoggedIn$
+          .do(isLoggedIn => this.redirect(event.url, isLoggedIn))
+        )
+      ).subscribe();
   }
 
   redirect(url: string, isLoggedIn: boolean) {

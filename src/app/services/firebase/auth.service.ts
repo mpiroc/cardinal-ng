@@ -8,9 +8,12 @@ import { UserActions } from '../../redux/actions/firebase';
 
 @Injectable()
 export class AuthService {
+  isLoading$: Observable<boolean>;
   isLoggedIn$: Observable<boolean>;
 
   constructor(private afAuth: AngularFireAuth, private ngRedux: NgRedux<IState>) {
+    this.isLoading$ = ngRedux
+      .select(["user", "isLoading"]);
     this.isLoggedIn$ = ngRedux
       .select(["user", "data", "uid"])
       .map(uid => uid ? true : false);

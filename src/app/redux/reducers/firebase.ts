@@ -32,7 +32,7 @@ export interface IFirebaseReducer {
 export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
-    isLoading: false,
+    isLoading: true,
     error: null,
     data: null,
   });
@@ -117,7 +117,7 @@ export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
 export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState : Map<string, any> = Map({
     isListening: false,
-    isLoading: false,
+    isLoading: true,
     error: null,
     data: Map<string, TModel>(),
   });

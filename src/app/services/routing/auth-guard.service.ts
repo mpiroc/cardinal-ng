@@ -6,6 +6,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -20,21 +21,20 @@ export class AuthGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    // TODO: There is a memory leak here. What is causing it?
-    return this.checkUrl(state.url)
+    return this.authService.isLoading$
+      .filter(isLoading => !isLoading)
+      .switchMap(_ => this.authService.isLoggedIn$)
+      .map(isLoggedIn => {
+        console.log("canActivate", state.url, isLoggedIn);
+        if (isLoggedIn) {
+          return state.url !== '/login';
+        }
+
+        return state.url === '/login';
+      })
       .catch(error => { 
         this.logService.error(error);
         return Observable.of(UserActions.error({}, error.message));
       });
-  }
-
-  private checkUrl(url: string): Observable<boolean> {
-    return this.authService.isLoggedIn$.map(isLoggedIn => {
-      if (isLoggedIn) {
-        return url !== "/login";
-      }
-
-      return url === "/login";
-    });
   }
 }

@@ -1,12 +1,12 @@
-<div class='container'>
-  <cardinal-loading-spinner [isLoading$]="isLoading$">
+<cardinal-loading-spinner [isLoading$]="isLoading$">
+  <div class='container'>
     <div class='ng-material-decks-list'>
       <div *ngFor="let deck of emptyIfNull(decks$ | async).toArray()">
         <cardinal-deck-card [deck]="deck"></cardinal-deck-card>
       </div>
     </div>
-  </cardinal-loading-spinner>
-  <div class='ng-material-new-deck-button'>
-    <button md-fab class='centered' (click)='this.onNewDeck()'><md-icon>add</md-icon></button>
+    <div class='ng-material-new-deck-button'>
+      <button md-fab class='centered' (click)='this.onNewDeck()'><md-icon>add</md-icon></button>
+    </div>
   </div>
-</div>
+</cardinal-loading-spinner>
