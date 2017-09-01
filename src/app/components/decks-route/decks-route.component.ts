@@ -1,35 +1,66 @@
-import { Component } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { select } from '@angular-redux/store';
 import { Map } from 'immutable';
+import { Component, OnInit } from '@angular/core';
+import { MdDialog, MdDialogRef } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/operator/do';
 import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
-import { IDeck } from '../../interfaces/firebase';
+import {
+  IUser,
+  IDeck,
+} from '../../interfaces/firebase';
+import { DeckActions } from '../../redux/actions/firebase';
+import { DeckListReducer } from '../../redux/reducers/firebase';
+import { IState } from '../../redux/state';
+import {
+  editDeckSetName,
+  editDeckSetDescription,
+} from '../../redux/actions/edit-deck';
 import {
   EditDeckDialog,
   EditDeckDialogResult,
 } from '../edit-deck-dialog/edit-deck-dialog.component';
 
+@WithSubStore({
+  basePathMethodName: "getBasePath",
+  localReducer: DeckListReducer.reducer,
+})
 @Component({
   selector: 'cardinal-decks-route',
   templateUrl: './decks-route.component.html',
   styleUrls: [ './decks-route.component.css' ],
 })
-export class DecksRouteComponent {
-  @select(['user', 'data', 'uid'])
-  uid$: Observable<string>;
+export class DecksRouteComponent implements OnInit {
+  private user: IUser;
 
-  @select(['deck', 'data'])
-  decks$: Observable<Map<string, IDeck>>;
-
-  @select(['deck', 'isLoading'])
+  @select(['isLoading'])
   isLoading$: Observable<boolean>;
 
+  @select(['data'])
+  decks$: Observable<Map<string, IDeck>>;
+
   constructor(
+    private ngRedux: NgRedux<IState>,
+    private activatedRoute: ActivatedRoute,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
     private logService: LogService) {
+  }
+
+  ngOnInit() : void {
+    this.user = this.activatedRoute.snapshot.data['user'];
+
+    this.ngRedux.dispatch(DeckActions.beforeStartListening(this.user));
+  }
+
+  getBasePath() : string[] {
+    return ['deck'];
   }
 
   emptyIfNull(decks: Map<string, IDeck>): Map<string, IDeck> {
@@ -37,38 +68,42 @@ export class DecksRouteComponent {
   }
 
   onNewDeck(): void {
+    this.ngRedux.dispatch(editDeckSetName(""));
+    this.ngRedux.dispatch(editDeckSetDescription(""));
+
     const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
-      data: {
-        title: "Create Deck",
-        name$: Observable.of(''),
-        description$: Observable.of(''),
-      },
+      data: { title: "Create Deck" },
     });
 
-    Observable.combineLatest(
-      this.uid$,
-      dialogRef.afterClosed().map(result => result || EditDeckDialogResult.Cancel))
-      .switchMap(results => {
-        const uid = results[0];
-        const result = results[1];
+    const dialogSubscription = dialogRef.afterClosed()
+      .map(result => result || EditDeckDialogResult.Cancel)
+      .do(result => {
+        const state = this.ngRedux.getState();
+        this.ngRedux.dispatch(editDeckSetName(null));
+        this.ngRedux.dispatch(editDeckSetDescription(null));
 
         switch (result) {
           case EditDeckDialogResult.Cancel:
-            return Observable.of<void>();
+            return;
 
           case EditDeckDialogResult.Save:
-            return Observable.from(this.databaseService.createDeck({ uid },
-              dialogRef.componentInstance.name,
-              dialogRef.componentInstance.description,
-            ));
+            this.databaseService.createDeck(
+              this.user,
+              state.editDeck.get('name'),
+              state.editDeck.get('description'),
+            );
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);
         }
+
       })
       .catch(error => {
         this.logService.error(error);
         return Observable.of();
+      })
+      .finally(() => {
+        dialogSubscription.unsubscribe();
       })
       .subscribe();
   }

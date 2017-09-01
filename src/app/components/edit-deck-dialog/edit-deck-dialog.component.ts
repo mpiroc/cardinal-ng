@@ -1,7 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {
+  editDeckSetName,
+  editDeckSetDescription,
+} from '../../redux/actions/edit-deck';
+import { IState } from '../../redux/state';
 
 export enum EditDeckDialogResult {
   Cancel,
@@ -10,8 +16,6 @@ export enum EditDeckDialogResult {
 
 interface IEditDeckDialogData {
   title: string;
-  name$: Observable<string>;
-  description$: Observable<string>;
 }
 
 @Component({
@@ -20,20 +24,24 @@ interface IEditDeckDialogData {
   styleUrls: [ './edit-deck-dialog.component.css' ],
 })
 export class EditDeckDialog {
-  public name: string;
-  public description: string;
+  @select(["editDeck", "name"])
+  name$: Observable<string>;
+
+  @select(["editDeck", "description"])
+  description$: Observable<string>;
+
   dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult;
 
-  constructor(@Inject(MD_DIALOG_DATA) public data: IEditDeckDialogData) {
-    data.name$.subscribe(name => this.name = name);
-    data.description$.subscribe(description => this.description = description);
+  constructor(
+    @Inject(MD_DIALOG_DATA) public data: IEditDeckDialogData,
+    private ngRedux: NgRedux<IState>) {
   }
 
   onNameInput($event: any) {
-    this.name = $event.target.value;
+    this.ngRedux.dispatch(editDeckSetName($event.target.value));
   }
 
   onDescriptionInput($event: any) {
-    this.description = $event.target.value;
+    this.ngRedux.dispatch(editDeckSetDescription($event.target.value));
   }
 }

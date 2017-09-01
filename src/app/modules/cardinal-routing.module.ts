@@ -5,6 +5,7 @@ import { LogModule } from './log.module';
 import { AuthGuardService } from '../services/routing/auth-guard.service';
 import { RedirectService } from '../services/routing/redirect.service';
 import { DeckResolver } from '../services/routing/deck-resolver.service';
+import { UserResolver } from '../services/routing/user-resolver.service';
 
 import { LoginRouteComponent } from '../components/login-route/login-route.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
@@ -23,6 +24,9 @@ const routes: Routes = [
     path: 'decks',
     component: DecksRouteComponent,
     canActivate: [AuthGuardService],
+    resolve: {
+      user: UserResolver,
+    }
   },
   {
     path: 'deck/:deckId',
@@ -56,6 +60,7 @@ const routes: Routes = [
   ],
   providers: [
     DeckResolver,
+    UserResolver,
     AuthGuardService,
     RedirectService,
   ],

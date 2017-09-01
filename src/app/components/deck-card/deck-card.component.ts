@@ -1,12 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { NgRedux, select, WithSubStore } from '@angular-redux/store';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
+import {
+  MdDialog,
+  MdDialogRef,
+} from '@angular/material';
+import {
+  NgRedux,
+  select,
+  WithSubStore,
+} from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/finally';
 import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import { IDeck } from '../../interfaces/firebase';
@@ -18,6 +31,10 @@ import {
   DeleteDeckDialog,
   DeleteDeckDialogResult,
 } from '../delete-deck-dialog/delete-deck-dialog.component';
+import {
+  editDeckSetName,
+  editDeckSetDescription,
+} from '../../redux/actions/edit-deck';
 import {
   CardActions,
   DeckInfoActions,
@@ -34,7 +51,7 @@ import { IState } from '../../redux/state';
   templateUrl: './deck-card.component.html',
   styleUrls: [ './deck-card.component.css' ],
 })
-export class DeckCardComponent implements OnInit {
+export class DeckCardComponent implements OnChanges {
   @Input()
   deck: IDeck;
   
@@ -60,7 +77,11 @@ export class DeckCardComponent implements OnInit {
     return ["deckInfo", this.deck.deckId];
   }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes.deck) {
+      return;
+    }
+
     this.ngRedux.dispatch(DeckInfoActions.beforeStartListening(this.deck));
     this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
 
@@ -85,26 +106,32 @@ export class DeckCardComponent implements OnInit {
   }
 
   onEdit() {
+    const nameSubscription = this.name$.subscribe(name =>
+      this.ngRedux.dispatch(editDeckSetName(name)));
+    const descriptionSubscription = this.description$.subscribe(description =>
+      this.ngRedux.dispatch(editDeckSetDescription(description)));
+
     const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
-      data: {
-        title: "Edit Deck",
-        name$: this.name$,
-        description$: this.description$,
-      }
+      data: { title: "Edit Deck" }
     });
-    dialogRef.afterClosed()
+    const dialogSubscription = dialogRef.afterClosed()
       .map(result => result || EditDeckDialogResult.Cancel)
-      .switchMap(result => {
+      .do(result => {
+        const state: IState = this.ngRedux.getState();
+        this.ngRedux.dispatch(editDeckSetName(null));
+        this.ngRedux.dispatch(editDeckSetDescription(null));
+
         switch (result) {
           case EditDeckDialogResult.Cancel:
-            return Observable.of<void>();
+            return;
           
           case EditDeckDialogResult.Save:
-            return Observable.from(this.databaseService.updateDeckInfo(
+            this.databaseService.updateDeckInfo(
               this.deck,
-              dialogRef.componentInstance.name,
-              dialogRef.componentInstance.description,
-            ));
+              state.editDeck.get('name'),
+              state.editDeck.get('description'),
+            );
+            return;
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);
@@ -113,6 +140,11 @@ export class DeckCardComponent implements OnInit {
       .catch(error => { 
         this.logService.error(error);
         return Observable.of();
+      })
+      .finally(() => {
+        nameSubscription.unsubscribe();
+        descriptionSubscription.unsubscribe();
+        dialogSubscription.unsubscribe();
       })
       .subscribe();
   }

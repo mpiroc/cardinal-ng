@@ -6,6 +6,9 @@ import { NgRedux, select, WithSubStore } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/operator/do';
 import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import {
@@ -16,13 +19,13 @@ import { CardActions } from '../../redux/actions/firebase';
 import { CardListReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 import {
-  EditCardDialog,
-  EditCardDialogResult,
-} from '../edit-card-dialog/edit-card-dialog.component';
-import {
   editCardSetFront,
   editCardSetBack,
 } from '../../redux/actions/edit-card';
+import {
+  EditCardDialog,
+  EditCardDialogResult,
+} from '../edit-card-dialog/edit-card-dialog.component';
 
 @WithSubStore({
   basePathMethodName: "getBasePath",

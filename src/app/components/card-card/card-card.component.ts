@@ -20,7 +20,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/finally';
-import { Action } from 'redux';
 import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import { ICard } from '../../interfaces/firebase';
@@ -74,9 +73,11 @@ export class CardCardComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) : void {
-    if (changes.card) {
-      this.ngRedux.dispatch(CardContentActions.beforeStartListening(this.card));
+    if (!changes.card) {
+      return;
     }
+
+    this.ngRedux.dispatch(CardContentActions.beforeStartListening(this.card));
   }
 
   onEdit() {
@@ -105,6 +106,7 @@ export class CardCardComponent implements OnChanges {
               state.editCard.get('front'),
               state.editCard.get('back'),
             );
+            return;
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);
