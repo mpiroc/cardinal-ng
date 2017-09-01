@@ -25,7 +25,6 @@ export class AuthGuardService implements CanActivate {
       .filter(isLoading => !isLoading)
       .switchMap(_ => this.authService.isLoggedIn$)
       .map(isLoggedIn => {
-        console.log("canActivate", state.url, isLoggedIn);
         if (isLoggedIn) {
           return state.url !== '/login';
         }

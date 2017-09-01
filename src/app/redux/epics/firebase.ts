@@ -24,7 +24,7 @@ import {
 } from '../actions/firebase';
 import { FirebaseObjectReducer } from '../reducers/firebase';
 
-const ARTIFICIAL_LATENCY = 0;
+const ARTIFICIAL_LATENCY = 2000;
 
 abstract class FirebaseEpic<TModel, TArgs> {
   constructor(

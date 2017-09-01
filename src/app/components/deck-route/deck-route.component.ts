@@ -32,6 +32,9 @@ import {
 export class DeckRouteComponent implements OnInit {
   private deck: IDeck;
 
+  @select(["isLoading"])
+  isLoading$: Observable<boolean>;
+
   @select(["data"])
   cards$: Observable<Map<string, ICard>>;
 

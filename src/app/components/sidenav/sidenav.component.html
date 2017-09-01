@@ -12,5 +12,10 @@
     </md-nav-list>
   </md-sidenav>
 
-  <router-outlet></router-outlet>
+  <cardinal-loading-spinner [isLoading$]="isLoading$">
+    <router-outlet #outlet
+      (activate)='_isLoading$.next(false)'
+      (deactivate)='_isLoading$.next(true)'>
+    </router-outlet>
+  </cardinal-loading-spinner>
 </md-sidenav-container>
