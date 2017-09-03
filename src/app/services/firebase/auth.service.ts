@@ -20,7 +20,11 @@ export class AuthService {
   }
 
   login(): void {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    const provider = new auth.GoogleAuthProvider();
+    provider.setCustomParameters({prompt: 'select_account'});
+
+    this.afAuth.auth.signInWithPopup(provider);
+    
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
   }
 
