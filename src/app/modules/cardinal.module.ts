@@ -27,6 +27,8 @@ import { DecksRouteComponent } from '../components/decks-route/decks-route.compo
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
+import { SignInComponent } from '../components/sign-in/sign-in.component';
+import { SignUpComponent } from '../components/sign-up/sign-up.component';
 import { DeleteCardDialogComponent } from '../components/delete-card-dialog/delete-card-dialog.component';
 import { DeleteDeckDialogComponent } from '../components/delete-deck-dialog/delete-deck-dialog.component';
 import { EditCardDialogComponent } from '../components/edit-card-dialog/edit-card-dialog.component';
@@ -51,6 +53,8 @@ import 'hammerjs';
     DeckCardComponent,
     DeckRouteComponent,
     ReviewDeckRouteComponent,
+    SignInComponent,
+    SignUpComponent,
     DeleteCardDialogComponent,
     DeleteDeckDialogComponent,
     EditCardDialogComponent,
