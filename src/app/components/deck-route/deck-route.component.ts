@@ -23,12 +23,12 @@ import {
   editCardSetBack,
 } from '../../redux/actions/edit-card';
 import {
-  EditCardDialog,
+  EditCardDialogComponent,
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
 
 @WithSubStore({
-  basePathMethodName: "getBasePath",
+  basePathMethodName: 'getBasePath',
   localReducer: CardListReducer.reducer,
 })
 @Component({
@@ -39,10 +39,10 @@ import {
 export class DeckRouteComponent implements OnInit {
   private deck: IDeck;
 
-  @select(["isLoading"])
+  @select(['isLoading'])
   isLoading$: Observable<boolean>;
 
-  @select(["data"])
+  @select(['data'])
   cards$: Observable<Map<string, ICard>>;
 
   constructor(
@@ -59,7 +59,7 @@ export class DeckRouteComponent implements OnInit {
     this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
   }
 
-  getBasePath() : string[] {
+  getBasePath(): string[] {
     return ['card', this.deck.deckId];
   }
 
@@ -68,11 +68,11 @@ export class DeckRouteComponent implements OnInit {
   }
 
   onNewCard() {
-    this.ngRedux.dispatch(editCardSetFront(""));
-    this.ngRedux.dispatch(editCardSetBack(""));
+    this.ngRedux.dispatch(editCardSetFront(''));
+    this.ngRedux.dispatch(editCardSetBack(''));
 
-    const dialogRef: MdDialogRef<EditCardDialog> = this.dialog.open(EditCardDialog, {
-      data: { title: "Create Card" },
+    const dialogRef: MdDialogRef<EditCardDialogComponent> = this.dialog.open(EditCardDialogComponent, {
+      data: { title: 'Create Card' },
     });
 
     const dialogSubscription = dialogRef.afterClosed()
@@ -92,6 +92,7 @@ export class DeckRouteComponent implements OnInit {
               state.editCard.get('front'),
               state.editCard.get('back'),
             );
+            return;
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);

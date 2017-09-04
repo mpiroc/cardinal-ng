@@ -18,7 +18,7 @@ export class DeckResolver implements Resolve<IDeck> {
   ) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : IDeck {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IDeck {
     const user = this.userResolver.resolve(route, state);
     const deckId: string = route.paramMap.get('deckId');
 

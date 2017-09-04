@@ -35,12 +35,12 @@ abstract class FirebaseEpic<TModel, TArgs> {
 
   protected isListening(store: MiddlewareAPI<IState>, action: Action & IHasArgs<TArgs>) {
     const subStore: Map<string, any> = this.selectSubStore(store.getState(), action.args);
-    const isListening: boolean = !!subStore && subStore.get("isListening");
+    const isListening: boolean = !!subStore && subStore.get('isListening');
 
     return isListening;
   }
 
-  protected filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>) : boolean {
+  protected filterStopAction(stopAction: Action & IHasArgs<TArgs>, action: Action & IHasArgs<TArgs>): boolean {
     switch (stopAction.type) {
       case this.actions.STOP_LISTENING:
         return (!stopAction.args && !action.args) || JSON.stringify(stopAction.args) === JSON.stringify(action.args);
@@ -58,7 +58,7 @@ export class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArg
     private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>
   ) {
     super(actions, selectSubStore);
-    
+
     if (!handleReceived) {
       this.handleReceived = (store, data, args) => Observable.of(this.actions.objectReceived(args, data));
     }
@@ -113,7 +113,7 @@ export class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs>
       );
   }
 
-  private convertToMap(data: TModel[]) : Map<string, TModel> {
+  private convertToMap(data: TModel[]): Map<string, TModel> {
     return data.reduce((result, current) => result.set(this.selectKey(current), current), Map<string, TModel>());
   }
 
@@ -193,10 +193,10 @@ export const UserEpic = new FirebaseObjectEpic(
     const userStore = store.getState().user;
     const previousUser: Map<string, any> = userStore.get('data');
     if (previousUser && previousUser.get('uid')) {
-      const args: IUser = { uid: previousUser.get('uid') };
+      const userArgs: IUser = { uid: previousUser.get('uid') };
       actions = actions.concat([
-        DeckActions.beforeStopListening(args),
-        DeckActions.stopListening(args),
+        DeckActions.beforeStopListening(userArgs),
+        DeckActions.stopListening(userArgs),
       ]);
     }
 

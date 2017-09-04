@@ -31,7 +31,7 @@ export class AuthGuardService implements CanActivate {
 
         return state.url === '/login';
       })
-      .catch(error => { 
+      .catch(error => {
         this.logService.error(error);
         return Observable.of(UserActions.error({}, error.message));
       });

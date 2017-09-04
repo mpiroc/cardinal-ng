@@ -6,14 +6,14 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyBCjcVowCuBu3nuXLRsNCAhR56QcZm4o9M",
-    authDomain: "cardinal-ng.firebaseapp.com",
-    databaseURL: "https://cardinal-ng.firebaseio.com",
-    projectId: "cardinal-ng",
-    storageBucket: "cardinal-ng.appspot.com",
-    messagingSenderId: "956312128006"
+    apiKey: 'AIzaSyBCjcVowCuBu3nuXLRsNCAhR56QcZm4o9M',
+    authDomain: 'cardinal-ng.firebaseapp.com',
+    databaseURL: 'https://cardinal-ng.firebaseio.com',
+    projectId: 'cardinal-ng',
+    storageBucket: 'cardinal-ng.appspot.com',
+    messagingSenderId: '956312128006'
   },
   routing: {
-    //enableTracing: true,
+    // enableTracing: true,
   },
 };

@@ -30,7 +30,7 @@ export interface IFirebaseReducer {
 }
 
 export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
-  private initialState : Map<string, any> = Map({
+  private initialState: Map<string, any> = Map({
     isListening: false,
     isLoading: true,
     error: null,
@@ -43,35 +43,35 @@ export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
     this.reducer = this._reducer.bind(this);
   }
 
-  _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
+  _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
         return state
-          .set("isListening", true)
-          .set("isLoading", true)
-          .set("error", null);
+          .set('isListening', true)
+          .set('isLoading', true)
+          .set('error', null);
 
       case this.actions.STOP_LISTENING:
         return state
-          .set("isListening", false)
-          .set("isLoading", false)
-          .set("error", null);
+          .set('isListening', false)
+          .set('isLoading', false)
+          .set('error', null);
 
       case this.actions.RECEIVED:
         return state
-          .set("isLoading", false) 
-          .set("error", null)
-          .set("data", Map<string, any>((action as IObjectReceivedAction<TModel>).data));
+          .set('isLoading', false)
+          .set('error', null)
+          .set('data', Map<string, any>((action as IObjectReceivedAction<TModel>).data));
 
       case this.actions.SET_IS_LOADING:
         return state
-          .set("isLoading", (action as ISetIsLoadingAction).isLoading);
+          .set('isLoading', (action as ISetIsLoadingAction).isLoading);
 
       case this.actions.ERROR:
         return state
-          .set("isListening", false)
-          .set("isLoading", false)
-          .set("error", (action as IErrorAction).error);
+          .set('isListening', false)
+          .set('isLoading', false)
+          .set('error', (action as IErrorAction).error);
 
       default:
         return state;
@@ -91,7 +91,7 @@ export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
     this.reducer = this._reducer.bind(this);
   }
 
-  _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
+  _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
       case this.actions.BEFORE_START_LISTENING:
       case this.actions.START_LISTENING:
@@ -117,7 +117,7 @@ export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
 }
 
 export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
-  private initialState : Map<string, any> = Map({
+  private initialState: Map<string, any> = Map({
     isListening: false,
     isLoading: true,
     error: null,
@@ -130,36 +130,36 @@ export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
     this.reducer = this._reducer.bind(this);
   }
 
-  private _reducer(state: Map<string, any> = this.initialState, action: Action) : Map<string, any> {
+  private _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
         return state
-          .set("isListening", true)
-          .set("isLoading", true)
-          .set("error", null);
+          .set('isListening', true)
+          .set('isLoading', true)
+          .set('error', null);
 
       case this.actions.STOP_LISTENING:
         return state
-          .set("isListening", false)
-          .set("isLoading", false)
-          .set("error", null)
-          .set("data", state.get("data").clear());
+          .set('isListening', false)
+          .set('isLoading', false)
+          .set('error', null)
+          .set('data', state.get('data').clear());
 
       case this.actions.RECEIVED:
         return state
-          .set("isLoading", false) 
-          .set("error", null)
-          .set("data", (action as IListReceivedAction<TModel>).data);
+          .set('isLoading', false)
+          .set('error', null)
+          .set('data', (action as IListReceivedAction<TModel>).data);
 
       case this.actions.SET_IS_LOADING:
         return state
-          .set("isLoading", (action as ISetIsLoadingAction).isLoading);
+          .set('isLoading', (action as ISetIsLoadingAction).isLoading);
 
       case this.actions.ERROR:
         return state
-          .set("isListening", false)
-          .set("isLoading", false)
-          .set("error", (action as IErrorAction).error);
+          .set('isListening', false)
+          .set('isLoading', false)
+          .set('error', (action as IErrorAction).error);
 
       default:
         return state;

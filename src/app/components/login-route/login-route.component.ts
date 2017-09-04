@@ -8,6 +8,6 @@ import { select } from '@angular-redux/store';
   styleUrls: [ './login-route.component.css' ],
 })
 export class LoginRouteComponent {
-  @select(["user", "isLoading"])
+  @select(['user', 'isLoading'])
   isLoading$: Observable<boolean>;
 }

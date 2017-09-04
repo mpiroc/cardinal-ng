@@ -16,7 +16,7 @@ interface IDeleteDeckDialogData {
   templateUrl: './delete-deck-dialog.component.html',
   styleUrls: [ './delete-deck-dialog.component.css' ],
 })
-export class DeleteDeckDialog {
+export class DeleteDeckDialogComponent {
   public name$: Observable<string>;
   dialogResult: typeof DeleteDeckDialogResult = DeleteDeckDialogResult;
 

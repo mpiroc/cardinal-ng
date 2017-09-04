@@ -25,7 +25,7 @@ export class DatabaseService {
   }
 
   // Create
-  async createDeck(args: IUser, name: string, description: string,) : FirebasePromise<void> {
+  async createDeck(args: IUser, name: string, description: string): FirebasePromise<void> {
     const deck: { key: string } = await this.getDecks(args).push(args);
 
     const deckArgs: IDeck = {
@@ -75,22 +75,22 @@ export class DatabaseService {
     return this.database.object(this.getCardPath(args));
   }
 
-  getCardContent(args: ICard) : FirebaseObjectObservable<ICardContent> {
+  getCardContent(args: ICard): FirebaseObjectObservable<ICardContent> {
     return this.database.object(this.getCardContentPath(args));
   }
 
-  getCardHistory(args: ICard) : FirebaseObjectObservable<ICardHistory> {
+  getCardHistory(args: ICard): FirebaseObjectObservable<ICardHistory> {
     return this.database.object(this.getCardHistoryPath(args));
   }
 
   // Update
-  updateDeck(args: IDeck) : FirebasePromise<void> {
+  updateDeck(args: IDeck): FirebasePromise<void> {
     return this.getDeck(args).update({
       ...args,
     });
   }
 
-  updateDeckInfo(args: IDeck, name: string, description: string) : FirebasePromise<void> {
+  updateDeckInfo(args: IDeck, name: string, description: string): FirebasePromise<void> {
     return this.getDeckInfo(args).update({
       ...args,
       name,
@@ -98,13 +98,13 @@ export class DatabaseService {
     });
   }
 
-  updateCard(args: ICard) : FirebasePromise<void> {
+  updateCard(args: ICard): FirebasePromise<void> {
     return this.getCard(args).update({
       ...args,
     });
   }
 
-  updateCardContent(args: ICard, front: string, back: string) : FirebasePromise<void> {
+  updateCardContent(args: ICard, front: string, back: string): FirebasePromise<void> {
     return this.getCardContent(args).update({
       ...args,
       front,
@@ -117,9 +117,9 @@ export class DatabaseService {
     difficulty: number,
     grade: number,
     repetitions: number,
-    previousReview : number,
+    previousReview: number,
     nextReview: number,
-  ) : FirebasePromise<void> {
+  ): FirebasePromise<void> {
     return this.getCardHistory(args).update({
       ...args,
       difficulty,

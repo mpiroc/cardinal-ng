@@ -23,12 +23,12 @@ import {
   editDeckSetDescription,
 } from '../../redux/actions/edit-deck';
 import {
-  EditDeckDialog,
+  EditDeckDialogComponent,
   EditDeckDialogResult,
 } from '../edit-deck-dialog/edit-deck-dialog.component';
 
 @WithSubStore({
-  basePathMethodName: "getBasePath",
+  basePathMethodName: 'getBasePath',
   localReducer: DeckListReducer.reducer,
 })
 @Component({
@@ -53,13 +53,13 @@ export class DecksRouteComponent implements OnInit {
     private logService: LogService) {
   }
 
-  ngOnInit() : void {
+  ngOnInit(): void {
     this.user = this.activatedRoute.snapshot.data['user'];
 
     this.ngRedux.dispatch(DeckActions.beforeStartListening(this.user));
   }
 
-  getBasePath() : string[] {
+  getBasePath(): string[] {
     return ['deck'];
   }
 
@@ -68,11 +68,11 @@ export class DecksRouteComponent implements OnInit {
   }
 
   onNewDeck(): void {
-    this.ngRedux.dispatch(editDeckSetName(""));
-    this.ngRedux.dispatch(editDeckSetDescription(""));
+    this.ngRedux.dispatch(editDeckSetName(''));
+    this.ngRedux.dispatch(editDeckSetDescription(''));
 
-    const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
-      data: { title: "Create Deck" },
+    const dialogRef: MdDialogRef<EditDeckDialogComponent> = this.dialog.open(EditDeckDialogComponent, {
+      data: { title: 'Create Deck' },
     });
 
     const dialogSubscription = dialogRef.afterClosed()
@@ -92,6 +92,7 @@ export class DecksRouteComponent implements OnInit {
               state.editDeck.get('name'),
               state.editDeck.get('description'),
             );
+            return;
 
           default:
             throw new Error(`Unknown dialog response: ${result}`);

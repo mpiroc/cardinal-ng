@@ -23,11 +23,11 @@ interface IEditCardDialogData {
   templateUrl: './edit-card-dialog.component.html',
   styleUrls: [ './edit-card-dialog.component.css' ],
 })
-export class EditCardDialog {
-  @select(["editCard", "front"])
+export class EditCardDialogComponent {
+  @select(['editCard', 'front'])
   front$: Observable<string>;
 
-  @select(["editCard", "back"])
+  @select(['editCard', 'back'])
   back$: Observable<string>;
 
   dialogResult: typeof EditCardDialogResult = EditCardDialogResult;

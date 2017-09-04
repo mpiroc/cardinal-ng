@@ -1,21 +1,21 @@
 <md-card class='container'>
   <md-card-content>
-    <cardinal-loading-spinner [isLoading$]="isLoading$">
+    <cardinal-loading-spinner [isLoading$]='isLoading$'>
       <md-tab-group>
         <md-tab label='Front'>
           <div class='ng-material-tab-body'>
-            <markdown data="{{front$ | async}}"></markdown>
+            <markdown data='{{front$ | async}}'></markdown>
           </div>
         </md-tab>
         <md-tab label='Back'>
           <div class='ng-material-tab-body'>
-            <markdown data="{{back$ | async}}"></markdown>
+            <markdown data='{{back$ | async}}'></markdown>
           </div>
         </md-tab>
       </md-tab-group>
     </cardinal-loading-spinner>
   </md-card-content>
-  <md-card-actions *ngIf="showActions && !(isLoading$ | async)">
+  <md-card-actions *ngIf='showActions && !(isLoading$ | async)'>
     <a md-button (click)='this.onEdit()'>Edit</a>
     <a md-button (click)='this.onDelete()'>Delete</a>
   </md-card-actions>

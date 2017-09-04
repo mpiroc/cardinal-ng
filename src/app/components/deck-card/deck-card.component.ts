@@ -24,11 +24,11 @@ import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import { IDeck } from '../../interfaces/firebase';
 import {
-  EditDeckDialog,
+  EditDeckDialogComponent,
   EditDeckDialogResult,
 } from '../edit-deck-dialog/edit-deck-dialog.component';
 import {
-  DeleteDeckDialog,
+  DeleteDeckDialogComponent,
   DeleteDeckDialogResult,
 } from '../delete-deck-dialog/delete-deck-dialog.component';
 import {
@@ -43,7 +43,7 @@ import { DeckInfoObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 
 @WithSubStore({
-  basePathMethodName: "getBasePath",
+  basePathMethodName: 'getBasePath',
   localReducer: DeckInfoObjectReducer.reducer,
 })
 @Component({
@@ -54,16 +54,16 @@ import { IState } from '../../redux/state';
 export class DeckCardComponent implements OnChanges {
   @Input()
   deck: IDeck;
-  
+
   count$: Observable<any>;
 
-  @select(["isLoading"])
+  @select(['isLoading'])
   isLoading$: Observable<boolean>;
 
-  @select(["data", "name"])
+  @select(['data', 'name'])
   name$: Observable<string>;
 
-  @select(["data", "description"])
+  @select(['data', 'description'])
   description$: Observable<string>;
 
   constructor(
@@ -74,7 +74,7 @@ export class DeckCardComponent implements OnChanges {
   }
 
   getBasePath() {
-    return ["deckInfo", this.deck.deckId];
+    return ['deckInfo', this.deck.deckId];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,7 +86,7 @@ export class DeckCardComponent implements OnChanges {
     this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
 
     this.count$ = this.ngRedux
-      .select(["card", this.deck.deckId])
+      .select(['card', this.deck.deckId])
       .map<Map<string, any>, any>(cards => {
         if (!cards) {
           return null;
@@ -111,8 +111,8 @@ export class DeckCardComponent implements OnChanges {
     const descriptionSubscription = this.description$.subscribe(description =>
       this.ngRedux.dispatch(editDeckSetDescription(description)));
 
-    const dialogRef: MdDialogRef<EditDeckDialog> = this.dialog.open(EditDeckDialog, {
-      data: { title: "Edit Deck" }
+    const dialogRef: MdDialogRef<EditDeckDialogComponent> = this.dialog.open(EditDeckDialogComponent, {
+      data: { title: 'Edit Deck' }
     });
     const dialogSubscription = dialogRef.afterClosed()
       .map(result => result || EditDeckDialogResult.Cancel)
@@ -124,7 +124,7 @@ export class DeckCardComponent implements OnChanges {
         switch (result) {
           case EditDeckDialogResult.Cancel:
             return;
-          
+
           case EditDeckDialogResult.Save:
             this.databaseService.updateDeckInfo(
               this.deck,
@@ -137,7 +137,7 @@ export class DeckCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => { 
+      .catch(error => {
         this.logService.error(error);
         return Observable.of();
       })
@@ -150,7 +150,7 @@ export class DeckCardComponent implements OnChanges {
   }
 
   onDelete() {
-    const dialogRef: MdDialogRef<DeleteDeckDialog> = this.dialog.open(DeleteDeckDialog, {
+    const dialogRef: MdDialogRef<DeleteDeckDialogComponent> = this.dialog.open(DeleteDeckDialogComponent, {
       data: { name$: this.name$ },
     });
     dialogRef.afterClosed()
@@ -167,7 +167,7 @@ export class DeckCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => { 
+      .catch(error => {
         this.logService.error(error);
         return Observable.of();
       })

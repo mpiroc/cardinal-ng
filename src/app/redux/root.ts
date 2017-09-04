@@ -35,7 +35,7 @@ import { IState } from './state';
 
 export const rootReducer = combineReducers({
   user: UserObjectReducer.reducer,
-  cardContent: CardContentMapReducer.reducer,  
+  cardContent: CardContentMapReducer.reducer,
   cardHistory: CardHistoryMapReducer.reducer,
   deckInfo: DeckInfoMapReducer.reducer,
   deck: DeckListReducer.reducer,

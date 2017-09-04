@@ -53,23 +53,23 @@ export class ReviewDeckRouteComponent implements OnInit {
   getReviewText(grade: number) {
     switch (grade) {
       case 0:
-        return "I completely forgot the card.";
-      
+        return 'I completely forgot the card.';
+
       case 1:
-        return "I forgot most of the card.";
-      
+        return 'I forgot most of the card.';
+
       case 2:
-        return "I forgot some of the card.";
-      
+        return 'I forgot some of the card.';
+
       case 3:
-        return "I remembered the card with much difficulty.";
-      
+        return 'I remembered the card with much difficulty.';
+
       case 4:
-        return "I remembered the card with some difficulty.";
-      
+        return 'I remembered the card with some difficulty.';
+
       case 5:
-        return "I easily remembered the card.";
-      
+        return 'I easily remembered the card.';
+
       default:
         throw new RangeError(`Grade out of range: ${grade}`);
     }

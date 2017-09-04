@@ -10,7 +10,7 @@ import { IState } from '../../redux/state';
 })
 export class ToolbarComponent {
   private title = 'Cardinal';
-  
-  @select(["user", "isLoading"])
+
+  @select(['user', 'isLoading'])
   isLoading$: Observable<boolean>;
 }

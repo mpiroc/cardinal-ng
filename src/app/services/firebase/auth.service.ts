@@ -13,9 +13,9 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth, private ngRedux: NgRedux<IState>) {
     this.isLoading$ = ngRedux
-      .select(["user", "isLoading"]);
+      .select(['user', 'isLoading']);
     this.isLoggedIn$ = ngRedux
-      .select(["user", "data", "uid"])
+      .select(['user', 'data', 'uid'])
       .map(uid => uid ? true : false);
   }
 
@@ -24,7 +24,7 @@ export class AuthService {
     provider.setCustomParameters({prompt: 'select_account'});
 
     this.afAuth.auth.signInWithPopup(provider);
-    
+
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
   }
 

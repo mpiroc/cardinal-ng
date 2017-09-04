@@ -23,11 +23,11 @@ interface IEditDeckDialogData {
   templateUrl: './edit-deck-dialog.component.html',
   styleUrls: [ './edit-deck-dialog.component.css' ],
 })
-export class EditDeckDialog {
-  @select(["editDeck", "name"])
+export class EditDeckDialogComponent {
+  @select(['editDeck', 'name'])
   name$: Observable<string>;
 
-  @select(["editDeck", "description"])
+  @select(['editDeck', 'description'])
   description$: Observable<string>;
 
   dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult;

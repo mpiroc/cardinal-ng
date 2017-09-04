@@ -15,11 +15,11 @@ export class GradingService {
   constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService) {
   }
 
-  isDue(history: ICardHistory, nowMs: number) : boolean {
+  isDue(history: ICardHistory, nowMs: number): boolean {
     return history.grade < MINIMUM_CORRECT_GRADE || !history.nextReview || nowMs >= history.nextReview;
   }
 
-  submitGrade() : FirebasePromise<void> {
+  submitGrade(): FirebasePromise<void> {
     const now = moment.now();
 
     const state: IState = this.ngRedux.getState();
@@ -40,7 +40,7 @@ export class GradingService {
     );
   }
 
-  private computeDifficulty(history: ICardHistory, grade: number) : number {
+  private computeDifficulty(history: ICardHistory, grade: number): number {
     if (history.grade < MINIMUM_CORRECT_GRADE) {
       return history.difficulty;
     }
@@ -50,7 +50,7 @@ export class GradingService {
     return Math.max(result, MINIMUM_DIFFICULTY);
   }
 
-  private computeRepetitions(history: ICardHistory, grade: number) : number {
+  private computeRepetitions(history: ICardHistory, grade: number): number {
     if (grade < MINIMUM_CORRECT_GRADE) {
       return 0;
     }

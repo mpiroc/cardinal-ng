@@ -17,24 +17,24 @@ const initialReviewState = Map<string, any>({
   grade: 0,
 });
 
-export function review(state: Map<string, any> = initialReviewState, action: Action) : Map<string, any> {
+export function review(state: Map<string, any> = initialReviewState, action: Action): Map<string, any> {
   switch (action.type) {
     case REVIEW_SET_DECK:
       return state
-        .set("isLoading", true)
-        .set("history", null)
-        .set("deck", (action as IReviewSetDeckAction).deck);
+        .set('isLoading', true)
+        .set('history', null)
+        .set('deck', (action as IReviewSetDeckAction).deck);
 
     case REVIEW_SET_HISTORY:
       const history = (action as IReviewSetHistoryAction).history;
       return state
-        .set("isLoading", false)
-        .set("history", history)
-        .set("grade", history ? history.grade : 0);
+        .set('isLoading', false)
+        .set('history', history)
+        .set('grade', history ? history.grade : 0);
 
     case REVIEW_SELECT_GRADE:
       return state
-        .set("grade", (action as IReviewSelectGradeAction).grade);
+        .set('grade', (action as IReviewSelectGradeAction).grade);
 
     default:
       return state;

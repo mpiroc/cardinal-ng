@@ -39,8 +39,8 @@ export function configureStore(
   logService: LogService) {
   const options: Options = {
     adapter: {
-      input: (action$: Observable<Action>) => action$.map(action => logAction(logService, "INPUT: ", action)),
-      output: (action$: Observable<Action>) => action$.map(action => logAction(logService, "OUTPUT: ", action)),
+      input: (action$: Observable<Action>) => action$.map(action => logAction(logService, 'INPUT: ', action)),
+      output: (action$: Observable<Action>) => action$.map(action => logAction(logService, 'OUTPUT: ', action)),
     }
   }
 

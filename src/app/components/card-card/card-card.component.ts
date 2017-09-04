@@ -24,11 +24,11 @@ import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import { ICard } from '../../interfaces/firebase';
 import {
-  DeleteCardDialog,
+  DeleteCardDialogComponent,
   DeleteCardDialogResult,
 } from '../delete-card-dialog/delete-card-dialog.component';
 import {
-  EditCardDialog,
+  EditCardDialogComponent,
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
 import {
@@ -40,7 +40,7 @@ import { CardContentObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 
 @WithSubStore({
-  basePathMethodName: "getBasePath",
+  basePathMethodName: 'getBasePath',
   localReducer: CardContentObjectReducer.reducer,
 })
 @Component({
@@ -52,13 +52,13 @@ export class CardCardComponent implements OnChanges {
   @Input() card: ICard;
   @Input() showActions: boolean;
 
-  @select(["isLoading"])
+  @select(['isLoading'])
   isLoading$: Observable<boolean>;
 
-  @select(["data", "front"])
+  @select(['data', 'front'])
   front$: Observable<string>;
 
-  @select(["data", "back"])
+  @select(['data', 'back'])
   back$: Observable<string>;
 
   constructor(
@@ -69,10 +69,10 @@ export class CardCardComponent implements OnChanges {
   }
 
   getBasePath() {
-    return [ "cardContent", this.card.cardId ];
+    return [ 'cardContent', this.card.cardId ];
   }
 
-  ngOnChanges(changes: SimpleChanges) : void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (!changes.card) {
       return;
     }
@@ -86,8 +86,8 @@ export class CardCardComponent implements OnChanges {
     const backSubscription = this.back$.subscribe(back =>
       this.ngRedux.dispatch(editCardSetBack(back)));
 
-    const dialogRef: MdDialogRef<EditCardDialog> = this.dialog.open(EditCardDialog, {
-      data: { title: "Edit Card" },
+    const dialogRef: MdDialogRef<EditCardDialogComponent> = this.dialog.open(EditCardDialogComponent, {
+      data: { title: 'Edit Card' },
     });
     const dialogSubscription = dialogRef.afterClosed()
       .map(result => result || EditCardDialogResult.Cancel)
@@ -112,7 +112,7 @@ export class CardCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => { 
+      .catch(error => {
         this.logService.error(error);
         return Observable.of();
       })
@@ -125,7 +125,7 @@ export class CardCardComponent implements OnChanges {
   }
 
   onDelete() {
-    const dialogRef: MdDialogRef<DeleteCardDialog> = this.dialog.open(DeleteCardDialog);
+    const dialogRef: MdDialogRef<DeleteCardDialogComponent> = this.dialog.open(DeleteCardDialogComponent);
     dialogRef.afterClosed()
       .map(result => result || DeleteCardDialogResult.Cancel)
       .switchMap(result => {
@@ -140,7 +140,7 @@ export class CardCardComponent implements OnChanges {
             throw new Error(`Unknown dialog response: ${result}`);
         }
       })
-      .catch(error => { 
+      .catch(error => {
         this.logService.error(error);
         return Observable.of();
       })

@@ -27,10 +27,10 @@ import { DecksRouteComponent } from '../components/decks-route/decks-route.compo
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
-import { DeleteCardDialog } from '../components/delete-card-dialog/delete-card-dialog.component';
-import { DeleteDeckDialog } from '../components/delete-deck-dialog/delete-deck-dialog.component';
-import { EditCardDialog } from '../components/edit-card-dialog/edit-card-dialog.component';
-import { EditDeckDialog } from '../components/edit-deck-dialog/edit-deck-dialog.component';
+import { DeleteCardDialogComponent } from '../components/delete-card-dialog/delete-card-dialog.component';
+import { DeleteDeckDialogComponent } from '../components/delete-deck-dialog/delete-deck-dialog.component';
+import { EditCardDialogComponent } from '../components/edit-card-dialog/edit-card-dialog.component';
+import { EditDeckDialogComponent } from '../components/edit-deck-dialog/edit-deck-dialog.component';
 
 import { configureStore } from '../redux/configureStore';
 import { UserActions } from '../redux/actions/firebase';
@@ -51,10 +51,10 @@ import 'hammerjs';
     DeckCardComponent,
     DeckRouteComponent,
     ReviewDeckRouteComponent,
-    DeleteCardDialog,
-    DeleteDeckDialog,
-    EditCardDialog,
-    EditDeckDialog,
+    DeleteCardDialogComponent,
+    DeleteDeckDialogComponent,
+    EditCardDialogComponent,
+    EditDeckDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,10 +70,10 @@ import 'hammerjs';
     GradingService,
   ],
   entryComponents: [
-    DeleteCardDialog,
-    DeleteDeckDialog,
-    EditCardDialog,
-    EditDeckDialog,
+    DeleteCardDialogComponent,
+    DeleteDeckDialogComponent,
+    EditCardDialogComponent,
+    EditDeckDialogComponent,
   ],
   bootstrap: [ RootComponent ]
 })
@@ -87,8 +87,8 @@ export class CardinalModule {
     logService: LogService,
     snackbarService: MdSnackBar,
   ) {
-    logService.error$.subscribe(error => snackbarService.open(error.message, "Dismiss", { duration: 5000 }));
-    
+    logService.error$.subscribe(error => snackbarService.open(error.message, 'Dismiss', { duration: 5000 }));
+
     const store = configureStore(afAuth, ngRedux, authService, databaseService, gradingService, logService);
     ngRedux.provideStore(store);
     store.dispatch(UserActions.beforeStartListening({}));

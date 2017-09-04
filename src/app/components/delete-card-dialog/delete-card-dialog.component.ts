@@ -10,6 +10,6 @@ export enum DeleteCardDialogResult {
   templateUrl: './delete-card-dialog.component.html',
   styleUrls: [ './delete-card-dialog.component.css' ],
 })
-export class DeleteCardDialog {
+export class DeleteCardDialogComponent {
   dialogResult: typeof DeleteCardDialogResult = DeleteCardDialogResult;
 }

@@ -8,7 +8,7 @@ export class LogService {
   private debugSubject: Subject<any> = new Subject<string>();
   private logSubject: Subject<any> = new Subject<any>();
   private errorSubject: Subject<any> = new Subject<any>();
-  
+
   get info$(): Observable<any> {
     return this.infoSubject.asObservable();
   }
@@ -35,17 +35,16 @@ export class LogService {
   info(message: any): void {
     this.infoSubject.next(message);
   }
-  
+
   debug(message: any): void {
     this.debugSubject.next(message);
   }
-  
+
   log(message: any): void {
     this.logSubject.next(message);
   }
-  
+
   error(message: any): void {
     this.errorSubject.next(message);
   }
-  
 }
