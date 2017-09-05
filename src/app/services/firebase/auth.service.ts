@@ -19,6 +19,10 @@ export class AuthService {
       .map(uid => uid ? true : false);
   }
 
+  loginWithGoogle(): void {
+    this.login();
+  }
+
   login(): void {
     const provider = new auth.GoogleAuthProvider();
     provider.setCustomParameters({prompt: 'select_account'});
