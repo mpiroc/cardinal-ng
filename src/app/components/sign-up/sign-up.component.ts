@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { select } from '@angular-redux/store';
+import { AuthService } from '../../services/firebase/auth.service';
 
 @Component({
   selector: 'cardinal-sign-up-component',
@@ -8,6 +7,30 @@ import { select } from '@angular-redux/store';
   styleUrls: [ './sign-up.component.css' ],
 })
 export class SignUpComponent {
-  @select(['user', 'isLoading'])
-  isLoading$: Observable<boolean>;
+  constructor(private authService: AuthService) {
+  }
+
+  signUpWithGoogle(): void {
+    this.authService.signInWithGoogle();
+  }
+
+  signUpWithFacebook(): void {
+    this.authService.signInWithFacebook();
+  }
+
+  signUpWithTwitter(): void {
+    this.authService.signInWithTwitter();
+  }
+
+  signUpWithEmail(): void {
+
+  }
+
+  onEmailChanged() {
+
+  }
+
+  onPasswordChanged() {
+
+  }
 }
