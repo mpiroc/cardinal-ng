@@ -10,7 +10,31 @@ export class SignInComponent {
   constructor(private authService: AuthService) {
   }
 
-  loginWithGoogle(): void {
-    this.authService.loginWithGoogle();
+  signInWithGoogle(): void {
+    this.authService.signInWithGoogle();
+  }
+
+  signInWithFacebook(): void {
+    this.authService.signInWithFacebook();
+  }
+
+  signInWithTwitter(): void {
+
+  }
+
+  signInWithEmail(): void {
+
+  }
+
+  onEmailChanged() {
+
+  }
+
+  onPasswordChanged() {
+
+  }
+
+  onRememberMeChanged() {
+    
   }
 }

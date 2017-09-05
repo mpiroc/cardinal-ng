@@ -3,11 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { select } from '@angular-redux/store';
 
 @Component({
-  selector: 'cardinal-login-route',
-  templateUrl: './login-route.component.html',
-  styleUrls: [ './login-route.component.css' ],
+  selector: 'cardinal-sign-in-route',
+  templateUrl: './sign-in-route.component.html',
+  styleUrls: [ './sign-in-route.component.css' ],
 })
-export class LoginRouteComponent {
+export class SignInRouteComponent {
   @select(['user', 'isLoading'])
   isLoading$: Observable<boolean>;
 }

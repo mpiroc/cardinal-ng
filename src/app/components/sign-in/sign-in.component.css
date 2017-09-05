@@ -25,8 +25,12 @@
   width: 384px;
 }
 
-.centered {
+.new-user-container {
   margin: auto;
+}
+
+.new-user-container span {
+  margin-right: 8px;
 }
 
 .mat-form-field {

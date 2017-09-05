@@ -19,20 +19,27 @@ export class AuthService {
       .map(uid => uid ? true : false);
   }
 
-  loginWithGoogle(): void {
-    this.login();
-  }
-
-  login(): void {
+  signInWithGoogle(): void {
     const provider = new auth.GoogleAuthProvider();
     provider.setCustomParameters({prompt: 'select_account'});
 
+    this.signInWithProvider(provider);
+  }
+
+  signInWithFacebook(): void {
+    const provider = new auth.FacebookAuthProvider();
+    provider.setCustomParameters({auth_type: 'reauthenticate'});
+
+    this.signInWithProvider(provider);
+  }
+
+  signInWithProvider(provider: auth.AuthProvider): void {
     this.afAuth.auth.signInWithPopup(provider);
 
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
   }
 
-  logout(): void {
+  signOut(): void {
     this.afAuth.auth.signOut();
   }
 }

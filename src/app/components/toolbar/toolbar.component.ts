@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { IState } from '../../redux/state';
+import { AuthService } from '../../services/firebase/auth.service';
 
 @Component({
   selector: 'cardinal-toolbar',
@@ -13,4 +14,11 @@ export class ToolbarComponent {
 
   @select(['user', 'isLoading'])
   isLoading$: Observable<boolean>;
+
+  constructor(private authService: AuthService) {
+  }
+
+  onSignOut() {
+    this.authService.signOut();
+  }
 }

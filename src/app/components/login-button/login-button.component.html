@@ -1,4 +1,0 @@
-<span [ngSwitch]="this.authService.isLoggedIn$ | async">
-  <a *ngSwitchCase="false" disabled="{{this.authService.isLoading$ | async}}" md-button (click)="this.login()">Sign in</a>
-  <a *ngSwitchCase="true" disabled="{{this.authService.isLoading$ | async}}" md-button (click)="this.logout()">Sign out</a>
-</span>

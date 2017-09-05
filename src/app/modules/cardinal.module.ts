@@ -20,8 +20,7 @@ import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
 import { LoadingSpinnerComponent } from '../components/loading-spinner/loading-spinner.component';
-import { LoginRouteComponent } from '../components/login-route/login-route.component';
-import { LoginButtonComponent } from '../components/login-button/login-button.component';
+import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
 import { CardCardComponent } from '../components/card-card/card-card.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
@@ -46,8 +45,7 @@ import 'hammerjs';
     ToolbarComponent,
     SidenavComponent,
     LoadingSpinnerComponent,
-    LoginRouteComponent,
-    LoginButtonComponent,
+    SignInRouteComponent,
     CardCardComponent,
     DecksRouteComponent,
     DeckCardComponent,

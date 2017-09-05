@@ -2,5 +2,20 @@
   <a md-button class="ng-material-app-title" routerLink='/'>{{title}}</a>
   <span class="ng-material-flex-spacer"></span>
   <a disabled="{{isLoading$ | async}}" md-button routerLink='/'>Home</a>
-  <cardinal-login-button></cardinal-login-button>
+  <div [ngSwitch]='authService.isLoggedIn$ | async'>
+    <a
+      *ngSwitchCase='false'
+      disabled="{{isLoading$ | async}}"
+      md-button
+      routerLink='/sign-in'>
+      Sign in
+    </a>
+    <a
+      *ngSwitchCase='true'
+      disabled="{{isLoading$ | async}}"
+      md-button
+      (click)='onSignOut()'>
+      Sign out
+    </a>
+  </div>
 </md-toolbar>

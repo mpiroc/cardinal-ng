@@ -26,10 +26,10 @@ export class AuthGuardService implements CanActivate {
       .switchMap(_ => this.authService.isLoggedIn$)
       .map(isLoggedIn => {
         if (isLoggedIn) {
-          return state.url !== '/login';
+          return state.url !== '/sign-in';
         }
 
-        return state.url === '/login';
+        return state.url === '/sign-in';
       })
       .catch(error => {
         this.logService.error(error);
