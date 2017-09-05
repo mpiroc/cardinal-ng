@@ -44,6 +44,28 @@ export class AuthService {
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
   }
 
+  async signInWithEmail(email: string, password: string): firebase.Promise<any> {
+    //try {
+      await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    //}
+    /*
+    catch (error) {
+      // TODO
+    }
+    */
+  }
+
+  async signUpWithEmail(email: string, password: string): firebase.Promise<any> {
+    //try {
+      await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    //}
+    /*
+    catch (error) {
+      // TODO
+    }
+    */
+  }
+
   signOut(): void {
     this.afAuth.auth.signOut();
   }

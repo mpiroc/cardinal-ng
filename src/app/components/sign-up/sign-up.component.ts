@@ -29,7 +29,11 @@ export class SignUpComponent {
   }
 
   signUpWithEmail(): void {
+    const state: IState = this.ngRedux.getState();
+    const email: string = state.signUp.get('email');
+    const password: string = state.signUp.get('password');
 
+    this.authService.signUpWithEmail(email, password);
   }
 
   onEmailInput($event: any) {

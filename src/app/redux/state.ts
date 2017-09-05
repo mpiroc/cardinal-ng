@@ -7,6 +7,8 @@ export interface IState {
   card: Map<string, any>;
   editCard: Map<string, any>;
   editDeck: Map<string, any>;
+  signIn: Map<string, any>;
+  signUp: Map<string, any>;
   cardContent: Map<string, any>;
   cardHistory: Map<string, any>;
   review: Map<string, any>;
