@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
+import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../services/firebase/auth.service';
 import {
   signUpSetEmail,
@@ -13,6 +14,17 @@ import { IState } from '../../redux/state';
   styleUrls: [ './sign-up.component.css' ],
 })
 export class SignUpComponent {
+  private emailFormControl = new FormControl('', [
+    Validators.required,
+    Validators.email,
+  ]);
+
+  private passwordFormControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(12),
+    Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/),
+  ])
+
   constructor(private authService: AuthService, private ngRedux: NgRedux<IState>) {
   }
 

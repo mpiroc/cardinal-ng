@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { MarkdownModule } from 'angular2-markdown';
 import { MdSnackBar } from '@angular/material';
@@ -67,6 +67,7 @@ import 'hammerjs';
     MarkdownModule.forRoot(),
     CardinalRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     NgReduxModule,
     LogModule,
   ],
