@@ -20,17 +20,23 @@
       <div class='input-with-icon'>
         <md-icon>email</md-icon>
         <md-form-field>
-          <input mdInput type='text' placeholder='email'>
+          <input
+            mdInput type='text' placeholder='email'
+            (input)='onEmailInput($event)'>
         </md-form-field>
       </div>
       <div class='input-with-icon'>
         <md-icon>lock</md-icon>
         <md-form-field>
-          <input mdInput type='password' placeholder='password'>
+          <input
+            mdInput type='password' placeholder='password'
+            (input)='onPasswordInput($event)'>
         </md-form-field>
       </div>
       <div class='signin-options'>
-        <md-checkbox>Remember me</md-checkbox>
+        <md-checkbox (change)='onRememberMeChanged($event)'>
+          Remember me
+        </md-checkbox>
         <a md-button color='accent'>Forgot password?</a>
       </div>
       <button class='sign-in-button' md-raised-button color='primary'>Sign in</button>
