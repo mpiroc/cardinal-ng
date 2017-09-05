@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import { AuthService } from '../../services/firebase/auth.service';
+import {
+  signUpSetEmail,
+  signUpSetPassword,
+} from '../../redux/actions/sign-up';
+import { IState } from '../../redux/state';
 
 @Component({
   selector: 'cardinal-sign-up-component',
@@ -7,7 +13,7 @@ import { AuthService } from '../../services/firebase/auth.service';
   styleUrls: [ './sign-up.component.css' ],
 })
 export class SignUpComponent {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private ngRedux: NgRedux<IState>) {
   }
 
   signUpWithGoogle(): void {
@@ -26,11 +32,11 @@ export class SignUpComponent {
 
   }
 
-  onEmailChanged() {
-
+  onEmailInput($event: any) {
+    this.ngRedux.dispatch(signUpSetEmail($event.target.value));
   }
 
-  onPasswordChanged() {
-
+  onPasswordInput($event: any) {
+    this.ngRedux.dispatch(signUpSetPassword($event.target.value));
   }
 }

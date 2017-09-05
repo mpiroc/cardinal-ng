@@ -30,7 +30,7 @@ export class SignInComponent {
   }
 
   signInWithEmail(): void {
-
+    
   }
 
   onEmailInput($event: any) {

@@ -20,16 +20,24 @@
       <div class='input-with-icon'>
         <md-icon>email</md-icon>
         <md-form-field>
-          <input mdInput type='text' placeholder='email'>
+          <input
+            mdInput type='text' placeholder='email'
+            (input)='onEmailInput($event)'>
         </md-form-field>
       </div>
       <div class='input-with-icon'>
         <md-icon>lock</md-icon>
         <md-form-field>
-          <input mdInput type='password' placeholder='password'>
+          <input
+            mdInput type='password' placeholder='password'
+            (input)='onPasswordInput($event)'>
         </md-form-field>
       </div>
-      <button class='sign-up-button' md-raised-button color='primary'>Sign up</button>
+      <button
+        class='sign-up-button' md-raised-button color='primary'
+        (click)='signUpWithEmail()'>
+        Sign up
+      </button>
     </div>
   </md-card-content>
 </md-card>

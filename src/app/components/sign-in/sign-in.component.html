@@ -39,7 +39,11 @@
         </md-checkbox>
         <a md-button color='accent'>Forgot password?</a>
       </div>
-      <button class='sign-in-button' md-raised-button color='primary'>Sign in</button>
+      <button
+        class='sign-in-button' md-raised-button color='primary'
+        (click)='signInWithEmail()'>
+        Sign in
+      </button>
       <div class="new-user-container">
         <span class='mat-body-1'>New to Cardinal?</span>
         <a md-button color='accent' routerLink='/sign-up'>Sign up</a>
