@@ -34,11 +34,11 @@ export class RedirectService {
   }
 
   redirect(url: string, isLoggedIn: boolean) {
-    if (isLoggedIn && url === '/sign-in') {
+    if (isLoggedIn && (url === '/sign-in' || url === '/sign-up')) {
       this.router.navigate(['/decks']);
     }
 
-    if (!isLoggedIn && url !== '/sign-in') {
+    if (!isLoggedIn && (url !== '/sign-in' && url !== '/sign-up')) {
       this.router.navigate(['/sign-in']);
     }
   }

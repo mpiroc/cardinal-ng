@@ -1,0 +1,46 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container button {
+  margin-bottom: 8px;
+}
+
+.main-container .mat-caption {
+  margin: 24px auto 16px;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon md-icon {
+  margin-right: 16px;
+  opacity: 0.87;
+}
+
+.mat-card {
+  width: 384px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.sign-up-button {
+  margin-top: 16px;
+}
+
+.google {
+  background-color: #dd4b39;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.twitter {
+  background-color: #00aced;
+}

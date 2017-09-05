@@ -42,7 +42,10 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 8px;
-  margin-bottom: 16px;
+}
+
+.sign-in-button {
+  margin-top: 16px;
 }
 
 .google {

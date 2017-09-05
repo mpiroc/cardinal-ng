@@ -8,6 +8,7 @@ import { DeckResolver } from '../services/routing/deck-resolver.service';
 import { UserResolver } from '../services/routing/user-resolver.service';
 
 import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
+import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'sign-in',
     component: SignInRouteComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'sign-up',
+    component: SignUpRouteComponent,
     canActivate: [AuthGuardService],
   },
   {

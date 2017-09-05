@@ -20,14 +20,15 @@ import { RootComponent } from '../components/root/root.component';
 import { SidenavComponent } from '../components/sidenav/sidenav.component';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
 import { LoadingSpinnerComponent } from '../components/loading-spinner/loading-spinner.component';
-import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
 import { CardCardComponent } from '../components/card-card/card-card.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
 import { SignInComponent } from '../components/sign-in/sign-in.component';
+import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
 import { SignUpComponent } from '../components/sign-up/sign-up.component';
+import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component';
 import { DeleteCardDialogComponent } from '../components/delete-card-dialog/delete-card-dialog.component';
 import { DeleteDeckDialogComponent } from '../components/delete-deck-dialog/delete-deck-dialog.component';
 import { EditCardDialogComponent } from '../components/edit-card-dialog/edit-card-dialog.component';
@@ -45,14 +46,15 @@ import 'hammerjs';
     ToolbarComponent,
     SidenavComponent,
     LoadingSpinnerComponent,
-    SignInRouteComponent,
     CardCardComponent,
     DecksRouteComponent,
     DeckCardComponent,
     DeckRouteComponent,
     ReviewDeckRouteComponent,
     SignInComponent,
+    SignInRouteComponent,
     SignUpComponent,
+    SignUpRouteComponent,
     DeleteCardDialogComponent,
     DeleteDeckDialogComponent,
     EditCardDialogComponent,
