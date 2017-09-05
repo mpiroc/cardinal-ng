@@ -1,0 +1,42 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container button {
+  margin-bottom: 8px;
+}
+
+.main-container .mat-caption {
+  margin: 24px auto 16px;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon md-icon {
+  margin-right: 16px;
+  opacity: 0.87;
+}
+
+.mat-card {
+  width: 384px;
+}
+
+.centered {
+  margin: auto;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.signin-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}

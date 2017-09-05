@@ -1,7 +1,7 @@
 <cardinal-loading-spinner [isLoading$]="isLoading$">
   <div class='centered-container'>
     <div class='centered-content'>
-      <span *ngIf="!(isLoading$ | async)" class='mat-headline'>Please Sign In</span>
+    <cardinal-sign-in-component></cardinal-sign-in-component>
     </div>
   </div>
 </cardinal-loading-spinner>
