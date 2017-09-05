@@ -52,6 +52,7 @@
       </div>
       <button
         class='sign-up-button' md-raised-button color='primary'
+        [disabled]='!(isValid$ | async)'
         (click)='signUpWithEmail()'>
         Sign up
       </button>
