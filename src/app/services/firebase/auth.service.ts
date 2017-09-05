@@ -28,7 +28,12 @@ export class AuthService {
 
   signInWithFacebook(): void {
     const provider = new auth.FacebookAuthProvider();
-    provider.setCustomParameters({auth_type: 'reauthenticate'});
+
+    this.signInWithProvider(provider);
+  }
+
+  signInWithTwitter(): void {
+    const provider = new auth.TwitterAuthProvider();
 
     this.signInWithProvider(provider);
   }

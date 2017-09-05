@@ -19,7 +19,7 @@ export class SignInComponent {
   }
 
   signInWithTwitter(): void {
-
+    this.authService.signInWithTwitter();
   }
 
   signInWithEmail(): void {
