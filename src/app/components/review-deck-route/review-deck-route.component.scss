@@ -1,14 +1,3 @@
-.container {
-  margin: auto;
-  padding: 8px;
-  display: table;
-}
-
-.responseContainer {
-  margin: 8px 0;
-}
-
-.responseGroup {
-  display: flex;
-  flex-direction: column;
-}
+@import '../../styles/centered';
+@import '../../styles/material-card';
+@import '../../styles/content-list';
