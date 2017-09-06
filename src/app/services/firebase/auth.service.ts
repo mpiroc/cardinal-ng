@@ -37,13 +37,19 @@ export class AuthService {
     this.signInWithProvider(provider);
   }
 
-  signInWithProvider(provider: auth.AuthProvider): void {
-    this.afAuth.auth.signInWithPopup(provider);
-
+  async signInWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
+
+    await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
+    await this.afAuth.auth.signInWithPopup(provider);
   }
 
-  async signInWithEmail(email: string, password: string): firebase.Promise<any> {
+  async signInWithEmail(email: string, password: string, rememberMe: boolean): firebase.Promise<any> {
+    const persistence = rememberMe ?
+      auth.Auth.Persistence.LOCAL :
+      auth.Auth.Persistence.SESSION;
+
+    await this.afAuth.auth.setPersistence(persistence);
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 

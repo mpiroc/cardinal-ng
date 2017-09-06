@@ -53,8 +53,9 @@ export class SignInComponent {
     const state: IState = this.ngRedux.getState();
     const email: string = state.signIn.get('email');
     const password: string = state.signIn.get('password');
+    const rememberMe: boolean = state.signIn.get('rememberMe');
 
-    this.authService.signInWithEmail(email, password);
+    this.authService.signInWithEmail(email, password, rememberMe);
   }
 
   onEmailInput($event: any) {
