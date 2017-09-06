@@ -21,7 +21,7 @@ export class AuthService {
 
   signInWithGoogle(): void {
     const provider = new auth.GoogleAuthProvider();
-    provider.setCustomParameters({prompt: 'select_account'});
+    //provider.setCustomParameters({prompt: 'select_account'});
 
     this.signInWithProvider(provider);
   }
