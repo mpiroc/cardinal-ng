@@ -14,7 +14,7 @@ interface IDeleteDeckDialogData {
 @Component({
   selector: 'cardinal-delete-deck-dialog',
   templateUrl: './delete-deck-dialog.component.html',
-  styleUrls: [ './delete-deck-dialog.component.css' ],
+  styleUrls: [ './delete-deck-dialog.component.scss' ],
 })
 export class DeleteDeckDialogComponent {
   public name$: Observable<string>;

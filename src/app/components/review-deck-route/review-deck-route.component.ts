@@ -19,7 +19,7 @@ import { IState } from '../../redux/state';
 @Component({
   selector: 'cardinal-review-deck-route',
   templateUrl: './review-deck-route.component.html',
-  styleUrls: [ './review-deck-route.component.css' ],
+  styleUrls: [ './review-deck-route.component.scss' ],
 })
 export class ReviewDeckRouteComponent implements OnInit {
   @select(['review', 'isLoading'])

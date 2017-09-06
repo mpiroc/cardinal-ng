@@ -46,7 +46,7 @@ import { IState } from '../../redux/state';
 @Component({
   selector: 'cardinal-card-card',
   templateUrl: './card-card.component.html',
-  styleUrls: [ './card-card.component.css' ],
+  styleUrls: [ './card-card.component.scss' ],
 })
 export class CardCardComponent implements OnChanges {
   @Input() card: ICard;

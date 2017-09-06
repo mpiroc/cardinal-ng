@@ -34,7 +34,7 @@ import {
 @Component({
   selector: 'cardinal-deck-route',
   templateUrl: './deck-route.component.html',
-  styleUrls: [ './deck-route.component.css' ],
+  styleUrls: [ './deck-route.component.scss' ],
 })
 export class DeckRouteComponent implements OnInit {
   private deck: IDeck;

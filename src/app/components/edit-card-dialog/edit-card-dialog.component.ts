@@ -21,7 +21,7 @@ interface IEditCardDialogData {
 @Component({
   selector: 'cardinal-edit-card-dialog',
   templateUrl: './edit-card-dialog.component.html',
-  styleUrls: [ './edit-card-dialog.component.css' ],
+  styleUrls: [ './edit-card-dialog.component.scss' ],
 })
 export class EditCardDialogComponent {
   @select(['editCard', 'front'])

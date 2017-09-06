@@ -21,7 +21,7 @@ interface IEditDeckDialogData {
 @Component({
   selector: 'cardinal-edit-deck-dialog',
   templateUrl: './edit-deck-dialog.component.html',
-  styleUrls: [ './edit-deck-dialog.component.css' ],
+  styleUrls: [ './edit-deck-dialog.component.scss' ],
 })
 export class EditDeckDialogComponent {
   @select(['editDeck', 'name'])

@@ -7,7 +7,7 @@ import { AuthService } from '../../services/firebase/auth.service';
 @Component({
   selector: 'cardinal-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: [ './toolbar.component.css' ],
+  styleUrls: [ './toolbar.component.scss' ],
 })
 export class ToolbarComponent {
   private title = 'Cardinal';

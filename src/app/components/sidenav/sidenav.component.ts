@@ -9,7 +9,7 @@ import { AuthService } from '../../services/firebase/auth.service';
 @Component({
   selector: 'cardinal-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrls: [ './sidenav.component.css' ],
+  styleUrls: [ './sidenav.component.scss' ],
 })
 export class SidenavComponent implements OnInit {
   _isLoading$: Subject<boolean> = new Subject<boolean>();

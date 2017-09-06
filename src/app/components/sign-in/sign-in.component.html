@@ -50,19 +50,19 @@
             </md-error>
         </md-form-field>
       </div>
-      <div class='signin-options'>
+      <div class='auth-options'>
         <md-checkbox (change)='onRememberMeChanged($event)'>
           Remember me
         </md-checkbox>
         <a md-button color='accent'>Forgot password?</a>
       </div>
       <button
-        class='sign-in-button' md-raised-button color='primary'
+        class='main-button' md-raised-button color='primary'
         [disabled]='!(isValid$ | async)'
         (click)='signInWithEmail()'>
         Sign in
       </button>
-      <div class="new-user-container">
+      <div class="wrong-form-container">
         <span class='mat-body-1'>New to Cardinal?</span>
         <a md-button color='accent' routerLink='/sign-up'>Sign up</a>
       </div>

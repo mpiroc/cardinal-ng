@@ -51,11 +51,15 @@
         </md-form-field>
       </div>
       <button
-        class='sign-up-button' md-raised-button color='primary'
+        class='main-button' md-raised-button color='primary'
         [disabled]='!(isValid$ | async)'
         (click)='signUpWithEmail()'>
         Sign up
       </button>
+      <div class="wrong-form-container">
+        <span class='mat-body-1'>Already have an account?</span>
+        <a md-button color='accent' routerLink='/sign-in'>Sign in</a>
+      </div>
     </div>
   </md-card-content>
 </md-card>

@@ -49,7 +49,7 @@ import { IState } from '../../redux/state';
 @Component({
   selector: 'cardinal-deck-card',
   templateUrl: './deck-card.component.html',
-  styleUrls: [ './deck-card.component.css' ],
+  styleUrls: [ './deck-card.component.scss' ],
 })
 export class DeckCardComponent implements OnChanges {
   @Input()

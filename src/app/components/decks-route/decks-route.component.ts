@@ -34,7 +34,7 @@ import {
 @Component({
   selector: 'cardinal-decks-route',
   templateUrl: './decks-route.component.html',
-  styleUrls: [ './decks-route.component.css' ],
+  styleUrls: [ './decks-route.component.scss' ],
 })
 export class DecksRouteComponent implements OnInit {
   private user: IUser;

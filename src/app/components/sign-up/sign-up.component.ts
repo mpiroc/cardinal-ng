@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/Observable/combineLatest';
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/map';
 import { AuthService } from '../../services/firebase/auth.service';
 import {
@@ -14,7 +14,7 @@ import { IState } from '../../redux/state';
 @Component({
   selector: 'cardinal-sign-up-component',
   templateUrl: './sign-up.component.html',
-  styleUrls: [ './sign-up.component.css' ],
+  styleUrls: [ './sign-up.component.scss' ],
 })
 export class SignUpComponent {
   private emailFormControl = new FormControl('', [

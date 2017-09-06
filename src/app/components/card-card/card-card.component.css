@@ -1,8 +1,0 @@
-md-card {
-  max-width: 448px; /* using 64px as an increment, 64 * 7 = 448 */
-}
-
-.ng-material-tab-body {
-  margin: 8px 0;
-}
-

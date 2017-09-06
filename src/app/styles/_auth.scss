@@ -1,0 +1,61 @@
+.google {
+  background-color: #dd4b39;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.twitter {
+  background-color: #00aced;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    margin-bottom: 8px;
+  }
+
+  .mat-caption {
+    margin: 24px auto 16px;
+  }
+}
+
+.main-button {
+  margin-top: 16px;
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.mat-card {
+  width: 384px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    margin-right: 16px;
+    opacity: 0.87;
+  }
+}
+
+.wrong-form-container {
+  margin: auto;
+
+  span {
+    margin-right: 8px;
+  }
+}

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/debounce';
 @Component({
   selector: 'cardinal-loading-spinner',
   templateUrl: './loading-spinner.component.html',
-  styleUrls: [ './loading-spinner.component.css' ],
+  styleUrls: [ './loading-spinner.component.scss' ],
 })
 export class LoadingSpinnerComponent implements OnChanges {
   @Input()
