@@ -1,12 +1,14 @@
-<cardinal-loading-spinner [isLoading$]="isLoading$">
-  <div class='container'>
-    <div class='ng-material-card-list'>
-      <div class='container' *ngFor='let card of emptyIfNull(cards$ | async).toArray()'>
-        <cardinal-card-card [card]='card' [showActions]='true'></cardinal-card-card>
+<cardinal-loading-spinner [isLoading$]='isLoading$'>
+  <div class='centered-container'>
+    <div class='centered-content'>
+      <div class='content-list'>
+        <div *ngFor='let card of emptyIfNull(cards$ | async).toArray()'>
+          <cardinal-card-card [card]='card' [showActions]='true'></cardinal-card-card>
+        </div>
       </div>
-    </div>
-    <div class='ng-material-new-card-button'>
-      <button md-fab class='centered' (click)='this.onNewCard()'><md-icon>add</md-icon></button>
+      <div class='new-button-container'>
+        <button md-fab class='new-button' (click)='this.onNewCard()'><md-icon>add</md-icon></button>
+      </div>
     </div>
   </div>
 </cardinal-loading-spinner>

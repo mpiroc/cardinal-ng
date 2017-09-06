@@ -1,17 +1,2 @@
-.container {
-  margin: 4px;
-}
-
-.ng-material-card-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.centered {
-  margin: auto;
-}
-
-.ng-material-new-card-button {
-  margin: 8px 0 0 0;
-  display: flex;
-}
+@import '../../styles/centered';
+@import '../../styles/content-list';
