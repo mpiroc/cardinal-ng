@@ -21,7 +21,6 @@ export class AuthService {
 
   signInWithGoogle(): void {
     const provider = new auth.GoogleAuthProvider();
-    //provider.setCustomParameters({prompt: 'select_account'});
 
     this.signInWithProvider(provider);
   }
@@ -45,25 +44,11 @@ export class AuthService {
   }
 
   async signInWithEmail(email: string, password: string): firebase.Promise<any> {
-    //try {
-      await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    //}
-    /*
-    catch (error) {
-      // TODO
-    }
-    */
+    await this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
   async signUpWithEmail(email: string, password: string): firebase.Promise<any> {
-    //try {
-      await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-    //}
-    /*
-    catch (error) {
-      // TODO
-    }
-    */
+    await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
   }
 
   signOut(): void {

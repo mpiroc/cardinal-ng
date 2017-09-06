@@ -29,7 +29,7 @@ export class AuthGuardService implements CanActivate {
           return state.url !== '/sign-in' && state.url !== '/sign-up';
         }
 
-        return state.url === '/sign-in' || state.url == '/sign-up';
+        return state.url === '/sign-in' || state.url === '/sign-up';
       })
       .catch(error => {
         this.logService.error(error);
