@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
@@ -21,14 +22,22 @@ export class ResetPasswordComponent {
   private isValid$ = this.emailFormControl.statusChanges
     .map(status => status === 'VALID');
 
-  constructor(private authService: AuthService, private ngRedux: NgRedux<IState>) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private ngRedux: NgRedux<IState>,
+  ) {
   }
 
-  resetPassword(): void {
+  async resetPassword(): Promise<void> {
     const state: IState = this.ngRedux.getState();
     const email: string = state.resetPassword.get('email');
 
-    this.authService.resetPassword(email);
+    await this.authService.resetPassword(email);
+
+    await this.router.navigate(['/reset-password-confirmation'], {
+      queryParams: { email },
+    });
   }
 
   onEmailInput($event: any) {

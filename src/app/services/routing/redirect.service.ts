@@ -18,6 +18,7 @@ export class RedirectService {
     '/sign-in',
     '/sign-up',
     '/reset-password',
+    '/reset-password-confirmation',
   ];
 
   constructor(
@@ -40,7 +41,8 @@ export class RedirectService {
   }
 
   redirect(url: string, isLoggedIn: boolean) {
-    const isUrlPublic: boolean = !!this.publicUrls.find(publicUrl => publicUrl === url);
+    const isUrlPublic: boolean = !!this.publicUrls
+      .find(publicUrl => url.startsWith(publicUrl));
 
     if (isLoggedIn && isUrlPublic) {
       this.router.navigate(['/decks']);
