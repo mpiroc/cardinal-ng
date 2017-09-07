@@ -12,7 +12,6 @@ import {
 const initialState = Map<string, any>({
   email: null,
   password: null,
-  rememberMe: false,
 })
 
 export function signUp(state: Map<string, any> = initialState, action: Action) {

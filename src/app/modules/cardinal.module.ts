@@ -24,6 +24,8 @@ import { CardCardComponent } from '../components/card-card/card-card.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckCardComponent } from '../components/deck-card/deck-card.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
+import { ResetPasswordComponent } from '../components/reset-password/reset-password.component';
+import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
 import { SignInComponent } from '../components/sign-in/sign-in.component';
 import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
@@ -50,6 +52,8 @@ import 'hammerjs';
     DecksRouteComponent,
     DeckCardComponent,
     DeckRouteComponent,
+    ResetPasswordComponent,
+    ResetPasswordRouteComponent,
     ReviewDeckRouteComponent,
     SignInComponent,
     SignInRouteComponent,

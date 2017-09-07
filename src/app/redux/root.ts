@@ -24,6 +24,7 @@ import { editCard } from './reducers/edit-card';
 import { editDeck } from './reducers/edit-deck';
 import { signIn } from './reducers/sign-in';
 import { signUp } from './reducers/sign-up';
+import { resetPassword } from './reducers/reset-password';
 import {
   UserEpic,
   CardContentEpic,
@@ -47,6 +48,7 @@ export const rootReducer = combineReducers({
   editDeck,
   signIn,
   signUp,
+  resetPassword,
 });
 
 export function createRootEpic(

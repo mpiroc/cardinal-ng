@@ -24,13 +24,6 @@ export class AuthGuardService implements CanActivate {
     return this.authService.isLoading$
       .filter(isLoading => !isLoading)
       .switchMap(_ => this.authService.isLoggedIn$)
-      .map(isLoggedIn => {
-        if (isLoggedIn) {
-          return state.url !== '/sign-in' && state.url !== '/sign-up';
-        }
-
-        return state.url === '/sign-in' || state.url === '/sign-up';
-      })
       .catch(error => {
         this.logService.error(error);
         return Observable.of(UserActions.error({}, error.message));

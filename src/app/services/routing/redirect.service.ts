@@ -14,6 +14,12 @@ import { AuthService } from '../firebase/auth.service';
 
 @Injectable()
 export class RedirectService {
+  private readonly publicUrls: string[] = [
+    '/sign-in',
+    '/sign-up',
+    '/reset-password',
+  ];
+
   constructor(
     private router: Router,
     private authService: AuthService) {
@@ -34,11 +40,13 @@ export class RedirectService {
   }
 
   redirect(url: string, isLoggedIn: boolean) {
-    if (isLoggedIn && (url === '/sign-in' || url === '/sign-up')) {
+    const isUrlPublic: boolean = !!this.publicUrls.find(publicUrl => publicUrl === url);
+
+    if (isLoggedIn && isUrlPublic) {
       this.router.navigate(['/decks']);
     }
 
-    if (!isLoggedIn && (url !== '/sign-in' && url !== '/sign-up')) {
+    if (!isLoggedIn && !isUrlPublic) {
       this.router.navigate(['/sign-in']);
     }
   }

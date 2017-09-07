@@ -60,4 +60,8 @@ export class AuthService {
   signOut(): void {
     this.afAuth.auth.signOut();
   }
+
+  resetPassword(email: string): firebase.Promise<any> {
+    return this.afAuth.auth.sendPasswordResetEmail(email);
+  }
 }

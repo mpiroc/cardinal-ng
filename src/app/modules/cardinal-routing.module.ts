@@ -11,6 +11,7 @@ import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.
 import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component';
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
+import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
 
 import { environment } from '../../environments/environment';
@@ -19,12 +20,14 @@ const routes: Routes = [
   {
     path: 'sign-in',
     component: SignInRouteComponent,
-    canActivate: [AuthGuardService],
   },
   {
     path: 'sign-up',
     component: SignUpRouteComponent,
-    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordRouteComponent,
   },
   {
     path: 'decks',
