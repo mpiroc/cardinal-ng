@@ -23,13 +23,13 @@ import { IState } from '../../redux/state';
 })
 export class ReviewDeckRouteComponent implements OnInit {
   @select(['review', 'isLoading'])
-  private isLoading$: Observable<boolean>;
+  readonly isLoading$: Observable<boolean>;
 
   @select(['review', 'history'])
-  private history$: Observable<ICardHistory>;
+  readonly history$: Observable<ICardHistory>;
 
   @select(['review', 'grade'])
-  private grade$: Observable<number>;
+  readonly grade$: Observable<number>;
 
   constructor(
     private ngRedux: NgRedux<IState>,

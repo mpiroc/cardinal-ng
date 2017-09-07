@@ -15,7 +15,7 @@ export class SidenavComponent implements OnInit {
   _isLoading$: Subject<boolean> = new Subject<boolean>();
   isLoading$: Observable<boolean>;
 
-  constructor(private authService: AuthService) {
+  constructor(readonly authService: AuthService) {
   }
 
   ngOnInit() {

@@ -18,18 +18,18 @@ import { IState } from '../../redux/state';
   styleUrls: [ './sign-in.component.scss' ],
 })
 export class SignInComponent {
-  private emailFormControl = new FormControl('', [
+  readonly emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
   ]);
 
-  private passwordFormControl = new FormControl('', [
+  readonly passwordFormControl = new FormControl('', [
     Validators.required,
     Validators.minLength(12),
     Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/),
   ]);
 
-  private isValid$: Observable<boolean> = Observable.combineLatest(
+  readonly isValid$: Observable<boolean> = Observable.combineLatest(
       this.emailFormControl.statusChanges,
       this.passwordFormControl.statusChanges,
     ).map(results => results[0] === 'VALID' && results[1] === 'VALID');

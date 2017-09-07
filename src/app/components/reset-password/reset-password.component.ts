@@ -14,12 +14,12 @@ import { IState } from '../../redux/state';
   styleUrls: [ './reset-password.component.scss' ],
 })
 export class ResetPasswordComponent {
-  private emailFormControl = new FormControl('', [
+  readonly emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
   ]);
 
-  private isValid$ = this.emailFormControl.statusChanges
+  readonly isValid$ = this.emailFormControl.statusChanges
     .map(status => status === 'VALID');
 
   constructor(

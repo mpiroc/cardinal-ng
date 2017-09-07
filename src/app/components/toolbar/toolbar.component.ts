@@ -10,12 +10,12 @@ import { AuthService } from '../../services/firebase/auth.service';
   styleUrls: [ './toolbar.component.scss' ],
 })
 export class ToolbarComponent {
-  private title = 'Cardinal';
+  readonly title = 'Cardinal';
 
   @select(['user', 'isLoading'])
   isLoading$: Observable<boolean>;
 
-  constructor(private authService: AuthService) {
+  constructor(readonly authService: AuthService) {
   }
 
   onSignOut() {
