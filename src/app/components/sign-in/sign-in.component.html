@@ -16,7 +16,7 @@
         (click)='signInWithTwitter()'>
         Sign in with Twitter
       </button>
-      <form [formGroup]='formGroup'>
+      <form [formGroup]='form.form'>
         <div class='mat-caption secondary-label'>or sign in with email</div>
         <div class='input-with-icon'>
           <md-icon>email</md-icon>
@@ -25,10 +25,10 @@
               mdInput type='text' placeholder='email'
               formControlName='email'
               (input)='onEmailInput($event)'>
-              <md-error *ngIf="getFirstEmailError() === 'required'">
+              <md-error *ngIf="form.getFirstEmailError() === 'required'">
                 required
               </md-error>
-              <md-error *ngIf="getFirstEmailError() === 'email'">
+              <md-error *ngIf="form.getFirstEmailError() === 'email'">
                 not a valid email address
               </md-error>
           </md-form-field>
@@ -40,13 +40,13 @@
               mdInput type='password' placeholder='password'
               formControlName='password'
               (input)='onPasswordInput($event)'>
-              <md-error *ngIf="getFirstPasswordError() === 'required'">
+              <md-error *ngIf="form.getFirstPasswordError() === 'required'">
                 required
               </md-error>
-              <md-error *ngIf="getFirstPasswordError() === 'minlength'">
+              <md-error *ngIf="form.getFirstPasswordError() === 'minlength'">
                 must be at least 12 characters
               </md-error>
-              <md-error *ngIf="getFirstPasswordError() === 'pattern'">
+              <md-error *ngIf="form.getFirstPasswordError() === 'pattern'">
                 must contain at least one lowercase letter (a-z), one uppercase letter (A-Z), one digit (0-9), and one special character (# ? ! @ $ % ^ &amp; * -)
               </md-error>
           </md-form-field>
@@ -59,7 +59,7 @@
         </div>
         <button
           class='main-button' md-raised-button color='primary'
-          [disabled]='!(isValid$ | async)'
+          [disabled]='!(form.isValid$ | async)'
           (click)='signInWithEmail()'>
           Sign in
         </button>

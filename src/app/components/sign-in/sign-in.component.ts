@@ -1,15 +1,7 @@
 import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import {
-  FormBuilder,
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/map';
+import { FormBuilder } from '@angular/forms';
+import { AuthForm } from '../../forms/auth.form';
 import { AuthService } from '../../services/firebase/auth.service';
 import {
   signInSetEmail,
@@ -24,46 +16,14 @@ import { IState } from '../../redux/state';
   styleUrls: [ './sign-in.component.scss' ],
 })
 export class SignInComponent {
-  readonly formGroup: FormGroup;
-
-  readonly isValid$: Observable<boolean>;
+  readonly form: AuthForm;
 
   constructor(
     private authService: AuthService,
     private ngRedux: NgRedux<IState>,
     private formBuilder: FormBuilder,
   ) {
-    this.formGroup = formBuilder.group({
-      email: ['', [
-        Validators.required,
-        Validators.email,
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(12),
-        Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/),
-      ]],
-    });
-
-    this.isValid$ = this.formGroup.statusChanges.map(status => status === 'VALID');
-  }
-
-  getFirstEmailError(): string {
-    return this.getFirstError(
-      this.formGroup.get('email'),
-      ['required', 'email'],
-    );
-  }
-
-  getFirstPasswordError(): string {
-    return this.getFirstError(
-      this.formGroup.get('password'),
-      ['required', 'minlength', 'pattern'],
-    );
-  }
-
-  private getFirstError(control: AbstractControl, errors: string[]) {
-    return errors.find(error => control.hasError(error));
+    this.form = new AuthForm(formBuilder);
   }
 
   signInWithGoogle(): void {
