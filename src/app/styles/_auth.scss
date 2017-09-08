@@ -1,13 +1,16 @@
 .google {
   background-color: #dd4b39;
+  width: 100%;
 }
 
 .facebook {
   background-color: #3b5998;
+  width: 100%;
 }
 
 .twitter {
   background-color: #00aced;
+  width: 100%;
 }
 
 .main-container {
@@ -58,9 +61,17 @@
 }
 
 .wrong-form-container {
+  width: 100%;
+  text-align: center;
+  
   margin: auto;
 
   span {
     margin-right: 8px;
   }
+}
+
+.cd-disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }

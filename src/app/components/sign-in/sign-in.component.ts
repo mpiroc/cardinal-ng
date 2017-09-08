@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { AuthForm } from '../../forms/auth.form';
 import { AuthService } from '../../services/firebase/auth.service';
 import {
@@ -17,6 +18,7 @@ import { IState } from '../../redux/state';
 })
 export class SignInComponent {
   readonly form: AuthForm;
+  readonly isSubmitting$: Observable<boolean> = Observable.of(false);
 
   constructor(
     private authService: AuthService,
