@@ -21,9 +21,7 @@
         <div class='input-with-icon'>
           <md-icon>email</md-icon>
           <md-form-field>
-            <input
-              mdInput type='text' placeholder='email'
-              formControlName='email'
+            <input mdInput type='text' placeholder='email' formControlName='email'
               (input)='onEmailInput($event)'>
               <md-error *ngIf="form.getFirstEmailError() === 'required'">
                 required
@@ -36,9 +34,7 @@
         <div class='input-with-icon'>
           <md-icon>lock</md-icon>
           <md-form-field>
-            <input
-              mdInput type='password' placeholder='password'
-              formControlName='password'
+            <input mdInput type='password' placeholder='password' formControlName='password'
               (input)='onPasswordInput($event)'>
               <md-error *ngIf="form.getFirstPasswordError() === 'required'">
                 required

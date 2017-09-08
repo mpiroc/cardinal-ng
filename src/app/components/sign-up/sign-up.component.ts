@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/map';
+import { FormBuilder } from '@angular/forms';
+import { AuthForm } from '../../forms/auth.form';
 import { AuthService } from '../../services/firebase/auth.service';
 import {
   signUpSetEmail,
@@ -17,23 +15,14 @@ import { IState } from '../../redux/state';
   styleUrls: [ './sign-up.component.scss' ],
 })
 export class SignUpComponent {
-  readonly emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
+  readonly form: AuthForm;
 
-  readonly passwordFormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(12),
-    Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/),
-  ]);
-
-  readonly isValid$: Observable<boolean> = Observable.combineLatest(
-      this.emailFormControl.statusChanges,
-      this.passwordFormControl.statusChanges,
-    ).map(results => results[0] === 'VALID' && results[1] === 'VALID');
-
-  constructor(private authService: AuthService, private ngRedux: NgRedux<IState>) {
+  constructor(
+    private authService: AuthService,
+    private ngRedux: NgRedux<IState>,
+    private formBuilder: FormBuilder,
+  ) {
+    this.form = new AuthForm(formBuilder);
   }
 
   signUpWithGoogle(): void {
