@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/map';
@@ -18,23 +23,28 @@ import { IState } from '../../redux/state';
   styleUrls: [ './sign-in.component.scss' ],
 })
 export class SignInComponent {
-  readonly emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
+  readonly formGroup: FormGroup;
 
-  readonly passwordFormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(12),
-    Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/),
-  ]);
+  readonly isValid$: Observable<boolean>;
 
-  readonly isValid$: Observable<boolean> = Observable.combineLatest(
-      this.emailFormControl.statusChanges,
-      this.passwordFormControl.statusChanges,
-    ).map(results => results[0] === 'VALID' && results[1] === 'VALID');
+  constructor(
+    private authService: AuthService,
+    private ngRedux: NgRedux<IState>,
+    private formBuilder: FormBuilder,
+  ) {
+    this.formGroup = formBuilder.group({
+      email: ['', [
+        Validators.required,
+        Validators.email,
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(12),
+        Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/),
+      ]],
+    });
 
-  constructor(private authService: AuthService, private ngRedux: NgRedux<IState>) {
+    this.isValid$ = this.formGroup.statusChanges.map(status => status === 'VALID');
   }
 
   signInWithGoogle(): void {
