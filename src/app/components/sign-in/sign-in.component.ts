@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import {
   FormBuilder,
+  AbstractControl,
   FormControl,
   FormGroup,
   Validators,
@@ -45,6 +46,24 @@ export class SignInComponent {
     });
 
     this.isValid$ = this.formGroup.statusChanges.map(status => status === 'VALID');
+  }
+
+  getFirstEmailError(): string {
+    return this.getFirstError(
+      this.formGroup.get('email'),
+      ['required', 'email'],
+    );
+  }
+
+  getFirstPasswordError(): string {
+    return this.getFirstError(
+      this.formGroup.get('password'),
+      ['required', 'minlength', 'pattern'],
+    );
+  }
+
+  private getFirstError(control: AbstractControl, errors: string[]) {
+    return errors.find(error => control.hasError(error));
   }
 
   signInWithGoogle(): void {

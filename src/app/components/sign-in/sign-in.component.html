@@ -17,7 +17,7 @@
         Sign in with Twitter
       </button>
       <form [formGroup]='formGroup'>
-        <div class='mat-caption'>or sign in with email</div>
+        <div class='mat-caption secondary-label'>or sign in with email</div>
         <div class='input-with-icon'>
           <md-icon>email</md-icon>
           <md-form-field>
@@ -25,10 +25,10 @@
               mdInput type='text' placeholder='email'
               formControlName='email'
               (input)='onEmailInput($event)'>
-              <md-error *ngIf="formGroup.get('email').hasError('required')">
+              <md-error *ngIf="getFirstEmailError() === 'required'">
                 required
               </md-error>
-              <md-error *ngIf="!formGroup.get('email').hasError('required') && formGroup.get('email').hasError('email')">
+              <md-error *ngIf="getFirstEmailError() === 'email'">
                 not a valid email address
               </md-error>
           </md-form-field>
@@ -40,13 +40,13 @@
               mdInput type='password' placeholder='password'
               formControlName='password'
               (input)='onPasswordInput($event)'>
-              <md-error *ngIf="formGroup.get('password').hasError('required')">
+              <md-error *ngIf="getFirstPasswordError() === 'required'">
                 required
               </md-error>
-              <md-error *ngIf="!formGroup.get('password').hasError('required') && formGroup.get('password').hasError('minlength')">
+              <md-error *ngIf="getFirstPasswordError() === 'minlength'">
                 must be at least 12 characters
               </md-error>
-              <md-error *ngIf="!formGroup.get('password').hasError('required') && !formGroup.get('password').hasError('minlength') && formGroup.get('password').hasError('pattern')">
+              <md-error *ngIf="getFirstPasswordError() === 'pattern'">
                 must contain at least one lowercase letter (a-z), one uppercase letter (A-Z), one digit (0-9), and one special character (# ? ! @ $ % ^ &amp; * -)
               </md-error>
           </md-form-field>
