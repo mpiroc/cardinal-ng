@@ -15,7 +15,9 @@ import {
 import {
   signUpSubmit,
   signUpSubmitSuccess,
-  signUpSubmitError,
+  signUpSubmitUserError,
+  signUpSubmitPasswordError,
+  signUpSubmitOtherError,
 } from '../../redux/actions/sign-up';
 
 @Injectable()
@@ -51,17 +53,9 @@ export class AuthService {
 
   async signInWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
-    this.ngRedux.dispatch(signUpSubmit());
 
-    try {
-      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
-      await this.afAuth.auth.signInWithPopup(provider);
-
-      this.ngRedux.dispatch(signUpSubmitSuccess());
-    }
-    catch (error) {
-      this.ngRedux.dispatch(signUpSubmitError(error.message))
-    }
+    await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
+    await this.afAuth.auth.signInWithPopup(provider);
   }
 
   async signInWithEmail(email: string, password: string, rememberMe: boolean): firebase.Promise<any> {
@@ -78,7 +72,6 @@ export class AuthService {
     }
     catch (error) {
       switch (error.code) {
-        // User
         case 'auth/user-not-found':
           this.ngRedux.dispatch(signInSubmitUserError('There is no user with this email address.'));
           break;
@@ -87,17 +80,14 @@ export class AuthService {
           this.ngRedux.dispatch(signInSubmitUserError('The user with this email address has been disabled.'));
           break;
 
-        // Password
         case 'auth/wrong-password':
           this.ngRedux.dispatch(signInSubmitPasswordError('Invalid password'));
           break;
 
         default:
-          console.log(error.code);
           this.ngRedux.dispatch(signInSubmitOtherError(error.message));
           break;
       }
-      
     }
   }
 
@@ -111,7 +101,28 @@ export class AuthService {
       this.ngRedux.dispatch(signUpSubmitSuccess());
     }
     catch (error) {
-      this.ngRedux.dispatch(signUpSubmitError(error.message))
+      switch (error.code) {
+        case 'auth/user-not-found':
+          this.ngRedux.dispatch(signUpSubmitUserError('There is no user with this email address.'));
+          break;
+
+        case 'auth/user-disabled':
+          this.ngRedux.dispatch(signUpSubmitUserError('The user with this email address has been disabled.'));
+          break;
+
+        case 'auth/invalid-email':
+          this.ngRedux.dispatch(signUpSubmitUserError('Invalid email address'));
+          break;
+
+        case 'auth/wrong-password':
+          this.ngRedux.dispatch(signUpSubmitPasswordError('Invalid password'));
+          break;
+
+        default:
+          console.log(error.code);
+          this.ngRedux.dispatch(signUpSubmitOtherError(error.message));
+          break;
+      }
     }    
   }
 

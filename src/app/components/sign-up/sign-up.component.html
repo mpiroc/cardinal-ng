@@ -1,6 +1,7 @@
+<md-progress-bar *ngIf='isSubmitting$ | async' mode='indeterminate'></md-progress-bar>
 <md-card>
   <md-card-content>
-    <div class='main-container'>
+    <div [ngClass]="{'main-container': true, 'cd-disabled': (isSubmitting$ | async)}">
       <button
         md-raised-button class='google' color='accent'
         (click)='signUpWithGoogle()'>
@@ -16,12 +17,13 @@
         (click)='signUpWithTwitter()'>
         Sign up with Twitter
       </button>
-      <form [formGroup]='form.form'>
+      <form [formGroup]='form.form' (ngSubmit)='signUpWithEmail()'>
         <div class='mat-caption secondary-label'>or sign up with email</div>
         <div class='input-with-icon'>
           <md-icon>email</md-icon>
           <md-form-field>
             <input mdInput type='text' placeholder='email' formControlName='email'
+              [errorStateMatcher]="getErrorStateMatcher(['userError'])"
               (input)='onEmailInput($event)'>
             <md-error *ngIf="form.getFirstEmailError() === 'required'">
               required
@@ -29,12 +31,16 @@
             <md-error *ngIf="form.getFirstEmailError() === 'email'">
               not a valid email address
             </md-error>
+            <md-error *ngIf="!!(userError$ | async)">
+              {{userError$ | async}}
+            </md-error>
           </md-form-field>
         </div>
         <div class='input-with-icon'>
           <md-icon>lock</md-icon>
           <md-form-field>
             <input mdInput type='password' placeholder='password' formControlName='password'
+              [errorStateMatcher]="getErrorStateMatcher(['passwordError', 'otherError'])"
               (input)='onPasswordInput($event)'>
             <md-error *ngIf="form.getFirstPasswordError() === 'required'">
               required
@@ -45,12 +51,18 @@
             <md-error *ngIf="form.getFirstPasswordError() === 'pattern'">
               must contain at least one lowercase letter (a-z), one uppercase letter (A-Z), one digit (0-9), and one special character (# ? ! @ $ % ^ &amp; * -)
             </md-error>
+            <md-error *ngIf="!!(passwordError$ | async)">
+              {{passwordError$ | async}}
+            </md-error>
+            <md-error *ngIf="!!(otherError$ | async)">
+              {{otherError$ | async}}
+            </md-error>
           </md-form-field>
         </div>
         <button
           class='main-button' md-raised-button color='primary'
-          [disabled]='!(isValid$ | async)'
-          (click)='signUpWithEmail()'>
+          type='submit'
+          [disabled]='!(form.isValid$ | async)'>
           Sign up
         </button>
       </form>

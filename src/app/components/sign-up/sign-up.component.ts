@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
-import { FormBuilder } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+} from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { AuthForm } from '../../forms/auth.form';
 import { AuthService } from '../../services/firebase/auth.service';
 import {
@@ -15,6 +21,18 @@ import { IState } from '../../redux/state';
   styleUrls: [ './sign-up.component.scss' ],
 })
 export class SignUpComponent {
+  @select(['signUp', 'isSubmitting'])
+  readonly isSubmitting$: Observable<boolean>;
+
+  @select(['signUp', 'userError'])
+  readonly userError$: Observable<string>;
+
+  @select(['signUp', 'passwordError'])
+  readonly passwordError$: Observable<string>;
+
+  @select(['signUp', 'otherError'])
+  readonly otherError$: Observable<string>;
+
   readonly form: AuthForm;
 
   constructor(
@@ -23,6 +41,23 @@ export class SignUpComponent {
     private formBuilder: FormBuilder,
   ) {
     this.form = new AuthForm(formBuilder);
+  }
+
+  getErrorStateMatcher(errorTypes: string[]) {
+    return (control: FormControl, form: FormGroupDirective | NgForm) => {
+      const submitted = form && form.submitted;
+      if (control.invalid && (control.touched || submitted)) {
+        return true;
+      }
+
+      if (!this.ngRedux) {
+        return false;
+      }
+      
+      const state = this.ngRedux.getState();
+
+      return !!errorTypes.find(errorType => !!state.signUp.get(errorType))
+    };
   }
 
   signUpWithGoogle(): void {
