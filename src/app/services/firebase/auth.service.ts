@@ -5,6 +5,18 @@ import { auth } from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { IState } from '../../redux/state';
 import { UserActions } from '../../redux/actions/firebase';
+import {
+  signInSubmit,
+  signInSubmitSuccess,
+  signInSubmitUserError,
+  signInSubmitPasswordError,
+  signInSubmitOtherError,
+} from '../../redux/actions/sign-in';
+import {
+  signUpSubmit,
+  signUpSubmitSuccess,
+  signUpSubmitError,
+} from '../../redux/actions/sign-up';
 
 @Injectable()
 export class AuthService {
@@ -39,9 +51,17 @@ export class AuthService {
 
   async signInWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
     this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
+    this.ngRedux.dispatch(signUpSubmit());
 
-    await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
-    await this.afAuth.auth.signInWithPopup(provider);
+    try {
+      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.afAuth.auth.signInWithPopup(provider);
+
+      this.ngRedux.dispatch(signUpSubmitSuccess());
+    }
+    catch (error) {
+      this.ngRedux.dispatch(signUpSubmitError(error.message))
+    }
   }
 
   async signInWithEmail(email: string, password: string, rememberMe: boolean): firebase.Promise<any> {
@@ -49,12 +69,50 @@ export class AuthService {
       auth.Auth.Persistence.LOCAL :
       auth.Auth.Persistence.SESSION;
 
-    await this.afAuth.auth.setPersistence(persistence);
-    await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    this.ngRedux.dispatch(signInSubmit());
+    try {
+      await this.afAuth.auth.setPersistence(persistence);
+      await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+
+      this.ngRedux.dispatch(signInSubmitSuccess());
+    }
+    catch (error) {
+      switch (error.code) {
+        // User
+        case 'auth/user-not-found':
+          this.ngRedux.dispatch(signInSubmitUserError('There is no user with this email address.'));
+          break;
+
+        case 'auth/user-disabled':
+          this.ngRedux.dispatch(signInSubmitUserError('The user with this email address has been disabled.'));
+          break;
+
+        // Password
+        case 'auth/wrong-password':
+          this.ngRedux.dispatch(signInSubmitPasswordError('Invalid password'));
+          break;
+
+        default:
+          console.log(error.code);
+          this.ngRedux.dispatch(signInSubmitOtherError(error.message));
+          break;
+      }
+      
+    }
   }
 
   async signUpWithEmail(email: string, password: string): firebase.Promise<any> {
-    await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    this.ngRedux.dispatch(signUpSubmit());
+
+    try {
+      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+
+      this.ngRedux.dispatch(signUpSubmitSuccess());
+    }
+    catch (error) {
+      this.ngRedux.dispatch(signUpSubmitError(error.message))
+    }    
   }
 
   signOut(): void {

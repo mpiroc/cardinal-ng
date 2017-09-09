@@ -13,9 +13,7 @@ export class AuthForm {
 
   readonly isValid$: Observable<boolean>;
 
-  constructor(
-    private formBuilder: FormBuilder,
-  ) {
+  constructor(private formBuilder: FormBuilder) {
     this.form = formBuilder.group({
       email: ['', [
         Validators.required,

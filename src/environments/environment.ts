@@ -14,6 +14,6 @@ export const environment = {
     messagingSenderId: '956312128006'
   },
   routing: {
-    enableTracing: true,
+    //enableTracing: true,
   },
 };
