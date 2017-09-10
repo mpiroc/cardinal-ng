@@ -9,9 +9,16 @@ import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 
-import { IUser } from '../../interfaces/firebase';
 import { IState } from '../state';
 import { LogService } from '../../services/log.service';
+import {
+  IUser,
+  ICardContent,
+  ICardHistory,
+  ICard,
+  IDeckInfo,
+  IDeck,
+} from '../../interfaces/firebase';
 import {
   FirebaseActions,
   IHasArgs,
@@ -27,11 +34,10 @@ import { FirebaseObjectReducer } from '../reducers/firebase';
 const ARTIFICIAL_LATENCY = 0;
 
 abstract class FirebaseEpic<TModel, TArgs> {
-  constructor(
-    protected actions: FirebaseActions<TModel, TArgs>,
-    protected selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
-  ) {
+  constructor(protected actions: FirebaseActions<TModel, TArgs>) {
   }
+
+  abstract selectSubStore(state: IState, args: TArgs): Map<string, any>;
 
   protected isListening(store: MiddlewareAPI<IState>, action: Action & IHasArgs<TArgs>) {
     const subStore: Map<string, any> = this.selectSubStore(store.getState(), action.args);
@@ -51,17 +57,13 @@ abstract class FirebaseEpic<TModel, TArgs> {
   }
 }
 
-export class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
-  constructor(
-    actions: FirebaseActions<TModel, TArgs>,
-    selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
-    private handleReceived?: (store: MiddlewareAPI<IState>, data: TModel, args: TArgs) => Observable<Action>
-  ) {
-    super(actions, selectSubStore);
+export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
+  constructor(actions: FirebaseActions<TModel, TArgs>) {
+    super(actions);
+  }
 
-    if (!handleReceived) {
-      this.handleReceived = (store, data, args) => Observable.of(this.actions.objectReceived(args, data));
-    }
+  handleReceived(store: MiddlewareAPI<IState>, data: TModel, args: TArgs) {
+    return Observable.of(this.actions.objectReceived(args, data));
   }
 
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel>) {
@@ -84,15 +86,14 @@ export class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArg
   }
 }
 
-export class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
-  constructor(
-    actions: FirebaseActions<TModel, TArgs>,
-    private selectKey: (data: TModel) => string,
-    selectSubStore: (state: IState, args: TArgs) => Map<string, any>,
-    private getStopActions: (masterRecord: TModel) => Action[]
-  ) {
-    super(actions, selectSubStore);
+export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
+  constructor(actions: FirebaseActions<TModel, TArgs>) {
+    super(actions);
   }
+
+  abstract selectKey(data: TModel): string;
+
+  abstract getStopActions(masterRecord: TModel): Action[]
 
   public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel[]>) {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
@@ -159,35 +160,94 @@ export class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs>
 }
 
 // Epics
-export const CardContentEpic = new FirebaseObjectEpic(CardContentActions, (state, args) => state.cardContent.get(args.cardId));
-export const CardHistoryEpic = new FirebaseObjectEpic(CardHistoryActions, (state, args) => state.cardHistory.get(args.cardId));
-export const DeckInfoEpic = new FirebaseObjectEpic(DeckInfoActions, (state, args) => state.deckInfo.get(args.deckId));
+class _CardContentEpic extends FirebaseObjectEpic<ICardContent, ICard> {
+  constructor() {
+    super(CardContentActions);
+  }
 
-export const CardEpic = new FirebaseListEpic(
-  CardActions,
-  card => card.cardId,
-  (state, args) => state.card.get(args.deckId),
-  card => [
-    CardContentActions.stopListening(card),
-    CardHistoryActions.stopListening(card),
-  ],
-);
+  selectSubStore(state: IState, args: ICard) {
+    return state.cardContent.get(args.cardId);
+  }
+}
+export const CardContentEpic = new _CardContentEpic();
 
-export const DeckEpic = new FirebaseListEpic(
-  DeckActions,
-  deck => deck.deckId,
-  (state, args) => state.deck,
-  deck => [
-    CardActions.beforeStopListening(deck),
-    CardActions.stopListening(deck),
-    DeckInfoActions.stopListening(deck),
-  ],
-);
+class _CardHistoryEpic extends FirebaseObjectEpic<ICardHistory, ICard> {
+  constructor() {
+    super(CardHistoryActions);
+  }
 
-export const UserEpic = new FirebaseObjectEpic(
-  UserActions,
-  (state, args) => state.user,
-  (store, user, args) => {
+  selectSubStore(state: IState, args: ICard) {
+    return state.cardHistory.get(args.cardId);
+  }
+}
+export const CardHistoryEpic = new _CardHistoryEpic();
+
+class _DeckInfoEpic extends FirebaseObjectEpic<IDeckInfo, IDeck> {
+  constructor() {
+    super(DeckInfoActions);
+  }
+
+  selectSubStore(state: IState, args: ICard) {
+    return state.deckInfo.get(args.deckId);
+  }
+}
+export const DeckInfoEpic = new _DeckInfoEpic();
+
+class _CardEpic extends FirebaseListEpic<ICard, IDeck> {
+  constructor() {
+    super(CardActions);
+  }
+
+  selectSubStore(state: IState, args: IDeck) {
+    return state.card.get(args.deckId);
+  }
+
+  selectKey(card: ICard): string {
+    return card.cardId;
+  }
+
+  getStopActions(card: ICard): Action[] {
+    return [
+      CardContentActions.stopListening(card),
+      CardHistoryActions.stopListening(card),
+    ];
+  }
+}
+export const CardEpic = new _CardEpic();
+
+class _DeckEpic extends FirebaseListEpic<IDeck, IUser> {
+  constructor() {
+    super(DeckActions);
+  }
+
+  selectSubStore(state: IState, args: IUser) {
+    return state.deck;
+  }
+
+  selectKey(deck: IDeck) {
+    return deck.deckId;
+  }
+
+  getStopActions(deck: IDeck): Action[] {
+    return [
+      CardActions.beforeStopListening(deck),
+      CardActions.stopListening(deck),
+      DeckInfoActions.stopListening(deck),
+      ];
+  }
+}
+export const DeckEpic = new _DeckEpic();
+
+class _UserEpic extends FirebaseObjectEpic<IUser, {}> {
+  constructor() {
+    super(UserActions);
+  }
+
+  selectSubStore(state: IState, args: {}) {
+    return state.user;
+  }
+
+  handleReceived(store: MiddlewareAPI<IState>, user: IUser, args: {}) {
     let actions: Action[] = [];
 
     const userStore = store.getState().user;
@@ -208,4 +268,5 @@ export const UserEpic = new FirebaseObjectEpic(
 
     return Observable.from(actions);
   }
-);
+}
+export const UserEpic = new _UserEpic();
