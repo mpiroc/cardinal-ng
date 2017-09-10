@@ -13,9 +13,3 @@ export function resetPasswordSetEmail(email: string): IResetPasswordSetEmailActi
     email,
   };
 }
-
-export function resetPasswordClear(): Action {
-  return {
-    type: RESET_PASSWORD_CLEAR,
-  };
-}

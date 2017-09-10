@@ -4,10 +4,10 @@ import { Action } from 'redux';
 import {
   REVIEW_SET_DECK,
   REVIEW_SET_HISTORY,
-  REVIEW_SELECT_GRADE,
+  REVIEW_SET_GRADE,
   IReviewSetDeckAction,
   IReviewSetHistoryAction,
-  IReviewSelectGradeAction,
+  IReviewSetGradeAction,
 } from '../actions/review';
 
 const initialReviewState = Map<string, any>({
@@ -32,9 +32,9 @@ export function review(state: Map<string, any> = initialReviewState, action: Act
         .set('history', history)
         .set('grade', history ? history.grade : 0);
 
-    case REVIEW_SELECT_GRADE:
+    case REVIEW_SET_GRADE:
       return state
-        .set('grade', (action as IReviewSelectGradeAction).grade);
+        .set('grade', (action as IReviewSetGradeAction).grade);
 
     default:
       return state;

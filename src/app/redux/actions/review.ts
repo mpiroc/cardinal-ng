@@ -7,7 +7,7 @@ import {
 
 export const REVIEW_SET_DECK = 'REVIEW_SET_DECK';
 export const REVIEW_SET_HISTORY = 'REVIEW_SET_HISTORY';
-export const REVIEW_SELECT_GRADE = 'REVIEW_SELECT_GRADE';
+export const REVIEW_SET_GRADE = 'REVIEW_SET_GRADE';
 
 export interface IReviewSetDeckAction extends Action {
   deck: IDeck,
@@ -17,7 +17,7 @@ export interface IReviewSetHistoryAction extends Action {
   history: ICardHistory,
 }
 
-export interface IReviewSelectGradeAction extends Action {
+export interface IReviewSetGradeAction extends Action {
   grade: number;
 }
 
@@ -35,9 +35,9 @@ export function reviewSetHistory(history: ICardHistory): IReviewSetHistoryAction
   }
 }
 
-export function reviewSelectGrade(grade: number): IReviewSelectGradeAction {
+export function reviewSetGrade(grade: number): IReviewSetGradeAction {
   return {
-    type: REVIEW_SELECT_GRADE,
+    type: REVIEW_SET_GRADE,
     grade,
   }
 }
