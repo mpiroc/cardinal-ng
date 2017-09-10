@@ -12,7 +12,7 @@ import {
 } from '../../interfaces/firebase';
 import {
   reviewSetDeck,
-  reviewSelectGrade,
+  reviewSetGrade,
 } from '../../redux/actions/review';
 import { IState } from '../../redux/state';
 
@@ -47,7 +47,7 @@ export class ReviewDeckRouteComponent implements OnInit {
   }
 
   onSelectGrade(grade: number) {
-    this.ngRedux.dispatch(reviewSelectGrade(grade));
+    this.ngRedux.dispatch(reviewSetGrade(grade));
   }
 
   getReviewText(grade: number) {
