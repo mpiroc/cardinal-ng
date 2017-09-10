@@ -29,7 +29,7 @@ export interface IFirebaseReducer {
   reducer: Reducer<Map<string, any>>;
 }
 
-export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
+export abstract class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState: Map<string, any> = Map({
     isListening: false,
     isLoading: true,
@@ -79,17 +79,18 @@ export class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
   }
 }
 
-export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
+export abstract class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState = Map<string, Map<string, any>>();
 
   public reducer: Reducer<Map<string, any>>;
 
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
-    private objectReducer: IFirebaseReducer,
-    private selectKey: (args: TArgs) => string) {
+    private objectReducer: IFirebaseReducer) {
     this.reducer = this._reducer.bind(this);
   }
+
+  abstract selectKey(args: TArgs): string;
 
   _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
@@ -116,7 +117,7 @@ export class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
   }
 }
 
-export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
+export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
   private initialState: Map<string, any> = Map({
     isListening: false,
     isLoading: true,
@@ -167,30 +168,88 @@ export class FirebaseListReducer<TModel, TArgs> implements IFirebaseReducer {
   }
 }
 
-export const CardContentObjectReducer = new FirebaseObjectReducer<ICardContent, ICard>(CardContentActions);
-export const CardContentMapReducer = new FirebaseMapReducer<ICardContent, ICard>(
-    CardContentActions,
-    CardContentObjectReducer,
-    args => args.cardId);
+class _CardContentObjectReducer extends FirebaseObjectReducer<ICardContent, ICard> {
+  constructor() {
+    super(CardContentActions);
+  }
+}
+export const CardContentObjectReducer = new _CardContentObjectReducer();
 
-export const CardHistoryObjectReducer = new FirebaseObjectReducer<ICardHistory, ICard>(CardHistoryActions);
-export const CardHistoryMapReducer = new FirebaseMapReducer<ICardHistory, ICard>(
-  CardHistoryActions,
-  CardHistoryObjectReducer,
-  args => args.cardId);
+class _CardContentMapReducer extends FirebaseMapReducer<ICardContent, ICard> {
+  constructor() {
+    super(CardContentActions, CardContentObjectReducer);
+  }
 
-export const CardListReducer = new FirebaseListReducer<ICard, IDeck>(CardActions);
-export const CardMapReducer = new FirebaseMapReducer<ICard, IDeck>(
-  CardActions,
-  CardListReducer,
-  args => args.deckId);
+  selectKey(args: ICard) {
+    return args.cardId;
+  }
+}
+export const CardContentMapReducer = new _CardContentMapReducer();
 
-export const DeckInfoObjectReducer = new FirebaseObjectReducer<IDeckInfo, IDeck>(DeckInfoActions);
-export const DeckInfoMapReducer = new FirebaseMapReducer<IDeckInfo, IDeck>(
-  DeckInfoActions,
-  DeckInfoObjectReducer,
-  args => args.deckId);
+class _CardHistoryObjectReducer extends FirebaseObjectReducer<ICardHistory, ICard> {
+  constructor() {
+    super(CardHistoryActions);
+  }
+}
+export const CardHistoryObjectReducer = new _CardHistoryObjectReducer();
 
-export const DeckListReducer = new FirebaseListReducer<IDeck, IUser>(DeckActions);
+class _CardHistoryMapReducer extends FirebaseMapReducer<ICardHistory, ICard> {
+  constructor() {
+    super(CardHistoryActions, CardHistoryObjectReducer);
+  }
 
-export const UserObjectReducer = new FirebaseObjectReducer<IUser, {}>(UserActions);
+  selectKey(args: ICard) {
+    return args.cardId;
+  }
+}
+export const CardHistoryMapReducer = new _CardHistoryMapReducer();
+
+class _CardListReducer extends FirebaseListReducer<ICard, IDeck> {
+  constructor() {
+    super(CardActions);
+  }
+}
+export const CardListReducer = new _CardListReducer();
+
+class _CardMapReducer extends FirebaseMapReducer<ICard, IDeck> {
+  constructor() {
+    super(CardActions, CardListReducer);
+  }
+
+  selectKey(args: IDeck) {
+    return args.deckId;
+  }
+}
+export const CardMapReducer = new _CardMapReducer();
+
+class _DeckInfoObjectReducer extends FirebaseObjectReducer<IDeckInfo, IDeck> {
+  constructor() {
+    super(DeckInfoActions);
+  }
+}
+export const DeckInfoObjectReducer = new _DeckInfoObjectReducer();
+
+class _DeckInfoMapReducer extends FirebaseMapReducer<IDeckInfo, IDeck> {
+  constructor() {
+    super(DeckInfoActions, DeckInfoObjectReducer);
+  }
+
+  selectKey(args: IDeck) {
+    return args.deckId;
+  }
+}
+export const DeckInfoMapReducer = new _DeckInfoMapReducer();
+
+class _DeckListReducer extends FirebaseListReducer<IDeck, IUser> {
+  constructor() {
+    super(DeckActions);
+  }
+}
+export const DeckListReducer = new _DeckListReducer();
+
+class _UserObjectReducer extends FirebaseObjectReducer<IUser, {}> {
+  constructor() {
+    super(UserActions);
+  }
+}
+export const UserObjectReducer = new _UserObjectReducer();
