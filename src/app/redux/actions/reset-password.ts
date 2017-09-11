@@ -1,7 +1,6 @@
 import { Action } from 'redux';
 
 export const RESET_PASSWORD_SET_EMAIL = 'RESET_PASSWORD_SET_EMAIL';
-export const RESET_PASSWORD_CLEAR = 'RESET_PASSWORD_CLEAR';
 
 export interface IResetPasswordSetEmailAction extends Action {
   email: string;
