@@ -1,4 +1,4 @@
-import { 
+import {
   RESET_PASSWORD_SET_EMAIL,
   resetPasswordSetEmail,
 } from '../reset-password';

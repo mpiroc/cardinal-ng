@@ -1,4 +1,4 @@
-import { 
+import {
   SIGN_UP_SET_EMAIL,
   SIGN_UP_SET_PASSWORD,
   SIGN_UP_SUBMIT,

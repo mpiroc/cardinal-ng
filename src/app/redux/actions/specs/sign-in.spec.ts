@@ -1,4 +1,4 @@
-import { 
+import {
   SIGN_IN_SET_EMAIL,
   SIGN_IN_SET_PASSWORD,
   SIGN_IN_SET_REMEMBER_ME,

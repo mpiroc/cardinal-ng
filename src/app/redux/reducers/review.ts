@@ -30,7 +30,7 @@ export function review(state: Map<string, any> = initialReviewState, action: Act
       return state
         .set('isLoading', false)
         .set('history', history)
-        .set('grade', history ? history.grade : 0);
+        .set('grade', history && history.grade ? history.grade : 0);
 
     case REVIEW_SET_GRADE:
       return state

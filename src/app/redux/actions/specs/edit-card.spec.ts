@@ -1,4 +1,4 @@
-import { 
+import {
   EDIT_CARD_SET_FRONT,
   EDIT_CARD_SET_BACK,
   editCardSetFront,
