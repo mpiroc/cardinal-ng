@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarkdownModule } from 'angular2-markdown';
 import { MdSnackBar } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
