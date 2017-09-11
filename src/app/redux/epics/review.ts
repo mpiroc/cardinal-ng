@@ -32,6 +32,8 @@ import {
 
 @Injectable()
 export class ReviewEpic {
+  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+
   constructor(
     private logService: LogService,
     private ngRedux: NgRedux<IState>,
@@ -42,7 +44,6 @@ export class ReviewEpic {
     this.epic = this._epic.bind(this);
   }
 
-  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
   private _epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
     return action$
       .ofType(REVIEW_SET_DECK)

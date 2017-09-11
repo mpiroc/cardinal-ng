@@ -61,6 +61,8 @@ abstract class FirebaseEpic<TModel, TArgs> {
 }
 
 export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
+  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+
   constructor(
     actions: FirebaseActions<TModel, TArgs>,
     private logService: LogService,
@@ -75,7 +77,6 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
     return Observable.of(this.actions.objectReceived(args, data));
   }
 
-  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
   private _epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
     return action$
       .ofType(this.actions.BEFORE_START_LISTENING)
@@ -97,6 +98,9 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
 }
 
 export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
+  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+  public readonly stopListeningEpic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+
   constructor(
     actions: FirebaseActions<TModel, TArgs>,
     private logService: LogService,
@@ -112,7 +116,6 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
 
   abstract fetch(args: TArgs): Observable<TModel[]>;
 
-  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
   private _epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
     return action$
       .ofType(this.actions.BEFORE_START_LISTENING)
@@ -156,7 +159,6 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
       .startWith(receivedAction);
   }
 
-  public readonly stopListeningEpic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
   private _stopListeningEpic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
     return action$
       .ofType(this.actions.BEFORE_STOP_LISTENING)

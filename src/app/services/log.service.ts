@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+import { environment } from '../../environments/environment';
+
 @Injectable()
 export class LogService {
   private infoSubject: Subject<any> = new Subject<any>();
@@ -26,10 +28,12 @@ export class LogService {
   }
 
   constructor() {
-    this.info$.subscribe(message => console.info(message));
-    this.debug$.subscribe(message => console.debug(message));
-    this.log$.subscribe(message => console.log(message));
-    this.error$.subscribe(message => console.error(message));
+    if (!environment.production) {
+      this.info$.subscribe(message => console.info(message));
+      this.debug$.subscribe(message => console.debug(message));
+      this.log$.subscribe(message => console.log(message));
+      this.error$.subscribe(message => console.error(message));
+    }
   }
 
   info(message: any): void {

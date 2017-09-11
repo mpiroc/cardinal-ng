@@ -12,7 +12,9 @@ import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.
 import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
 import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
 import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component';
-import { ResetPasswordConfirmationRouteComponent } from '../components/reset-password-confirmation-route/reset-password-confirmation-route.component';
+import {
+  ResetPasswordConfirmationRouteComponent,
+} from '../components/reset-password-confirmation-route/reset-password-confirmation-route.component';
 import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
 
 import { environment } from '../../environments/environment';

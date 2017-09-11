@@ -73,8 +73,7 @@ export class AuthService {
       await this.afAuth.auth.signInWithEmailAndPassword(email, password);
 
       this.ngRedux.dispatch(signInSubmitSuccess());
-    }
-    catch (error) {
+    } catch (error) {
       switch (error.code) {
         case 'auth/user-not-found':
           this.ngRedux.dispatch(signInSubmitUserError('There is no user with this email address.'));
@@ -103,8 +102,7 @@ export class AuthService {
       await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
 
       this.ngRedux.dispatch(signUpSubmitSuccess());
-    }
-    catch (error) {
+    } catch (error) {
       switch (error.code) {
         case 'auth/user-not-found':
           this.ngRedux.dispatch(signUpSubmitUserError('There is no user with this email address.'));
