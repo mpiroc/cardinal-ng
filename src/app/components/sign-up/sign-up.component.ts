@@ -30,9 +30,6 @@ export class SignUpComponent {
   @select(['signUp', 'passwordError'])
   readonly passwordError$: Observable<string>;
 
-  @select(['signUp', 'otherError'])
-  readonly otherError$: Observable<string>;
-
   readonly form: AuthForm;
 
   constructor(
