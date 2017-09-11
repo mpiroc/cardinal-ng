@@ -10,12 +10,14 @@ import {
   signInSubmitSuccess,
   signInSubmitUserError,
   signInSubmitPasswordError,
+  signInSubmitProviderError,
 } from '../../redux/actions/sign-in';
 import {
   signUpSubmit,
   signUpSubmitSuccess,
   signUpSubmitUserError,
   signUpSubmitPasswordError,
+  signUpSubmitProviderError,
 } from '../../redux/actions/sign-up';
 
 @Injectable()
@@ -36,28 +38,30 @@ export class AuthService {
   }
 
   signInWithGoogle(): void {
-    const provider = new auth.GoogleAuthProvider();
-
-    this.signInWithProvider(provider);
+    this.signInWithProvider(new auth.GoogleAuthProvider());
   }
 
   signInWithFacebook(): void {
-    const provider = new auth.FacebookAuthProvider();
-
-    this.signInWithProvider(provider);
+    this.signInWithProvider(new auth.FacebookAuthProvider());
   }
 
   signInWithTwitter(): void {
-    const provider = new auth.TwitterAuthProvider();
-
-    this.signInWithProvider(provider);
+    this.signInWithProvider(new auth.TwitterAuthProvider());
   }
 
   async signInWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
-    this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
+    this.ngRedux.dispatch(signInSubmit());
 
-    await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
-    await this.afAuth.auth.signInWithPopup(provider);
+    try {
+      this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
+
+      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.afAuth.auth.signInWithPopup(provider);
+
+      this.ngRedux.dispatch(signInSubmitSuccess());
+    } catch (error) {
+      this.ngRedux.dispatch(signInSubmitProviderError(error.message));
+    }
   }
 
   async signInWithEmail(email: string, password: string, rememberMe: boolean): firebase.Promise<any> {
@@ -90,6 +94,33 @@ export class AuthService {
           this.ngRedux.dispatch(signInSubmitPasswordError(error.message));
           break;
       }
+    }
+  }
+
+  signUpWithGoogle(): void {
+    this.signUpWithProvider(new auth.GoogleAuthProvider());
+  }
+
+  signUpWithFacebook(): void {
+    this.signUpWithProvider(new auth.FacebookAuthProvider());
+  }
+
+  signUpWithTwitter(): void {
+    this.signUpWithProvider(new auth.TwitterAuthProvider());
+  }
+
+  async signUpWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
+    this.ngRedux.dispatch(signUpSubmit());
+
+    try {
+      this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
+
+      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.afAuth.auth.signInWithPopup(provider);
+
+      this.ngRedux.dispatch(signUpSubmitSuccess());
+    } catch (error) {
+      this.ngRedux.dispatch(signUpSubmitProviderError(error.message));
     }
   }
 

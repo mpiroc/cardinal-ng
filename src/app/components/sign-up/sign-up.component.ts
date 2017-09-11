@@ -58,15 +58,15 @@ export class SignUpComponent {
   }
 
   signUpWithGoogle(): void {
-    this.authService.signInWithGoogle();
+    this.authService.signUpWithGoogle();
   }
 
   signUpWithFacebook(): void {
-    this.authService.signInWithFacebook();
+    this.authService.signUpWithFacebook();
   }
 
   signUpWithTwitter(): void {
-    this.authService.signInWithTwitter();
+    this.authService.signUpWithTwitter();
   }
 
   signUpWithEmail(): void {

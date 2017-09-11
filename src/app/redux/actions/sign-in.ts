@@ -7,6 +7,7 @@ export const SIGN_IN_SUBMIT = 'SIGN_IN_SUBMIT';
 export const SIGN_IN_SUBMIT_SUCCESS = 'SIGN_IN_SUBMIT_SUCCESS';
 export const SIGN_IN_SUBMIT_USER_ERROR = 'SIGN_IN_SUBMIT_USER_ERROR';
 export const SIGN_IN_SUBMIT_PASSWORD_ERROR = 'SIGN_IN_SUBMIT_PASSWORD_ERROR';
+export const SIGN_IN_SUBMIT_PROVIDER_ERROR = 'SIGN_IN_SUBMIT_PROVIDER_ERROR';
 
 export interface ISignInSetEmailAction extends Action {
   email: string;
@@ -48,7 +49,7 @@ export function signInSetRememberMe(rememberMe: boolean): ISignInSetRememberMeAc
 export function signInSubmit(): Action {
   return {
     type: SIGN_IN_SUBMIT,
-  }
+  };
 }
 
 export function signInSubmitSuccess(): Action {
@@ -61,12 +62,19 @@ export function signInSubmitUserError(error: string): ISignInSubmitErrorAction {
   return {
     type: SIGN_IN_SUBMIT_USER_ERROR,
     error,
-  }
+  };
 }
 
 export function signInSubmitPasswordError(error: string): ISignInSubmitErrorAction {
   return {
     type: SIGN_IN_SUBMIT_PASSWORD_ERROR,
     error,
-  }
+  };
+}
+
+export function signInSubmitProviderError(error: string): ISignInSubmitErrorAction {
+  return {
+    type: SIGN_IN_SUBMIT_PROVIDER_ERROR,
+    error,
+  };
 }

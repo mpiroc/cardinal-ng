@@ -8,6 +8,7 @@ import {
   SIGN_UP_SUBMIT_SUCCESS,
   SIGN_UP_SUBMIT_USER_ERROR,
   SIGN_UP_SUBMIT_PASSWORD_ERROR,
+  SIGN_UP_SUBMIT_PROVIDER_ERROR,
   ISignUpSetEmailAction,
   ISignUpSetPasswordAction,
   ISignUpSubmitErrorAction,
@@ -20,6 +21,7 @@ const initialState = Map<string, any>({
   isSubmitting: false,
   userError: null,
   passwordError: null,
+  providerError: null,
 })
 
 export function signUp(state: Map<string, any> = initialState, action: Action) {
@@ -35,24 +37,35 @@ export function signUp(state: Map<string, any> = initialState, action: Action) {
         .set('isSubmitting', true)
         .set('userError', null)
         .set('passwordError', null)
+        .set('providerError', null)
 
     case SIGN_UP_SUBMIT_SUCCESS:
       return state
         .set('isSubmitting', false)
         .set('userError', null)
         .set('passwordError', null)
+        .set('providerError', null)
 
     case SIGN_UP_SUBMIT_USER_ERROR:
       return state
         .set('isSubmitting', false)
         .set('userError', (action as ISignUpSubmitErrorAction).error)
         .set('passwordError', null)
+        .set('providerError', null)
 
     case SIGN_UP_SUBMIT_PASSWORD_ERROR:
       return state
         .set('isSubmitting', false)
         .set('userError', null)
         .set('passwordError', (action as ISignUpSubmitErrorAction).error)
+        .set('providerError', null)
+
+    case SIGN_UP_SUBMIT_PROVIDER_ERROR:
+      return state
+        .set('isSubmitting', false)
+        .set('userError', null)
+        .set('passwordError', null)
+        .set('providerError', (action as ISignUpSubmitErrorAction).error)
 
     default:
       return state;
