@@ -1,10 +1,10 @@
-import { NgMaterialPage } from './app.po';
+import { CardinalPage } from './app.po';
 
-describe('ng-material App', () => {
-  let page: NgMaterialPage;
+describe('Cardinal App', () => {
+  let page: CardinalPage;
 
   beforeEach(() => {
-    page = new NgMaterialPage();
+    page = new CardinalPage();
   });
 
   it('should display welcome message', () => {

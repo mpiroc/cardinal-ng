@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-export class NgMaterialPage {
+export class CardinalPage {
   navigateTo() {
     return browser.get('/');
   }

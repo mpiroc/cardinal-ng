@@ -1,5 +1,6 @@
 <md-sidenav-container>
-  <md-sidenav *ngIf="!(isLoading$ | async) && (this.authService.isLoggedIn$ | async)" mode="side" opened="true" class="mat-elevation-z6">
+  <md-sidenav mode="side" class="mat-elevation-z6"
+    [opened]="!(isLoading$ | async) && (this.authService.isLoggedIn$ | async)" >
     <md-nav-list>
       <md-list-item routerLink='/'>
         <md-icon>home</md-icon>
@@ -19,3 +20,4 @@
     </router-outlet>
   </cardinal-loading-spinner>
 </md-sidenav-container>
+

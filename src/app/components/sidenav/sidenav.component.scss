@@ -1,12 +1,12 @@
-md-sidenav-container {
+.mat-sidenav-container {
   flex-grow: 1;
 }
 
-md-sidenav {
+.mat-sidenav {
   width: 200px;
 }
 
-md-nav-list md-list-item {
+.mat-nav-list .mat-list-item {
   display: flex;
   flex-direction: column;
 
@@ -14,6 +14,6 @@ md-nav-list md-list-item {
   font-weight: 500;
 }
 
-md-nav-list md-icon {
+.mat-nav-list .mat-icon {
   width: 56px;
 }
