@@ -39,9 +39,11 @@ export class ReviewEpic {
     private cardActions: CardActions,
     private cardHistoryActions: CardHistoryActions,
   ) {
+    this.epic = this._epic.bind(this);
   }
 
-  epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
+  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+  private _epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
     return action$
       .ofType(REVIEW_SET_DECK)
       .map(action => action as IReviewSetDeckAction)

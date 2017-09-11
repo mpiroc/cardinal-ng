@@ -66,6 +66,7 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
     private logService: LogService,
   ) {
     super(actions);
+    this.epic = this._epic.bind(this);
   }
 
   abstract fetch(args: TArgs): Observable<TModel>;
@@ -74,8 +75,9 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
     return Observable.of(this.actions.objectReceived(args, data));
   }
 
-  public createEpic() {
-    return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
+  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+  private _epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
+    return action$
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
@@ -98,8 +100,10 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
   constructor(
     actions: FirebaseActions<TModel, TArgs>,
     private logService: LogService,
-    ) {
+  ) {
     super(actions);
+    this.epic = this._epic.bind(this);
+    this.stopListeningEpic = this._stopListeningEpic.bind(this);
   }
 
   abstract selectKey(data: TModel): string;
@@ -108,8 +112,9 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
 
   abstract fetch(args: TArgs): Observable<TModel[]>;
 
-  public createEpic() {
-    return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
+  public readonly epic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+  private _epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
+    return action$
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
@@ -151,8 +156,9 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
       .startWith(receivedAction);
   }
 
-  public createStopListeningEpic() {
-    return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
+  public readonly stopListeningEpic: (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => Observable<Action>;
+  private _stopListeningEpic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
+    return action$
       .ofType(this.actions.BEFORE_STOP_LISTENING)
       .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(store, action.args));
   }

@@ -8,7 +8,6 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import {
   createEpicMiddleware,
   combineEpics,
-  Options,
 } from 'redux-observable';
 import {
   combineReducers,
@@ -174,6 +173,8 @@ export class CardinalModule {
     gradingService: GradingService,
     logService: LogService,
     snackbarService: MdSnackBar,
+
+    // Redux services
     userActions: UserActions,
     userObjectReducer: UserObjectReducer,
     cardContentMapReducer: CardContentMapReducer,
@@ -191,53 +192,36 @@ export class CardinalModule {
   ) {
     logService.error$.subscribe(error => snackbarService.open(error.message, 'Dismiss', { duration: 5000 }));
 
-    const options: Options = {
-      adapter: {
-        input: (action$: Observable<Action>) => action$.map(action => this.logAction(logService, 'INPUT: ', action)),
-        output: (action$: Observable<Action>) => action$.map(action => this.logAction(logService, 'OUTPUT: ', action)),
-      }
-    }
-
-    const rootEpic = combineEpics(
-      cardContentEpic.createEpic(),
-      cardHistoryEpic.createEpic(),
-      cardEpic.createEpic(),
-      cardEpic.createStopListeningEpic(),
-      deckInfoEpic.createEpic(),
-      deckEpic.createEpic(),
-      deckEpic.createStopListeningEpic(),
-      userEpic.createEpic(),
-      (state, action$) => reviewEpic.epic(state, action$),
-    );
-    const epicMiddleware = createEpicMiddleware(rootEpic, options);
-
-    const rootReducer = combineReducers({
-      user: userObjectReducer.reducer,
-      cardContent: cardContentMapReducer.reducer,
-      cardHistory: cardHistoryMapReducer.reducer,
-      deckInfo: deckInfoMapReducer.reducer,
-      deck: deckListReducer.reducer,
-      card: cardMapReducer.reducer,
-      review,
-      editCard,
-      editDeck,
-      signIn,
-      signUp,
-      resetPassword,
-    });
-
     const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const store = createStore(
-      rootReducer,
-      composeEnhancers(applyMiddleware(epicMiddleware)),
+      combineReducers({
+        user: userObjectReducer.reducer,
+        cardContent: cardContentMapReducer.reducer,
+        cardHistory: cardHistoryMapReducer.reducer,
+        deckInfo: deckInfoMapReducer.reducer,
+        deck: deckListReducer.reducer,
+        card: cardMapReducer.reducer,
+        review,
+        editCard,
+        editDeck,
+        signIn,
+        signUp,
+        resetPassword,
+      }),
+      composeEnhancers(applyMiddleware(createEpicMiddleware(combineEpics(
+        cardContentEpic.epic,
+        cardHistoryEpic.epic,
+        cardEpic.epic,
+        cardEpic.stopListeningEpic,
+        deckInfoEpic.epic,
+        deckEpic.epic,
+        deckEpic.stopListeningEpic,
+        userEpic.epic,
+        reviewEpic.epic,
+      )))),
     );
 
     ngRedux.provideStore(store);
     store.dispatch(userActions.beforeStartListening({}));
-  }
-
-  logAction(logService: LogService, prefix: string, action: Action): Action {
-    logService.debug(prefix + action.type);
-    return action;
   }
 }
