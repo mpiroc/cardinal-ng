@@ -1,21 +1,21 @@
 <md-toolbar color="primary" class="ng-material-nav-toolbar mat-elevation-z6">
-  <a md-button class="ng-material-app-title" routerLink='/'>{{title}}</a>
+  <button md-button class="ng-material-app-title" routerLink='/'>{{title}}</button>
   <span class="ng-material-flex-spacer"></span>
-  <a disabled="{{isLoading$ | async}}" md-button routerLink='/'>Home</a>
+  <button disabled="{{isLoading$ | async}}" md-button routerLink='/'>Home</button>
   <div [ngSwitch]='authService.isLoggedIn$ | async'>
-    <a
+    <button
       *ngSwitchCase='false'
       disabled="{{isLoading$ | async}}"
       md-button
       routerLink='/sign-in'>
       Sign in
-    </a>
-    <a
+    </button>
+    <button
       *ngSwitchCase='true'
       disabled="{{isLoading$ | async}}"
       md-button
       (click)='onSignOut()'>
       Sign out
-    </a>
+    </button>
   </div>
 </md-toolbar>

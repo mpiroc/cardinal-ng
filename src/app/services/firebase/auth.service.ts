@@ -3,6 +3,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { NgRedux } from '@angular-redux/store';
 import { auth } from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
+import { Promise as FirebasePromise } from 'firebase';
 import { IState } from '../../redux/state';
 import { UserActions } from '../../redux/actions/firebase';
 import {
@@ -49,7 +50,7 @@ export class AuthService {
     this.signInWithProvider(new auth.TwitterAuthProvider());
   }
 
-  async signInWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
+  async signInWithProvider(provider: auth.AuthProvider): FirebasePromise<any> {
     this.ngRedux.dispatch(signInSubmit());
 
     try {
@@ -64,7 +65,7 @@ export class AuthService {
     }
   }
 
-  async signInWithEmail(email: string, password: string, rememberMe: boolean): firebase.Promise<any> {
+  async signInWithEmail(email: string, password: string, rememberMe: boolean): FirebasePromise<any> {
     const persistence = rememberMe ?
       auth.Auth.Persistence.LOCAL :
       auth.Auth.Persistence.SESSION;
@@ -109,7 +110,7 @@ export class AuthService {
     this.signUpWithProvider(new auth.TwitterAuthProvider());
   }
 
-  async signUpWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
+  async signUpWithProvider(provider: auth.AuthProvider): FirebasePromise<any> {
     this.ngRedux.dispatch(signUpSubmit());
 
     try {
@@ -124,7 +125,7 @@ export class AuthService {
     }
   }
 
-  async signUpWithEmail(email: string, password: string): firebase.Promise<any> {
+  async signUpWithEmail(email: string, password: string): FirebasePromise<any> {
     this.ngRedux.dispatch(signUpSubmit());
 
     try {
@@ -162,7 +163,7 @@ export class AuthService {
     this.afAuth.auth.signOut();
   }
 
-  resetPassword(email: string): firebase.Promise<any> {
+  resetPassword(email: string): FirebasePromise<any> {
     return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 }
