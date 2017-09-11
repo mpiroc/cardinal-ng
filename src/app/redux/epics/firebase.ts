@@ -9,8 +9,10 @@ import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import { IState } from '../state';
+import { DatabaseService } from '../../services/firebase/database.service';
 import { LogService } from '../../services/log.service';
 import {
   IUser,
@@ -59,20 +61,25 @@ abstract class FirebaseEpic<TModel, TArgs> {
 }
 
 export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
-  constructor(actions: FirebaseActions<TModel, TArgs>) {
+  constructor(
+    actions: FirebaseActions<TModel, TArgs>,
+    private logService: LogService,
+  ) {
     super(actions);
   }
+
+  abstract fetch(args: TArgs): Observable<TModel>;
 
   handleReceived(store: MiddlewareAPI<IState>, data: TModel, args: TArgs) {
     return Observable.of(this.actions.objectReceived(args, data));
   }
 
-  public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel>) {
+  public createEpic() {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
-      .mergeMap(action => fetch(action.args).delay(ARTIFICIAL_LATENCY)
+      .mergeMap(action => this.fetch(action.args).delay(ARTIFICIAL_LATENCY)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
@@ -80,7 +87,7 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
         )
         .startWith(this.actions.startListening(action.args))
         .catch(error => {
-          logService.error(error)
+          this.logService.error(error)
           return Observable.of(this.actions.error(action.args, error.message));
         })
       );
@@ -88,20 +95,25 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
 }
 
 export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TModel, TArgs> {
-  constructor(actions: FirebaseActions<TModel, TArgs>) {
+  constructor(
+    actions: FirebaseActions<TModel, TArgs>,
+    private logService: LogService,
+    ) {
     super(actions);
   }
 
   abstract selectKey(data: TModel): string;
 
-  abstract getStopActions(masterRecord: TModel): Action[]
+  abstract getStopActions(masterRecord: TModel): Action[];
 
-  public createEpic(logService: LogService, fetch: (args: TArgs) => Observable<TModel[]>) {
+  abstract fetch(args: TArgs): Observable<TModel[]>;
+
+  public createEpic() {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
-      .mergeMap(action => fetch(action.args).delay(ARTIFICIAL_LATENCY)
+      .mergeMap(action => this.fetch(action.args).delay(ARTIFICIAL_LATENCY)
         .mergeMap((data: TModel[]) => this.handleListReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
@@ -109,7 +121,7 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
         )
         .startWith(this.actions.startListening(action.args))
         .catch(error => {
-          logService.error(error)
+          this.logService.error(error)
           return Observable.of(this.actions.error(action.args, error.message));
         })
       );
@@ -139,13 +151,13 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
       .startWith(receivedAction);
   }
 
-  public createStopListeningEpic(logService: LogService) {
+  public createStopListeningEpic() {
     return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
       .ofType(this.actions.BEFORE_STOP_LISTENING)
-      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(logService, store, action.args));
+      .mergeMap((action: Action & IHasArgs<TArgs>) => this.handleStopListening(store, action.args));
   }
 
-  private handleStopListening(logService: LogService, store: MiddlewareAPI<IState>, args: TArgs) {
+  private handleStopListening(store: MiddlewareAPI<IState>, args: TArgs) {
     const subStore = this.selectSubStore(store.getState(), args);
     const objectsToRemove: Map<string, TModel> = subStore.get('data');
     const stopListeningActions: Action[] = objectsToRemove
@@ -154,7 +166,7 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
 
     return Observable.from(stopListeningActions)
       .catch(error => {
-        logService.error(error)
+        this.logService.error(error)
         return Observable.of(this.actions.error(args, error.message));
       });
   }
@@ -163,34 +175,58 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
 // Epics
 @Injectable()
 export class CardContentEpic extends FirebaseObjectEpic<ICardContent, ICard> {
-  constructor(cardContentActions: CardContentActions) {
-    super(cardContentActions);
+  constructor(
+    cardContentActions: CardContentActions,
+    logService: LogService,
+    private databaseService: DatabaseService,
+  ) {
+    super(cardContentActions, logService);
   }
 
   selectSubStore(state: IState, args: ICard) {
     return state.cardContent.get(args.cardId);
   }
+
+  fetch(args: ICard): Observable<ICardContent> {
+    return this.databaseService.getCardContent(args);
+  }
 }
 
 @Injectable()
 export class CardHistoryEpic extends FirebaseObjectEpic<ICardHistory, ICard> {
-  constructor(cardHistoryActions: CardHistoryActions) {
-    super(cardHistoryActions);
+  constructor(
+    cardHistoryActions: CardHistoryActions,
+    logService: LogService,
+    private databaseService: DatabaseService,
+  ) {
+    super(cardHistoryActions, logService);
   }
 
   selectSubStore(state: IState, args: ICard) {
     return state.cardHistory.get(args.cardId);
   }
+
+  fetch(args: ICard): Observable<ICardHistory> {
+    return this.databaseService.getCardHistory(args);
+  }
 }
 
 @Injectable()
 export class DeckInfoEpic extends FirebaseObjectEpic<IDeckInfo, IDeck> {
-  constructor(deckInfoActions: DeckInfoActions) {
-    super(deckInfoActions);
+  constructor(
+    deckInfoActions: DeckInfoActions,
+    logService: LogService,
+    private databaseService: DatabaseService,
+  ) {
+    super(deckInfoActions, logService);
   }
 
   selectSubStore(state: IState, args: ICard) {
     return state.deckInfo.get(args.deckId);
+  }
+
+  fetch(args: IDeck): Observable<IDeckInfo> {
+    return this.databaseService.getDeckInfo(args);
   }
 }
 
@@ -200,8 +236,10 @@ export class CardEpic extends FirebaseListEpic<ICard, IDeck> {
     cardActions: CardActions,
     private cardContentActions: CardContentActions,
     private cardHistoryActions: CardHistoryActions,
+    logService: LogService,
+    private databaseService: DatabaseService,
   ) {
-    super(cardActions);
+    super(cardActions, logService);
   }
 
   selectSubStore(state: IState, args: IDeck) {
@@ -218,6 +256,10 @@ export class CardEpic extends FirebaseListEpic<ICard, IDeck> {
       this.cardHistoryActions.stopListening(card),
     ];
   }
+
+  fetch(args: IDeck): Observable<ICard[]> {
+    return this.databaseService.getCards(args);
+  }
 }
 
 @Injectable()
@@ -226,8 +268,10 @@ export class DeckEpic extends FirebaseListEpic<IDeck, IUser> {
     deckActions: DeckActions,
     private cardActions: CardActions,
     private deckInfoActions: DeckInfoActions,
+    logService: LogService,
+    private databaseService: DatabaseService,
   ) {
-    super(deckActions);
+    super(deckActions, logService);
   }
 
   selectSubStore(state: IState, args: IUser) {
@@ -243,7 +287,11 @@ export class DeckEpic extends FirebaseListEpic<IDeck, IUser> {
       this.cardActions.beforeStopListening(deck),
       this.cardActions.stopListening(deck),
       this.deckInfoActions.stopListening(deck),
-      ];
+    ];
+  }
+
+  fetch (args: IUser): Observable<IDeck[]> {
+    return this.databaseService.getDecks(args);
   }
 }
 
@@ -252,8 +300,10 @@ export class UserEpic extends FirebaseObjectEpic<IUser, {}> {
   constructor(
     private userActions: UserActions,
     private deckActions: DeckActions,
+    logService: LogService,
+    private afAuth: AngularFireAuth,
   ) {
-    super(userActions);
+    super(userActions, logService);
   }
 
   selectSubStore(state: IState, args: {}) {
@@ -280,5 +330,9 @@ export class UserEpic extends FirebaseObjectEpic<IUser, {}> {
     }
 
     return Observable.from(actions);
+  }
+
+  fetch(args: {}): Observable<IUser> {
+    return this.afAuth.authState.map(user => user ? { uid: user.uid } as IUser : null);
   }
 }

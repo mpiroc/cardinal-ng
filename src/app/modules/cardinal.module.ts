@@ -199,14 +199,14 @@ export class CardinalModule {
     }
 
     const rootEpic = combineEpics(
-      userEpic.createEpic(logService, _ => afAuth.authState.map(user => user ? { uid: user.uid } as IUser : null)),
-      cardContentEpic.createEpic(logService, databaseService.getCardContent.bind(databaseService)),
-      cardHistoryEpic.createEpic(logService, databaseService.getCardHistory.bind(databaseService)),
-      deckInfoEpic.createEpic(logService, databaseService.getDeckInfo.bind(databaseService)),
-      deckEpic.createEpic(logService, databaseService.getDecks.bind(databaseService)),
-      deckEpic.createStopListeningEpic(logService),
-      cardEpic.createEpic(logService, databaseService.getCards.bind(databaseService)),
-      cardEpic.createStopListeningEpic(logService),
+      cardContentEpic.createEpic(),
+      cardHistoryEpic.createEpic(),
+      cardEpic.createEpic(),
+      cardEpic.createStopListeningEpic(),
+      deckInfoEpic.createEpic(),
+      deckEpic.createEpic(),
+      deckEpic.createStopListeningEpic(),
+      userEpic.createEpic(),
       (state, action$) => reviewEpic.epic(state, action$),
     );
     const epicMiddleware = createEpicMiddleware(rootEpic, options);
