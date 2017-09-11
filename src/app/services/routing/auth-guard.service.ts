@@ -17,7 +17,11 @@ import { LogService } from '../log.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
-  constructor(private authService: AuthService, private logService: LogService) {
+  constructor(
+    private authService: AuthService,
+    private logService: LogService,
+    private userActions: UserActions,
+  ) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -26,7 +30,7 @@ export class AuthGuardService implements CanActivate {
       .switchMap(_ => this.authService.isLoggedIn$)
       .catch(error => {
         this.logService.error(error);
-        return Observable.of(UserActions.error({}, error.message));
+        return Observable.of(this.userActions.error({}, error.message));
       });
   }
 }

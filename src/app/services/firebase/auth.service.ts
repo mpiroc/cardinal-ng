@@ -25,7 +25,11 @@ export class AuthService {
   isLoading$: Observable<boolean>;
   isLoggedIn$: Observable<boolean>;
 
-  constructor(private afAuth: AngularFireAuth, private ngRedux: NgRedux<IState>) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private ngRedux: NgRedux<IState>,
+    private userActions: UserActions,
+  ) {
     this.isLoading$ = ngRedux
       .select(['user', 'isLoading']);
     this.isLoggedIn$ = ngRedux
@@ -52,7 +56,7 @@ export class AuthService {
   }
 
   async signInWithProvider(provider: auth.AuthProvider): firebase.Promise<any> {
-    this.ngRedux.dispatch(UserActions.setIsLoading({}, true));
+    this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
 
     await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
     await this.afAuth.auth.signInWithPopup(provider);
@@ -123,7 +127,7 @@ export class AuthService {
           this.ngRedux.dispatch(signUpSubmitOtherError(error.message));
           break;
       }
-    }    
+    }
   }
 
   signOut(): void {

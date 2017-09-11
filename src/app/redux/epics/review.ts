@@ -29,11 +29,17 @@ import {
   CardActions,
 } from '../actions/firebase';
 
-export function createReviewEpic(logService: LogService, ngRedux: NgRedux<IState>, gradingService: GradingService) {
+export function createReviewEpic(
+  logService: LogService,
+  ngRedux: NgRedux<IState>,
+  gradingService: GradingService,
+  cardActions: CardActions,
+  cardHistoryActions: CardHistoryActions,
+) {
   return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
     .ofType(REVIEW_SET_DECK)
     .map(action => action as IReviewSetDeckAction)
-    .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, action.deck))
+    .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, cardActions, cardHistoryActions, action.deck))
     .catch(error => {
       logService.error(error.message);
 
@@ -42,16 +48,27 @@ export function createReviewEpic(logService: LogService, ngRedux: NgRedux<IState
     });
 }
 
-function handleSetDeckReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, deck: IDeck): Observable<Action> {
+function handleSetDeckReceived(
+  ngRedux: NgRedux<IState>,
+  gradingService: GradingService,
+  cardActions: CardActions,
+  cardHistoryActions: CardHistoryActions,
+  deck: IDeck,
+): Observable<Action> {
   return ngRedux
     .select(['card', deck.deckId, 'data'])
-    .switchMap((cards: Map<string, ICard>) => handleCardsReceived(ngRedux, gradingService, cards))
-    .startWith(CardActions.beforeStartListening(deck));
+    .switchMap((cards: Map<string, ICard>) => handleCardsReceived(ngRedux, gradingService, cardHistoryActions, cards))
+    .startWith(cardActions.beforeStartListening(deck));
 }
 
-function handleCardsReceived(ngRedux: NgRedux<IState>, gradingService: GradingService, cards: Map<string, ICard>): Observable<Action> {
+function handleCardsReceived(
+  ngRedux: NgRedux<IState>,
+  gradingService: GradingService,
+  cardHistoryActions: CardHistoryActions,
+  cards: Map<string, ICard>,
+): Observable<Action> {
   const beforeStartListeningActions: Action[] = cards.valueSeq()
-    .map(card => CardHistoryActions.beforeStartListening(card))
+    .map(card => cardHistoryActions.beforeStartListening(card))
     .toArray();
 
   const now = moment.now();

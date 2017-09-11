@@ -16,7 +16,6 @@ import {
   ICard,
 } from '../../interfaces/firebase';
 import { CardActions } from '../../redux/actions/firebase';
-import { CardListReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 import {
   editCardSetFront,
@@ -27,10 +26,6 @@ import {
   EditCardDialogResult,
 } from '../edit-card-dialog/edit-card-dialog.component';
 
-@WithSubStore({
-  basePathMethodName: 'getBasePath',
-  localReducer: CardListReducer.reducer,
-})
 @Component({
   selector: 'cardinal-deck-route',
   templateUrl: './deck-route.component.html',
@@ -39,10 +34,7 @@ import {
 export class DeckRouteComponent implements OnInit {
   private deck: IDeck;
 
-  @select(['isLoading'])
   isLoading$: Observable<boolean>;
-
-  @select(['data'])
   cards$: Observable<Map<string, ICard>>;
 
   constructor(
@@ -50,17 +42,18 @@ export class DeckRouteComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private logService: LogService) {
+    private logService: LogService,
+    private cardActions: CardActions,
+  ) {
   }
 
   ngOnInit(): void {
     this.deck = this.activatedRoute.snapshot.data['deck'];
 
-    this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
-  }
+    this.ngRedux.dispatch(this.cardActions.beforeStartListening(this.deck));
 
-  getBasePath(): string[] {
-    return ['card', this.deck.deckId];
+    this.isLoading$ = this.ngRedux.select(['card', this.deck.deckId, 'isLoading']);
+    this.cards$ = this.ngRedux.select(['card', this.deck.deckId, 'data']);
   }
 
   emptyIfNull(cards: Map<string, ICard>): Map<string, ICard> {

@@ -36,13 +36,8 @@ import {
   editCardSetBack,
 } from '../../redux/actions/edit-card';
 import { CardContentActions } from '../../redux/actions/firebase';
-import { CardContentObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 
-@WithSubStore({
-  basePathMethodName: 'getBasePath',
-  localReducer: CardContentObjectReducer.reducer,
-})
 @Component({
   selector: 'cardinal-card-card',
   templateUrl: './card-card.component.html',
@@ -52,24 +47,17 @@ export class CardCardComponent implements OnChanges {
   @Input() card: ICard;
   @Input() showActions: boolean;
 
-  @select(['isLoading'])
   isLoading$: Observable<boolean>;
-
-  @select(['data', 'front'])
   front$: Observable<string>;
-
-  @select(['data', 'back'])
   back$: Observable<string>;
 
   constructor(
     private ngRedux: NgRedux<IState>,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private logService: LogService) {
-  }
-
-  getBasePath() {
-    return [ 'cardContent', this.card.cardId ];
+    private logService: LogService,
+    private cardContentActions: CardContentActions,
+  ) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -77,7 +65,11 @@ export class CardCardComponent implements OnChanges {
       return;
     }
 
-    this.ngRedux.dispatch(CardContentActions.beforeStartListening(this.card));
+    this.isLoading$ = this.ngRedux.select(['cardContent', this.card.cardId, 'isLoading']);
+    this.front$ = this.ngRedux.select(['cardContent', this.card.cardId, 'data', 'front']);
+    this.back$ = this.ngRedux.select(['cardContent', this.card.cardId, 'data', 'back']);
+
+    this.ngRedux.dispatch(this.cardContentActions.beforeStartListening(this.card));
   }
 
   onEdit() {

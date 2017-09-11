@@ -35,7 +35,7 @@ export class SignInComponent {
   readonly otherError$: Observable<string>;
 
   readonly form: AuthForm;
-  
+
   constructor(
     private authService: AuthService,
     private ngRedux: NgRedux<IState>,
@@ -54,7 +54,7 @@ export class SignInComponent {
       if (!this.ngRedux) {
         return false;
       }
-      
+
       const state = this.ngRedux.getState();
 
       return !!errorTypes.find(errorType => !!state.signIn.get(errorType))

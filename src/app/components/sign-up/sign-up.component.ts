@@ -53,7 +53,7 @@ export class SignUpComponent {
       if (!this.ngRedux) {
         return false;
       }
-      
+
       const state = this.ngRedux.getState();
 
       return !!errorTypes.find(errorType => !!state.signUp.get(errorType))

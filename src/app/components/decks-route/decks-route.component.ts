@@ -16,7 +16,6 @@ import {
   IDeck,
 } from '../../interfaces/firebase';
 import { DeckActions } from '../../redux/actions/firebase';
-import { DeckListReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 import {
   editDeckSetName,
@@ -27,10 +26,6 @@ import {
   EditDeckDialogResult,
 } from '../edit-deck-dialog/edit-deck-dialog.component';
 
-@WithSubStore({
-  basePathMethodName: 'getBasePath',
-  localReducer: DeckListReducer.reducer,
-})
 @Component({
   selector: 'cardinal-decks-route',
   templateUrl: './decks-route.component.html',
@@ -39,10 +34,10 @@ import {
 export class DecksRouteComponent implements OnInit {
   private user: IUser;
 
-  @select(['isLoading'])
+  @select(['deck', 'isLoading'])
   isLoading$: Observable<boolean>;
 
-  @select(['data'])
+  @select(['deck', 'data'])
   decks$: Observable<Map<string, IDeck>>;
 
   constructor(
@@ -50,17 +45,15 @@ export class DecksRouteComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private logService: LogService) {
+    private logService: LogService,
+    private deckActions: DeckActions,
+  ) {
   }
 
   ngOnInit(): void {
     this.user = this.activatedRoute.snapshot.data['user'];
 
-    this.ngRedux.dispatch(DeckActions.beforeStartListening(this.user));
-  }
-
-  getBasePath(): string[] {
-    return ['deck'];
+    this.ngRedux.dispatch(this.deckActions.beforeStartListening(this.user));
   }
 
   emptyIfNull(decks: Map<string, IDeck>): Map<string, IDeck> {

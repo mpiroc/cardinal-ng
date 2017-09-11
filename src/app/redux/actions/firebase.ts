@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Map } from 'immutable';
 import { Action } from 'redux';
 
@@ -123,45 +124,44 @@ export class FirebaseActions<TModel, TArgs> {
   }
 }
 
-export class _CardContentActions extends FirebaseActions<ICardContent, ICard> {
+@Injectable()
+export class CardContentActions extends FirebaseActions<ICardContent, ICard> {
   constructor() {
     super('CARD_CONTENT');
   }
 }
 
-export class _CardHistoryActions extends FirebaseActions<ICardHistory, ICard> {
+@Injectable()
+export class CardHistoryActions extends FirebaseActions<ICardHistory, ICard> {
   constructor() {
     super('CARD_HISTORY');
   }
 }
 
-export class _CardActions extends FirebaseActions<ICard, IDeck> {
+@Injectable()
+export class CardActions extends FirebaseActions<ICard, IDeck> {
   constructor() {
     super('CARD');
   }
 }
 
-export class _DeckInfoActions extends FirebaseActions<IDeckInfo, IDeck> {
+@Injectable()
+export class DeckInfoActions extends FirebaseActions<IDeckInfo, IDeck> {
   constructor() {
     super('DECK_INFO');
   }
 }
 
-export class _DeckActions extends FirebaseActions<IDeck, IUser> {
+@Injectable()
+export class DeckActions extends FirebaseActions<IDeck, IUser> {
   constructor() {
     super('DECK');
   }
 }
 
-export class _UserActions extends FirebaseActions<IUser, {}> {
+@Injectable()
+export class UserActions extends FirebaseActions<IUser, {}> {
   constructor() {
     super('USER');
   }
 }
-
-export const CardContentActions = new _CardContentActions();
-export const CardHistoryActions = new _CardHistoryActions();
-export const CardActions = new _CardActions();
-export const DeckInfoActions = new _DeckInfoActions();
-export const DeckActions = new _DeckActions();
-export const UserActions = new _UserActions();

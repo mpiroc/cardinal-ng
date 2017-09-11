@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Map } from 'immutable';
 import { Action, Reducer } from 'redux';
 
@@ -168,88 +169,88 @@ export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseRed
   }
 }
 
-class _CardContentObjectReducer extends FirebaseObjectReducer<ICardContent, ICard> {
-  constructor() {
-    super(CardContentActions);
+@Injectable()
+export class CardContentObjectReducer extends FirebaseObjectReducer<ICardContent, ICard> {
+  constructor(private cardContentActions: CardContentActions) {
+    super(cardContentActions);
   }
 }
-export const CardContentObjectReducer = new _CardContentObjectReducer();
 
-class _CardContentMapReducer extends FirebaseMapReducer<ICardContent, ICard> {
-  constructor() {
-    super(CardContentActions, CardContentObjectReducer);
+@Injectable()
+export class CardContentMapReducer extends FirebaseMapReducer<ICardContent, ICard> {
+  constructor(cardContentActions: CardContentActions, cardContentObjectReducer: CardContentObjectReducer) {
+    super(cardContentActions, cardContentObjectReducer);
   }
 
   selectKey(args: ICard) {
     return args.cardId;
   }
 }
-export const CardContentMapReducer = new _CardContentMapReducer();
 
-class _CardHistoryObjectReducer extends FirebaseObjectReducer<ICardHistory, ICard> {
-  constructor() {
-    super(CardHistoryActions);
+@Injectable()
+export class CardHistoryObjectReducer extends FirebaseObjectReducer<ICardHistory, ICard> {
+  constructor(cardHistoryActions: CardHistoryActions) {
+    super(cardHistoryActions);
   }
 }
-export const CardHistoryObjectReducer = new _CardHistoryObjectReducer();
 
-class _CardHistoryMapReducer extends FirebaseMapReducer<ICardHistory, ICard> {
-  constructor() {
-    super(CardHistoryActions, CardHistoryObjectReducer);
+@Injectable()
+export class CardHistoryMapReducer extends FirebaseMapReducer<ICardHistory, ICard> {
+  constructor(cardHistoryActions: CardHistoryActions, cardHistoryObjectReducer: CardHistoryObjectReducer) {
+    super(cardHistoryActions, cardHistoryObjectReducer);
   }
 
   selectKey(args: ICard) {
     return args.cardId;
   }
 }
-export const CardHistoryMapReducer = new _CardHistoryMapReducer();
 
-class _CardListReducer extends FirebaseListReducer<ICard, IDeck> {
-  constructor() {
-    super(CardActions);
+@Injectable()
+export class CardListReducer extends FirebaseListReducer<ICard, IDeck> {
+  constructor(cardActions: CardActions) {
+    super(cardActions);
   }
 }
-export const CardListReducer = new _CardListReducer();
 
-class _CardMapReducer extends FirebaseMapReducer<ICard, IDeck> {
-  constructor() {
-    super(CardActions, CardListReducer);
+@Injectable()
+export class CardMapReducer extends FirebaseMapReducer<ICard, IDeck> {
+  constructor(cardActions: CardActions, cardListReducer: CardListReducer) {
+    super(cardActions, cardListReducer);
   }
 
   selectKey(args: IDeck) {
     return args.deckId;
   }
 }
-export const CardMapReducer = new _CardMapReducer();
 
-class _DeckInfoObjectReducer extends FirebaseObjectReducer<IDeckInfo, IDeck> {
-  constructor() {
-    super(DeckInfoActions);
+@Injectable()
+export class DeckInfoObjectReducer extends FirebaseObjectReducer<IDeckInfo, IDeck> {
+  constructor(deckInfoActions: DeckInfoActions) {
+    super(deckInfoActions);
   }
 }
-export const DeckInfoObjectReducer = new _DeckInfoObjectReducer();
 
-class _DeckInfoMapReducer extends FirebaseMapReducer<IDeckInfo, IDeck> {
-  constructor() {
-    super(DeckInfoActions, DeckInfoObjectReducer);
+@Injectable()
+export class DeckInfoMapReducer extends FirebaseMapReducer<IDeckInfo, IDeck> {
+  constructor(deckInfoActions: DeckInfoActions, deckInfoObjectReducer: DeckInfoObjectReducer) {
+    super(deckInfoActions, deckInfoObjectReducer);
   }
 
   selectKey(args: IDeck) {
     return args.deckId;
   }
 }
-export const DeckInfoMapReducer = new _DeckInfoMapReducer();
 
-class _DeckListReducer extends FirebaseListReducer<IDeck, IUser> {
-  constructor() {
-    super(DeckActions);
+@Injectable()
+export class DeckListReducer extends FirebaseListReducer<IDeck, IUser> {
+  constructor(deckActions: DeckActions) {
+    super(deckActions);
   }
 }
-export const DeckListReducer = new _DeckListReducer();
 
-class _UserObjectReducer extends FirebaseObjectReducer<IUser, {}> {
-  constructor() {
-    super(UserActions);
+@Injectable()
+export class UserObjectReducer extends FirebaseObjectReducer<IUser, {}> {
+  constructor(userActions: UserActions) {
+    super(userActions);
   }
 }
-export const UserObjectReducer = new _UserObjectReducer();

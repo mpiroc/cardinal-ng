@@ -39,13 +39,8 @@ import {
   CardActions,
   DeckInfoActions,
 } from '../../redux/actions/firebase';
-import { DeckInfoObjectReducer } from '../../redux/reducers/firebase';
 import { IState } from '../../redux/state';
 
-@WithSubStore({
-  basePathMethodName: 'getBasePath',
-  localReducer: DeckInfoObjectReducer.reducer,
-})
 @Component({
   selector: 'cardinal-deck-card',
   templateUrl: './deck-card.component.html',
@@ -55,26 +50,19 @@ export class DeckCardComponent implements OnChanges {
   @Input()
   deck: IDeck;
 
-  count$: Observable<any>;
-
-  @select(['isLoading'])
   isLoading$: Observable<boolean>;
-
-  @select(['data', 'name'])
   name$: Observable<string>;
-
-  @select(['data', 'description'])
   description$: Observable<string>;
+  count$: Observable<any>;
 
   constructor(
     private ngRedux: NgRedux<IState>,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private logService: LogService) {
-  }
-
-  getBasePath() {
-    return ['deckInfo', this.deck.deckId];
+    private logService: LogService,
+    private deckInfoActions: DeckInfoActions,
+    private cardActions: CardActions,
+  ) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -82,9 +70,12 @@ export class DeckCardComponent implements OnChanges {
       return;
     }
 
-    this.ngRedux.dispatch(DeckInfoActions.beforeStartListening(this.deck));
-    this.ngRedux.dispatch(CardActions.beforeStartListening(this.deck));
+    this.ngRedux.dispatch(this.deckInfoActions.beforeStartListening(this.deck));
+    this.ngRedux.dispatch(this.cardActions.beforeStartListening(this.deck));
 
+    this.isLoading$ = this.ngRedux.select(['deckInfo', this.deck.deckId, 'isLoading']);
+    this.name$ = this.ngRedux.select(['deckInfo', this.deck.deckId, 'data', 'name']);
+    this.description$ = this.ngRedux.select(['deckInfo', this.deck.deckId, 'data', 'description']);
     this.count$ = this.ngRedux
       .select(['card', this.deck.deckId])
       .map<Map<string, any>, any>(cards => {

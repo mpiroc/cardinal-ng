@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Map } from 'immutable';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -130,7 +131,7 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
     const objectsToRemove = previousObjects.valueSeq().filter(
       master => !newObjects.has(this.selectKey(master)));
     const stopListeningActions: Action[] = objectsToRemove
-      .map(this.getStopActions)
+      .map(model => this.getStopActions(model))
       .reduce((accumulator, current) => accumulator.concat(current), []);
 
     return Observable
@@ -148,7 +149,7 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
     const subStore = this.selectSubStore(store.getState(), args);
     const objectsToRemove: Map<string, TModel> = subStore.get('data');
     const stopListeningActions: Action[] = objectsToRemove
-      .map(this.getStopActions)
+      .map(model => this.getStopActions(model))
       .reduce((accumulator, current) => accumulator.concat(current), []);
 
     return Observable.from(stopListeningActions)
@@ -160,42 +161,47 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
 }
 
 // Epics
-class _CardContentEpic extends FirebaseObjectEpic<ICardContent, ICard> {
-  constructor() {
-    super(CardContentActions);
+@Injectable()
+export class CardContentEpic extends FirebaseObjectEpic<ICardContent, ICard> {
+  constructor(cardContentActions: CardContentActions) {
+    super(cardContentActions);
   }
 
   selectSubStore(state: IState, args: ICard) {
     return state.cardContent.get(args.cardId);
   }
 }
-export const CardContentEpic = new _CardContentEpic();
 
-class _CardHistoryEpic extends FirebaseObjectEpic<ICardHistory, ICard> {
-  constructor() {
-    super(CardHistoryActions);
+@Injectable()
+export class CardHistoryEpic extends FirebaseObjectEpic<ICardHistory, ICard> {
+  constructor(cardHistoryActions: CardHistoryActions) {
+    super(cardHistoryActions);
   }
 
   selectSubStore(state: IState, args: ICard) {
     return state.cardHistory.get(args.cardId);
   }
 }
-export const CardHistoryEpic = new _CardHistoryEpic();
 
-class _DeckInfoEpic extends FirebaseObjectEpic<IDeckInfo, IDeck> {
-  constructor() {
-    super(DeckInfoActions);
+@Injectable()
+export class DeckInfoEpic extends FirebaseObjectEpic<IDeckInfo, IDeck> {
+  constructor(deckInfoActions: DeckInfoActions) {
+    super(deckInfoActions);
   }
 
   selectSubStore(state: IState, args: ICard) {
     return state.deckInfo.get(args.deckId);
   }
 }
-export const DeckInfoEpic = new _DeckInfoEpic();
 
-class _CardEpic extends FirebaseListEpic<ICard, IDeck> {
-  constructor() {
-    super(CardActions);
+@Injectable()
+export class CardEpic extends FirebaseListEpic<ICard, IDeck> {
+  constructor(
+    cardActions: CardActions,
+    private cardContentActions: CardContentActions,
+    private cardHistoryActions: CardHistoryActions,
+  ) {
+    super(cardActions);
   }
 
   selectSubStore(state: IState, args: IDeck) {
@@ -208,16 +214,20 @@ class _CardEpic extends FirebaseListEpic<ICard, IDeck> {
 
   getStopActions(card: ICard): Action[] {
     return [
-      CardContentActions.stopListening(card),
-      CardHistoryActions.stopListening(card),
+      this.cardContentActions.stopListening(card),
+      this.cardHistoryActions.stopListening(card),
     ];
   }
 }
-export const CardEpic = new _CardEpic();
 
-class _DeckEpic extends FirebaseListEpic<IDeck, IUser> {
-  constructor() {
-    super(DeckActions);
+@Injectable()
+export class DeckEpic extends FirebaseListEpic<IDeck, IUser> {
+  constructor(
+    deckActions: DeckActions,
+    private cardActions: CardActions,
+    private deckInfoActions: DeckInfoActions,
+  ) {
+    super(deckActions);
   }
 
   selectSubStore(state: IState, args: IUser) {
@@ -230,17 +240,20 @@ class _DeckEpic extends FirebaseListEpic<IDeck, IUser> {
 
   getStopActions(deck: IDeck): Action[] {
     return [
-      CardActions.beforeStopListening(deck),
-      CardActions.stopListening(deck),
-      DeckInfoActions.stopListening(deck),
+      this.cardActions.beforeStopListening(deck),
+      this.cardActions.stopListening(deck),
+      this.deckInfoActions.stopListening(deck),
       ];
   }
 }
-export const DeckEpic = new _DeckEpic();
 
-class _UserEpic extends FirebaseObjectEpic<IUser, {}> {
-  constructor() {
-    super(UserActions);
+@Injectable()
+export class UserEpic extends FirebaseObjectEpic<IUser, {}> {
+  constructor(
+    private userActions: UserActions,
+    private deckActions: DeckActions,
+  ) {
+    super(userActions);
   }
 
   selectSubStore(state: IState, args: {}) {
@@ -255,18 +268,17 @@ class _UserEpic extends FirebaseObjectEpic<IUser, {}> {
     if (previousUser && previousUser.get('uid')) {
       const userArgs: IUser = { uid: previousUser.get('uid') };
       actions = actions.concat([
-        DeckActions.beforeStopListening(userArgs),
-        DeckActions.stopListening(userArgs),
+        this.deckActions.beforeStopListening(userArgs),
+        this.deckActions.stopListening(userArgs),
       ]);
     }
 
-    actions = actions.concat(UserActions.objectReceived({}, user));
+    actions = actions.concat(this.userActions.objectReceived({}, user));
 
     if (user) {
-      actions = actions.concat(DeckActions.beforeStartListening(user));
+      actions = actions.concat(this.deckActions.beforeStartListening(user));
     }
 
     return Observable.from(actions);
   }
 }
-export const UserEpic = new _UserEpic();

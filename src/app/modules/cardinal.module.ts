@@ -5,6 +5,20 @@ import { NgReduxModule, NgRedux } from '@angular-redux/store';
 import { MarkdownModule } from 'angular2-markdown';
 import { MdSnackBar } from '@angular/material';
 import { AngularFireAuth } from 'angularfire2/auth';
+import {
+  createEpicMiddleware,
+  combineEpics,
+  Options,
+} from 'redux-observable';
+import {
+  combineReducers,
+  createStore,
+  applyMiddleware,
+  compose,
+  Action,
+} from 'redux';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 import { FirebaseModule } from './firebase.module';
 import { MaterialModule } from './material.module';
@@ -37,8 +51,42 @@ import { DeleteDeckDialogComponent } from '../components/delete-deck-dialog/dele
 import { EditCardDialogComponent } from '../components/edit-card-dialog/edit-card-dialog.component';
 import { EditDeckDialogComponent } from '../components/edit-deck-dialog/edit-deck-dialog.component';
 
-import { configureStore } from '../redux/configureStore';
-import { UserActions } from '../redux/actions/firebase';
+import { IUser } from '../interfaces/firebase';
+import {
+  CardContentActions,
+  CardHistoryActions,
+  CardActions,
+  DeckInfoActions,
+  DeckActions,
+  UserActions,
+} from '../redux/actions/firebase';
+import {
+  CardContentObjectReducer,
+  CardContentMapReducer,
+  CardHistoryObjectReducer,
+  CardHistoryMapReducer,
+  CardListReducer,
+  CardMapReducer,
+  DeckInfoObjectReducer,
+  DeckInfoMapReducer,
+  DeckListReducer,
+  UserObjectReducer,
+} from '../redux/reducers/firebase';
+import {
+  CardEpic,
+  CardContentEpic,
+  CardHistoryEpic,
+  DeckInfoEpic,
+  DeckEpic,
+  UserEpic,
+} from '../redux/epics/firebase';
+import { review } from '../redux/reducers/review';
+import { editCard } from '../redux/reducers/edit-card';
+import { editDeck } from '../redux/reducers/edit-deck';
+import { signIn } from '../redux/reducers/sign-in';
+import { signUp } from '../redux/reducers/sign-up';
+import { resetPassword } from '../redux/reducers/reset-password';
+import { createReviewEpic } from '../redux/epics/review';
 import { IState } from '../redux/state';
 
 import 'hammerjs';
@@ -79,6 +127,34 @@ import 'hammerjs';
   ],
   providers: [
     GradingService,
+
+    // Actions
+    CardContentActions,
+    CardHistoryActions,
+    CardActions,
+    DeckInfoActions,
+    DeckActions,
+    UserActions,
+
+    // Reducers
+    CardContentObjectReducer,
+    CardContentMapReducer,
+    CardHistoryObjectReducer,
+    CardHistoryMapReducer,
+    CardListReducer,
+    CardMapReducer,
+    DeckInfoObjectReducer,
+    DeckInfoMapReducer,
+    DeckListReducer,
+    UserObjectReducer,
+
+    // Epics
+    CardEpic,
+    CardContentEpic,
+    CardHistoryEpic,
+    DeckInfoEpic,
+    DeckEpic,
+    UserEpic,
   ],
   entryComponents: [
     DeleteCardDialogComponent,
@@ -97,11 +173,72 @@ export class CardinalModule {
     gradingService: GradingService,
     logService: LogService,
     snackbarService: MdSnackBar,
+    userActions: UserActions,
+    userObjectReducer: UserObjectReducer,
+    cardContentMapReducer: CardContentMapReducer,
+    cardHistoryMapReducer: CardHistoryMapReducer,
+    deckInfoMapReducer: DeckInfoMapReducer,
+    deckListReducer: DeckListReducer,
+    cardMapReducer: CardMapReducer,
+    userEpic: UserEpic,
+    cardContentEpic: CardContentEpic,
+    cardHistoryEpic: CardHistoryEpic,
+    deckInfoEpic: DeckInfoEpic,
+    deckEpic: DeckEpic,
+    cardEpic: CardEpic,
+    // TODO: remove
+    cardActions: CardActions,
+    cardHistoryActions: CardHistoryActions,
   ) {
     logService.error$.subscribe(error => snackbarService.open(error.message, 'Dismiss', { duration: 5000 }));
 
-    const store = configureStore(afAuth, ngRedux, authService, databaseService, gradingService, logService);
+    const options: Options = {
+      adapter: {
+        input: (action$: Observable<Action>) => action$.map(action => this.logAction(logService, 'INPUT: ', action)),
+        output: (action$: Observable<Action>) => action$.map(action => this.logAction(logService, 'OUTPUT: ', action)),
+      }
+    }
+
+    const rootEpic = combineEpics(
+      userEpic.createEpic(logService, _ => afAuth.authState.map(user => user ? { uid: user.uid } as IUser : null)),
+      cardContentEpic.createEpic(logService, databaseService.getCardContent.bind(databaseService)),
+      cardHistoryEpic.createEpic(logService, databaseService.getCardHistory.bind(databaseService)),
+      deckInfoEpic.createEpic(logService, databaseService.getDeckInfo.bind(databaseService)),
+      deckEpic.createEpic(logService, databaseService.getDecks.bind(databaseService)),
+      deckEpic.createStopListeningEpic(logService),
+      cardEpic.createEpic(logService, databaseService.getCards.bind(databaseService)),
+      cardEpic.createStopListeningEpic(logService),
+      createReviewEpic(logService, ngRedux, gradingService, cardActions, cardHistoryActions),
+    );
+    const epicMiddleware = createEpicMiddleware(rootEpic, options);
+
+    const rootReducer = combineReducers({
+      user: userObjectReducer.reducer,
+      cardContent: cardContentMapReducer.reducer,
+      cardHistory: cardHistoryMapReducer.reducer,
+      deckInfo: deckInfoMapReducer.reducer,
+      deck: deckListReducer.reducer,
+      card: cardMapReducer.reducer,
+      review,
+      editCard,
+      editDeck,
+      signIn,
+      signUp,
+      resetPassword,
+    });
+
+    const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    const store = createStore(
+      rootReducer,
+      composeEnhancers(applyMiddleware(epicMiddleware)),
+    );
+
     ngRedux.provideStore(store);
-    store.dispatch(UserActions.beforeStartListening({}));
+    store.dispatch(userActions.beforeStartListening({}));
+  }
+
+  logAction(logService: LogService, prefix: string, action: Action): Action {
+    logService.debug(prefix + action.type);
+    return action;
   }
 }
