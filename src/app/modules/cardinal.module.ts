@@ -86,7 +86,7 @@ import { editDeck } from '../redux/reducers/edit-deck';
 import { signIn } from '../redux/reducers/sign-in';
 import { signUp } from '../redux/reducers/sign-up';
 import { resetPassword } from '../redux/reducers/reset-password';
-import { createReviewEpic } from '../redux/epics/review';
+import { ReviewEpic } from '../redux/epics/review';
 import { IState } from '../redux/state';
 
 import 'hammerjs';
@@ -155,6 +155,7 @@ import 'hammerjs';
     DeckInfoEpic,
     DeckEpic,
     UserEpic,
+    ReviewEpic,
   ],
   entryComponents: [
     DeleteCardDialogComponent,
@@ -186,9 +187,7 @@ export class CardinalModule {
     deckInfoEpic: DeckInfoEpic,
     deckEpic: DeckEpic,
     cardEpic: CardEpic,
-    // TODO: remove
-    cardActions: CardActions,
-    cardHistoryActions: CardHistoryActions,
+    reviewEpic: ReviewEpic,
   ) {
     logService.error$.subscribe(error => snackbarService.open(error.message, 'Dismiss', { duration: 5000 }));
 
@@ -208,7 +207,7 @@ export class CardinalModule {
       deckEpic.createStopListeningEpic(logService),
       cardEpic.createEpic(logService, databaseService.getCards.bind(databaseService)),
       cardEpic.createStopListeningEpic(logService),
-      createReviewEpic(logService, ngRedux, gradingService, cardActions, cardHistoryActions),
+      (state, action$) => reviewEpic.epic(state, action$),
     );
     const epicMiddleware = createEpicMiddleware(rootEpic, options);
 

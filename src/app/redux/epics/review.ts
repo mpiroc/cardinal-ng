@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Map } from 'immutable';
 import { NgRedux } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
@@ -29,77 +30,72 @@ import {
   CardActions,
 } from '../actions/firebase';
 
-export function createReviewEpic(
-  logService: LogService,
-  ngRedux: NgRedux<IState>,
-  gradingService: GradingService,
-  cardActions: CardActions,
-  cardHistoryActions: CardHistoryActions,
-) {
-  return (action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>) => action$
-    .ofType(REVIEW_SET_DECK)
-    .map(action => action as IReviewSetDeckAction)
-    .switchMap(action => handleSetDeckReceived(ngRedux, gradingService, cardActions, cardHistoryActions, action.deck))
-    .catch(error => {
-      logService.error(error.message);
+@Injectable()
+export class ReviewEpic {
+  constructor(
+    private logService: LogService,
+    private ngRedux: NgRedux<IState>,
+    private gradingService: GradingService,
+    private cardActions: CardActions,
+    private cardHistoryActions: CardHistoryActions,
+  ) {
+  }
 
-      // TODO: log this error in redux store.
-      return Observable.of();
-    });
-}
+  epic(action$: ActionsObservable<Action>, store: MiddlewareAPI<IState>): Observable<Action> {
+    return action$
+      .ofType(REVIEW_SET_DECK)
+      .map(action => action as IReviewSetDeckAction)
+      .switchMap(action => this.handleSetDeckReceived(action.deck))
+      .catch(error => {
+        this.logService.error(error.message);
 
-function handleSetDeckReceived(
-  ngRedux: NgRedux<IState>,
-  gradingService: GradingService,
-  cardActions: CardActions,
-  cardHistoryActions: CardHistoryActions,
-  deck: IDeck,
-): Observable<Action> {
-  return ngRedux
-    .select(['card', deck.deckId, 'data'])
-    .switchMap((cards: Map<string, ICard>) => handleCardsReceived(ngRedux, gradingService, cardHistoryActions, cards))
-    .startWith(cardActions.beforeStartListening(deck));
-}
+        // TODO: log this error in redux store.
+        return Observable.of<Action>();
+      });
+  }
 
-function handleCardsReceived(
-  ngRedux: NgRedux<IState>,
-  gradingService: GradingService,
-  cardHistoryActions: CardHistoryActions,
-  cards: Map<string, ICard>,
-): Observable<Action> {
-  const beforeStartListeningActions: Action[] = cards.valueSeq()
-    .map(card => cardHistoryActions.beforeStartListening(card))
-    .toArray();
+  private handleSetDeckReceived(deck: IDeck): Observable<Action> {
+    return this.ngRedux
+      .select(['card', deck.deckId, 'data'])
+      .switchMap((cards: Map<string, ICard>) => this.handleCardsReceived(cards))
+      .startWith(this.cardActions.beforeStartListening(deck));
+  }
 
-  const now = moment.now();
-  const cardHistories: Observable<ICardHistory>[] = cards.valueSeq()
-    .map(card => ngRedux
-      .select(['cardHistory', card.cardId, 'data'])
-      .filter(history => history ? true : false)
-      .map(history => history as Map<string, any>)
-      .map(history => history.toJS() as ICardHistory)
-    )
-    .toArray();
+  private handleCardsReceived(cards: Map<string, ICard>): Observable<Action> {
+    const beforeStartListeningActions: Action[] = cards.valueSeq()
+      .map(card => this.cardHistoryActions.beforeStartListening(card))
+      .toArray();
 
-  // Pick a current card:
-  // 1. Once when all histories have first loaded.
-  // 2. Again each time a history changes.
-  return Observable.combineLatest(cardHistories)
-    .map(histories => histories.filter(history => gradingService.isDue(history, now)))
-    .map(histories => {
-      if (histories.length === 0) {
-        return reviewSetHistory(null) as Action;
-      }
-      if (histories.length === 1) {
-        return reviewSetHistory(histories[0]) as Action;
-      }
+    const now = moment.now();
+    const cardHistories: Observable<ICardHistory>[] = cards.valueSeq()
+      .map(card => this.ngRedux
+        .select(['cardHistory', card.cardId, 'data'])
+        .filter(history => history ? true : false)
+        .map(history => history as Map<string, any>)
+        .map(history => history.toJS() as ICardHistory)
+      )
+      .toArray();
 
-      const currentHistory = ngRedux.getState().review.get('history')
-      const currentCardId = currentHistory ? currentHistory.cardId : null;
-      histories = histories.filter(history => history.cardId !== currentCardId);
+    // Pick a current card:
+    // 1. Once when all histories have first loaded.
+    // 2. Again each time a history changes.
+    return Observable.combineLatest(cardHistories)
+      .map(histories => histories.filter(history => this.gradingService.isDue(history, now)))
+      .map(histories => {
+        if (histories.length === 0) {
+          return reviewSetHistory(null) as Action;
+        }
+        if (histories.length === 1) {
+          return reviewSetHistory(histories[0]) as Action;
+        }
 
-      const index = Math.floor(Math.random() * histories.length);
-      return reviewSetHistory(histories[index]) as Action;
-    })
-    .startWith(...beforeStartListeningActions);
+        const currentHistory = this.ngRedux.getState().review.get('history')
+        const currentCardId = currentHistory ? currentHistory.cardId : null;
+        histories = histories.filter(history => history.cardId !== currentCardId);
+
+        const index = Math.floor(Math.random() * histories.length);
+        return reviewSetHistory(histories[index]) as Action;
+      })
+      .startWith(...beforeStartListeningActions);
+  }
 }
