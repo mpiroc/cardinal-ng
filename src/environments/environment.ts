@@ -15,5 +15,6 @@ export const environment = {
   },
   routing: {
     // enableTracing: true,
+    useHash: true,
   },
 };

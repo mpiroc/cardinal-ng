@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  // TODO: Create separate production database.
   firebase: {
     apiKey: "AIzaSyBBAOaYYEETdE3mkjgjs0_nrCJkveWugpo",
     authDomain: "cardinal-prod.firebaseapp.com",
@@ -10,5 +9,6 @@ export const environment = {
     messagingSenderId: "367381328845"
   },
   routing: {
+    useHash: true,
   },
 };
