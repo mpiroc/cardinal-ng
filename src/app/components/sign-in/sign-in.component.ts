@@ -44,7 +44,7 @@ export class SignInComponent {
     this.form = new AuthForm(formBuilder);
   }
 
-  getErrorStateMatcher(errorTypes: string[]) {
+  getErrorStateMatcher(errorType: string) {
     return (control: FormControl, form: FormGroupDirective | NgForm) => {
       const submitted = form && form.submitted;
       if (control.invalid && (control.touched || submitted)) {
@@ -57,7 +57,7 @@ export class SignInComponent {
 
       const state = this.ngRedux.getState();
 
-      return !!errorTypes.find(errorType => !!state.signIn.get(errorType))
+      return !!state.signIn.get(errorType);
     };
   }
 

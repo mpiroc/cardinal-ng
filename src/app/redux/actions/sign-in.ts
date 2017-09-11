@@ -7,7 +7,6 @@ export const SIGN_IN_SUBMIT = 'SIGN_IN_SUBMIT';
 export const SIGN_IN_SUBMIT_SUCCESS = 'SIGN_IN_SUBMIT_SUCCESS';
 export const SIGN_IN_SUBMIT_USER_ERROR = 'SIGN_IN_SUBMIT_USER_ERROR';
 export const SIGN_IN_SUBMIT_PASSWORD_ERROR = 'SIGN_IN_SUBMIT_PASSWORD_ERROR';
-export const SIGN_IN_SUBMIT_OTHER_ERROR = 'SIGN_IN_SUBMIT_OTHER_ERROR';
 
 export interface ISignInSetEmailAction extends Action {
   email: string;
@@ -68,13 +67,6 @@ export function signInSubmitUserError(error: string): ISignInSubmitErrorAction {
 export function signInSubmitPasswordError(error: string): ISignInSubmitErrorAction {
   return {
     type: SIGN_IN_SUBMIT_PASSWORD_ERROR,
-    error,
-  }
-}
-
-export function signInSubmitOtherError(error: string): ISignInSubmitErrorAction {
-  return {
-    type: SIGN_IN_SUBMIT_OTHER_ERROR,
     error,
   }
 }

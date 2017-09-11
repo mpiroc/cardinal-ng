@@ -10,14 +10,12 @@ import {
   signInSubmitSuccess,
   signInSubmitUserError,
   signInSubmitPasswordError,
-  signInSubmitOtherError,
 } from '../../redux/actions/sign-in';
 import {
   signUpSubmit,
   signUpSubmitSuccess,
   signUpSubmitUserError,
   signUpSubmitPasswordError,
-  signUpSubmitOtherError,
 } from '../../redux/actions/sign-up';
 
 @Injectable()
@@ -88,7 +86,8 @@ export class AuthService {
           break;
 
         default:
-          this.ngRedux.dispatch(signInSubmitOtherError(error.message));
+          // Show miscellaneous errors with password errors.
+          this.ngRedux.dispatch(signInSubmitPasswordError(error.message));
           break;
       }
     }
@@ -121,8 +120,8 @@ export class AuthService {
           break;
 
         default:
-          console.log(error.code);
-          this.ngRedux.dispatch(signUpSubmitOtherError(error.message));
+          // Show miscellaneous errors with password errors.
+          this.ngRedux.dispatch(signUpSubmitPasswordError(error.message));
           break;
       }
     }

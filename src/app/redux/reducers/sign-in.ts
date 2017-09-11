@@ -9,7 +9,6 @@ import {
   SIGN_IN_SUBMIT_SUCCESS,
   SIGN_IN_SUBMIT_USER_ERROR,
   SIGN_IN_SUBMIT_PASSWORD_ERROR,
-  SIGN_IN_SUBMIT_OTHER_ERROR,
   ISignInSetEmailAction,
   ISignInSetPasswordAction,
   ISignInSetRememberMeAction,
@@ -23,7 +22,6 @@ const initialState = Map<string, any>({
   isSubmitting: false,
   userError: null,
   passwordError: null,
-  otherError: null,
 })
 
 export function signIn(state: Map<string, any> = initialState, action: Action) {
@@ -42,35 +40,24 @@ export function signIn(state: Map<string, any> = initialState, action: Action) {
         .set('isSubmitting', true)
         .set('userError', null)
         .set('passwordError', null)
-        .set('otherError', null);
 
     case SIGN_IN_SUBMIT_SUCCESS:
       return state
         .set('isSubmitting', false)
         .set('userError', null)
         .set('passwordError', null)
-        .set('otherError', null);
 
     case SIGN_IN_SUBMIT_USER_ERROR:
       return state
         .set('isSubmitting', false)
         .set('userError', (action as ISignInSubmitErrorAction).error)
         .set('passwordError', null)
-        .set('otherError', null);
 
     case SIGN_IN_SUBMIT_PASSWORD_ERROR:
       return state
         .set('isSubmitting', false)
         .set('userError', null)
         .set('passwordError', (action as ISignInSubmitErrorAction).error)
-        .set('otherError', null);
-
-    case SIGN_IN_SUBMIT_OTHER_ERROR:
-      return state
-        .set('isSubmitting', false)
-        .set('userError', null)
-        .set('passwordError', null)
-        .set('otherError', (action as ISignInSubmitErrorAction).error);
 
     default:
       return state;
