@@ -4,8 +4,13 @@ import { Subject } from 'rxjs/Subject';
 
 import { environment } from '../../environments/environment';
 
+export abstract class LogService {
+  abstract error$: Observable<any>;
+  abstract error(message: any): void;
+}
+
 @Injectable()
-export class LogService {
+export class LogServiceImplementation extends LogService {
   private errorSubject: Subject<any> = new Subject<any>();
 
   get error$(): Observable<any> {
@@ -13,6 +18,7 @@ export class LogService {
   }
 
   constructor() {
+    super();
     this.error$.subscribe(message => console.error(message));
   }
 

@@ -12,8 +12,12 @@ import 'rxjs/add/operator/map';
 
 import { AuthService } from '../firebase/auth.service';
 
+export abstract class RedirectService {
+  abstract startListening();
+}
+
 @Injectable()
-export class RedirectService {
+export class RedirectServiceImplementation extends RedirectService {
   private readonly publicUrls: string[] = [
     '/sign-in',
     '/sign-up',
@@ -21,9 +25,8 @@ export class RedirectService {
     '/reset-password-confirmation',
   ];
 
-  constructor(
-    private router: Router,
-    private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService) {
+    super();
   }
 
   startListening() {
@@ -40,7 +43,7 @@ export class RedirectService {
       ).subscribe();
   }
 
-  redirect(url: string, isLoggedIn: boolean) {
+  private redirect(url: string, isLoggedIn: boolean) {
     const isUrlPublic: boolean = !!this.publicUrls
       .find(publicUrl => url.startsWith(publicUrl));
 

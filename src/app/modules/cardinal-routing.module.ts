@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LogModule } from './log.module';
 
-import { AuthGuardService } from '../services/routing/auth-guard.service';
-import { RedirectService } from '../services/routing/redirect.service';
-import { DeckResolver } from '../services/routing/deck-resolver.service';
-import { UserResolver } from '../services/routing/user-resolver.service';
+import { AuthGuardService, AuthGuardServiceImplementation } from '../services/routing/auth-guard.service';
+import { DeckResolver, DeckResolverImplementation } from '../services/routing/deck-resolver.service';
+import { RedirectService, RedirectServiceImplementation } from '../services/routing/redirect.service';
+import { UserResolver, UserResolverImplementation } from '../services/routing/user-resolver.service';
 
 import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
 import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component';
@@ -75,10 +75,10 @@ const routes: Routes = [
     RouterModule,
   ],
   providers: [
-    DeckResolver,
-    UserResolver,
-    AuthGuardService,
-    RedirectService,
+    { provide: AuthGuardService, useClass: AuthGuardServiceImplementation },
+    { provide: DeckResolver, useClass: DeckResolverImplementation },
+    { provide: RedirectService, useClass: RedirectServiceImplementation },
+    { provide: UserResolver, useClass: UserResolverImplementation },
   ],
 })
 export class CardinalRoutingModule {

@@ -19,9 +19,43 @@ import {
   ICardHistory,
 } from '../../interfaces/firebase';
 
+export abstract class DatabaseService {
+  // Create
+  abstract createDeck(args: IUser, name: string, description: string): FirebasePromise<void>;
+  abstract createCard(args: IDeck, front: string, back: string): FirebasePromise<void>;
+
+  // Retrieve
+  abstract getDecks(args: IUser): FirebaseListObservable<IDeck[]>;
+  abstract getDeck(args: IDeck): FirebaseObjectObservable<IDeck>;
+  abstract getDeckInfo(args: IDeck): FirebaseObjectObservable<IDeckInfo>;
+  abstract getCards(args: IDeck): FirebaseListObservable<ICard[]>;
+  abstract getCard(args: ICard): FirebaseObjectObservable<ICard>;
+  abstract getCardContent(args: ICard): FirebaseObjectObservable<ICardContent>;
+  abstract getCardHistory(args: ICard): FirebaseObjectObservable<ICardHistory>;
+
+  // Update
+  abstract updateDeck(args: IDeck): FirebasePromise<void>
+  abstract updateDeckInfo(args: IDeck, name: string, description: string): FirebasePromise<void>
+  abstract updateCard(args: ICard): FirebasePromise<void>
+  abstract updateCardContent(args: ICard, front: string, back: string): FirebasePromise<void>
+  abstract updateCardHistory(
+    args: ICard,
+    difficulty: number,
+    grade: number,
+    repetitions: number,
+    previousReview: number,
+    nextReview: number,
+  ): FirebasePromise<void>;
+
+  // Delete
+  abstract deleteDeck(args: IDeck): FirebasePromise<any[]>
+  abstract async deleteCard(args: ICard): FirebasePromise<any[]>
+}
+
 @Injectable()
-export class DatabaseService {
+export class DatabaseServiceImplementation extends DatabaseService {
   constructor(private database: AngularFireDatabase) {
+    super();
   }
 
   // Create

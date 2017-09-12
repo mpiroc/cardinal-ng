@@ -10,9 +10,15 @@ import { IState } from '../redux/state';
 const MINIMUM_DIFFICULTY = 1.3;
 const MINIMUM_CORRECT_GRADE = 3;
 
+export abstract class GradingService {
+  abstract isDue(history: ICardHistory, nowMs: number): boolean;
+  abstract submitGrade(): FirebasePromise<void>;
+}
+
 @Injectable()
-export class GradingService {
+export class GradingServiceImplementation extends GradingService {
   constructor(private ngRedux: NgRedux<IState>, private databaseService: DatabaseService) {
+    super();
   }
 
   isDue(history: ICardHistory, nowMs: number): boolean {

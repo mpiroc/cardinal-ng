@@ -10,8 +10,12 @@ import { UserResolver } from './user-resolver.service';
 import { IState } from '../../redux/state';
 import { IDeck } from '../../interfaces/firebase';
 
+export abstract class DeckResolver implements Resolve<IDeck> {
+  abstract resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IDeck;
+}
+
 @Injectable()
-export class DeckResolver implements Resolve<IDeck> {
+export class DeckResolverImplementation implements Resolve<IDeck> {
   constructor(
     private ngRedux: NgRedux<IState>,
     private userResolver: UserResolver

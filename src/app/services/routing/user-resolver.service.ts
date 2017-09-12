@@ -9,9 +9,14 @@ import { NgRedux } from '@angular-redux/store';
 import { IState } from '../../redux/state';
 import { IUser } from '../../interfaces/firebase';
 
+export abstract class UserResolver implements Resolve<IUser> {
+  abstract resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IUser;
+}
+
 @Injectable()
-export class UserResolver implements Resolve<IUser> {
+export class UserResolverImplementation extends UserResolver {
   constructor(private ngRedux: NgRedux<IState>) {
+    super();
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IUser {

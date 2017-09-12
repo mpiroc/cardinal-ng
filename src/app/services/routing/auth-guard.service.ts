@@ -15,13 +15,18 @@ import { UserActions } from '../../redux/actions/firebase';
 import { AuthService } from '../firebase/auth.service';
 import { LogService } from '../log.service';
 
+export abstract class AuthGuardService implements CanActivate {
+  abstract canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>;
+}
+
 @Injectable()
-export class AuthGuardService implements CanActivate {
+export class AuthGuardServiceImplementation extends AuthGuardService {
   constructor(
     private authService: AuthService,
     private logService: LogService,
     private userActions: UserActions,
   ) {
+    super();
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {

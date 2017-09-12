@@ -10,7 +10,7 @@ import { CardinalReduxModule } from './cardinal-redux.module';
 import { CardinalRoutingModule } from './cardinal-routing.module';
 import { LogModule } from './log.module';
 
-import { GradingService } from '../services/grading.service';
+import { GradingService, GradingServiceImplementation } from '../services/grading.service';
 import { LogService } from '../services/log.service';
 
 import { RootComponent } from '../components/root/root.component';
@@ -73,7 +73,7 @@ import 'hammerjs';
     LogModule,
   ],
   providers: [
-    GradingService,
+    { provide: GradingService, useClass: GradingServiceImplementation },
   ],
   entryComponents: [
     DeleteCardDialogComponent,
