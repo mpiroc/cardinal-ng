@@ -4,6 +4,7 @@ import {
   FirebaseListObservable,
   FirebaseObjectObservable,
 } from 'angularfire2/database';
+import { Observable } from 'rxjs/Observable';
 import {
   database,
 } from 'firebase';
@@ -24,13 +25,13 @@ export abstract class DatabaseService {
   abstract createCard(args: IDeck, front: string, back: string): Promise<void>;
 
   // Retrieve
-  abstract getDecks(args: IUser): FirebaseListObservable<IDeck[]>;
-  abstract getDeck(args: IDeck): FirebaseObjectObservable<IDeck>;
-  abstract getDeckInfo(args: IDeck): FirebaseObjectObservable<IDeckInfo>;
-  abstract getCards(args: IDeck): FirebaseListObservable<ICard[]>;
-  abstract getCard(args: ICard): FirebaseObjectObservable<ICard>;
-  abstract getCardContent(args: ICard): FirebaseObjectObservable<ICardContent>;
-  abstract getCardHistory(args: ICard): FirebaseObjectObservable<ICardHistory>;
+  abstract getDecks(args: IUser): Observable<IDeck[]>;
+  abstract getDeck(args: IDeck): Observable<IDeck>;
+  abstract getDeckInfo(args: IDeck): Observable<IDeckInfo>;
+  abstract getCards(args: IDeck): Observable<ICard[]>;
+  abstract getCard(args: ICard): Observable<ICard>;
+  abstract getCardContent(args: ICard): Observable<ICardContent>;
+  abstract getCardHistory(args: ICard): Observable<ICardHistory>;
 
   // Update
   abstract updateDeck(args: IDeck): Promise<void>
@@ -48,7 +49,7 @@ export abstract class DatabaseService {
 
   // Delete
   abstract deleteDeck(args: IDeck): Promise<any[]>
-  abstract async deleteCard(args: ICard): Promise<any[]>
+  abstract deleteCard(args: ICard): Promise<any[]>
 }
 
 @Injectable()
@@ -88,43 +89,71 @@ export class DatabaseServiceImplementation extends DatabaseService {
   }
 
   // Retrieve
-  getDecks(args: IUser): FirebaseListObservable<IDeck[]> {
+  getDecks(args: IUser): Observable<IDeck[]> {
+    return this._getDecks(args);
+  }
+
+  getDeck(args: IDeck): Observable<IDeck> {
+    return this._getDeck(args);
+  }
+
+  getDeckInfo(args: IDeck): Observable<IDeckInfo> {
+    return this._getDeckInfo(args);
+  }
+
+  getCards(args: IDeck): Observable<ICard[]> {
+    return this._getCards(args);
+  }
+
+  getCard(args: ICard): Observable<ICard> {
+    return this._getCard(args);
+  }
+
+  getCardContent(args: ICard): Observable<ICardContent> {
+    return this._getCardContent(args);
+  }
+
+  getCardHistory(args: ICard): Observable<ICardHistory> {
+    return this._getCardHistory(args);
+  }
+
+  private _getDecks(args: IUser): FirebaseListObservable<IDeck[]> {
     return this.database.list(this.getDeckBasePath(args));
   }
 
-  getDeck(args: IDeck): FirebaseObjectObservable<IDeck> {
+  private _getDeck(args: IDeck): FirebaseObjectObservable<IDeck> {
     return this.database.object(this.getDeckPath(args));
   }
 
-  getDeckInfo(args: IDeck): FirebaseObjectObservable<IDeckInfo> {
+  private _getDeckInfo(args: IDeck): FirebaseObjectObservable<IDeckInfo> {
     return this.database.object(this.getDeckInfoPath(args));
   }
 
-  getCards(args: IDeck): FirebaseListObservable<ICard[]> {
+  private _getCards(args: IDeck): FirebaseListObservable<ICard[]> {
     return this.database.list(this.getCardBasePath(args));
   }
 
-  getCard(args: ICard): FirebaseObjectObservable<ICard> {
+  private _getCard(args: ICard): FirebaseObjectObservable<ICard> {
     return this.database.object(this.getCardPath(args));
   }
 
-  getCardContent(args: ICard): FirebaseObjectObservable<ICardContent> {
+  private _getCardContent(args: ICard): FirebaseObjectObservable<ICardContent> {
     return this.database.object(this.getCardContentPath(args));
   }
 
-  getCardHistory(args: ICard): FirebaseObjectObservable<ICardHistory> {
+  private _getCardHistory(args: ICard): FirebaseObjectObservable<ICardHistory> {
     return this.database.object(this.getCardHistoryPath(args));
   }
 
   // Update
   async updateDeck(args: IDeck): Promise<void> {
-    await this.getDeck(args).update({
+    await this._getDeck(args).update({
       ...args,
     });
   }
 
   async updateDeckInfo(args: IDeck, name: string, description: string): Promise<void> {
-    await this.getDeckInfo(args).update({
+    await this._getDeckInfo(args).update({
       ...args,
       name,
       description,
@@ -132,13 +161,13 @@ export class DatabaseServiceImplementation extends DatabaseService {
   }
 
   async updateCard(args: ICard): Promise<void> {
-    await this.getCard(args).update({
+    await this._getCard(args).update({
       ...args,
     });
   }
 
   async updateCardContent(args: ICard, front: string, back: string): Promise<void> {
-    await this.getCardContent(args).update({
+    await this._getCardContent(args).update({
       ...args,
       front,
       back,
@@ -153,7 +182,7 @@ export class DatabaseServiceImplementation extends DatabaseService {
     previousReview: number,
     nextReview: number,
   ): Promise<void> {
-    await this.getCardHistory(args).update({
+    await this._getCardHistory(args).update({
       ...args,
       difficulty,
       grade,
@@ -166,14 +195,14 @@ export class DatabaseServiceImplementation extends DatabaseService {
   // Delete
   deleteDeck(args: IDeck): Promise<any[]> {
     return Promise.all([
-      this.getDecks(args).remove(args.deckId),
+      this._getDecks(args).remove(args.deckId),
       this.database.list(this.getDeckInfoBasePath(args)).remove(args.deckId),
     ]);
   }
 
   async deleteCard(args: ICard): Promise<any[]> {
     return Promise.all([
-      this.getCards(args).remove(args.cardId),
+      this._getCards(args).remove(args.cardId),
       this.database.list(this.getCardContentBasePath(args)).remove(args.cardId),
       this.database.list(this.getCardHistoryBasePath(args)).remove(args.cardId),
     ]);
