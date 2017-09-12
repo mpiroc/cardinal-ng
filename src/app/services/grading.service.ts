@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { Promise as FirebasePromise } from 'firebase';
 import * as moment from 'moment';
 
 import { DatabaseService } from './firebase/database.service';
@@ -12,7 +11,7 @@ const MINIMUM_CORRECT_GRADE = 3;
 
 export abstract class GradingService {
   abstract isDue(history: ICardHistory, nowMs: number): boolean;
-  abstract submitGrade(): FirebasePromise<void>;
+  abstract submitGrade(): Promise<void>;
 }
 
 @Injectable()
@@ -25,7 +24,7 @@ export class GradingServiceImplementation extends GradingService {
     return history.grade < MINIMUM_CORRECT_GRADE || !history.nextReview || nowMs >= history.nextReview;
   }
 
-  submitGrade(): FirebasePromise<void> {
+  async submitGrade(): Promise<void> {
     const now = moment.now();
 
     const state: IState = this.ngRedux.getState();
@@ -36,7 +35,7 @@ export class GradingServiceImplementation extends GradingService {
     const repetitions = this.computeRepetitions(history, grade);
     const nextReview = this.computeNextReview(history, difficulty, repetitions, now);
 
-    return this.databaseService.updateCardHistory(
+    await this.databaseService.updateCardHistory(
       history,
       difficulty,
       grade,

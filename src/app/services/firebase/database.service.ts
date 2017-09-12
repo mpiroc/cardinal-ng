@@ -60,7 +60,7 @@ export class DatabaseServiceImplementation extends DatabaseService {
 
   // Create
   async createDeck(args: IUser, name: string, description: string): Promise<void> {
-    const deck: { key: string } = await this.getDecks(args).push(args);
+    const deck: { key: string } = await this._getDecks(args).push(args);
 
     const deckArgs: IDeck = {
       ...args,
@@ -74,7 +74,7 @@ export class DatabaseServiceImplementation extends DatabaseService {
   }
 
   async createCard(args: IDeck, front: string, back: string): Promise<void> {
-    const card: { key: string } = await this.getCards(args).push(args);
+    const card: { key: string } = await this._getCards(args).push(args);
 
     const cardArgs: ICard = {
       ...args,
