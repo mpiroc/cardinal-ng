@@ -3,10 +3,12 @@ import { Map } from 'immutable';
 import { NgRedux } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/toArray';
 import { Action, MiddlewareAPI } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import * as moment from 'moment';
@@ -18,6 +20,7 @@ import {
 } from '../../interfaces/firebase';
 import { GradingService } from '../../services/grading.service';
 import { LogService } from '../../services/log.service';
+import { RandomService } from '../../services/random.service';
 
 import { IState } from '../state';
 import {
@@ -38,6 +41,7 @@ export class ReviewEpic {
     private logService: LogService,
     private ngRedux: NgRedux<IState>,
     private gradingService: GradingService,
+    private randomService: RandomService,
     private cardActions: CardActions,
     private cardHistoryActions: CardHistoryActions,
   ) {
@@ -65,6 +69,10 @@ export class ReviewEpic {
   }
 
   private handleCardsReceived(cards: Map<string, ICard>): Observable<Action> {
+    if (cards.size < 1) {
+      return Observable.of(reviewSetHistory(null))
+    }
+
     const beforeStartListeningActions: Action[] = cards.valueSeq()
       .map(card => this.cardHistoryActions.beforeStartListening(card))
       .toArray();
@@ -96,7 +104,7 @@ export class ReviewEpic {
         const currentCardId = currentHistory ? currentHistory.cardId : null;
         histories = histories.filter(history => history.cardId !== currentCardId);
 
-        const index = Math.floor(Math.random() * histories.length);
+        const index = Math.floor(this.randomService.random() * histories.length);
         return reviewSetHistory(histories[index]) as Action;
       })
       .startWith(...beforeStartListeningActions);

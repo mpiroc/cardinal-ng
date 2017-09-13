@@ -18,6 +18,7 @@ import { LogModule } from './log.module';
 import { DatabaseService } from '../services/firebase/database.service';
 import { GradingService } from '../services/grading.service';
 import { LogService } from '../services/log.service';
+import { RandomService, RandomServiceImplementation } from '../services/random.service';
 
 import {
   CardContentActions,
@@ -66,6 +67,9 @@ import { IState } from '../redux/state';
     NgReduxModule,
   ],
   providers: [
+    // Services
+    { provide: RandomService, useClass: RandomServiceImplementation },
+
     // Actions
     CardContentActions,
     CardHistoryActions,

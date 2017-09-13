@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "redux-mock-store": "registry:dt/redux-mock-store#0.0.6+20161121205806"
+  }
+}
