@@ -9,6 +9,7 @@ import { LogModule } from './log.module';
 import { environment } from '../../environments/environment';
 import { AuthService, AuthServiceImplementation } from '../services/firebase/auth.service';
 import { DatabaseService, DatabaseServiceImplementation } from '../services/firebase/database.service';
+import { UserProviderService, UserProviderServiceImplementation } from '../services/firebase/user-provider.service';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { DatabaseService, DatabaseServiceImplementation } from '../services/fire
   providers: [
     { provide: AuthService, useClass: AuthServiceImplementation },
     { provide: DatabaseService, useClass: DatabaseServiceImplementation },
+    { provide: UserProviderService, useClass: UserProviderServiceImplementation },
   ],
 })
 export class FirebaseModule {

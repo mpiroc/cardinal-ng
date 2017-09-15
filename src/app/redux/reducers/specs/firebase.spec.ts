@@ -54,6 +54,10 @@ class TestListReducer extends FirebaseListReducer<IModel, IArgs> {
   constructor(actions: TestActions) {
     super(actions);
   }
+
+  selectKey(args: IArgs) {
+    return args.id;
+  }
 }
 
 describe('reducers', () => {
@@ -436,12 +440,12 @@ describe('reducers', () => {
           error: 'myError',
           data: Map<string, IModel>(),
         })
-        afterState = reducer.reducer(beforeState, actions.listReceived(args, Map({
-          myId: {
+        afterState = reducer.reducer(beforeState, actions.listReceived(args, [
+          {
             ...args,
             content: 'myContent',
           }
-        })));
+        ]));
       })
 
       it('should mark state as not loading', () => {

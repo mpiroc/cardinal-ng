@@ -59,21 +59,21 @@ describe('actions', () => {
     }),
     describe('listReceived', () => {
       it('should create a valid action', () => {
-        const data = Map<string, any>({
-          id1: {
+        const data = [
+          {
             id: 'id1',
             content: 'content1',
           },
-          id2: {
+          {
             id: 'id2',
             content: 'content2',
-          }
-        });
+          },
+        ]
+
         const result = actions.listReceived(args, data);
         expect(result.type).toEqual(actions.RECEIVED);
         expect(result.args).toEqual(args);
-        expect(result.data.get('id1')).toEqual(data.get('id1'));
-        expect(result.data.get('id2')).toEqual(data.get('id2'));
+        expect(result.data).toEqual(data)
       })
     }),
     describe('setIsLoading', () => {

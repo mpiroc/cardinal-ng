@@ -16,7 +16,7 @@ export interface IObjectReceivedAction<TModel> extends Action {
 }
 
 export interface IListReceivedAction<TModel> extends Action {
-  data: Map<string, TModel>;
+  data: TModel[];
 }
 
 export interface ISetIsLoadingAction extends Action {
@@ -99,7 +99,7 @@ export class FirebaseActions<TModel, TArgs> {
     };
   }
 
-  listReceived(args: TArgs, data: Map<string, TModel>): IHasArgs<TArgs> & Action & IListReceivedAction<TModel> {
+  listReceived(args: TArgs, data: TModel[]): IHasArgs<TArgs> & Action & IListReceivedAction<TModel> {
     return {
       type: this.RECEIVED,
       args,

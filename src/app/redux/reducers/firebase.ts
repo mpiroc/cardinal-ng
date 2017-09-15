@@ -132,6 +132,8 @@ export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseRed
     this.reducer = this._reducer.bind(this);
   }
 
+  protected abstract selectKey(data: TModel): string;
+
   private _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
       case this.actions.START_LISTENING:
@@ -151,7 +153,7 @@ export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseRed
         return state
           .set('isLoading', false)
           .set('error', null)
-          .set('data', (action as IListReceivedAction<TModel>).data);
+          .set('data', this.convertToMap((action as IListReceivedAction<TModel>).data));
 
       case this.actions.SET_IS_LOADING:
         return state
@@ -166,6 +168,10 @@ export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseRed
       default:
         return state;
     }
+  }
+
+  private convertToMap(data: TModel[]): Map<string, TModel> {
+    return data.reduce((result, current) => result.set(this.selectKey(current), current), Map<string, TModel>());
   }
 }
 
@@ -210,6 +216,10 @@ export class CardListReducer extends FirebaseListReducer<ICard, IDeck> {
   constructor(cardActions: CardActions) {
     super(cardActions);
   }
+
+  protected selectKey(card: ICard): string {
+    return card.cardId;
+  }
 }
 
 @Injectable()
@@ -245,6 +255,10 @@ export class DeckInfoMapReducer extends FirebaseMapReducer<IDeckInfo, IDeck> {
 export class DeckListReducer extends FirebaseListReducer<IDeck, IUser> {
   constructor(deckActions: DeckActions) {
     super(deckActions);
+  }
+
+  protected selectKey(deck: IDeck): string {
+    return deck.deckId;
   }
 }
 
