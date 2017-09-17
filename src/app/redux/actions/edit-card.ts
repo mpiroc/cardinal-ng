@@ -1,14 +1,14 @@
-import { Action } from 'redux';
+import { Action } from 'redux'
 
-export const EDIT_CARD_SET_FRONT = 'EDIT_CARD_SET_FRONT';
-export const EDIT_CARD_SET_BACK = 'EDIT_CARD_SET_BACK';
+export const EDIT_CARD_SET_FRONT = 'EDIT_CARD_SET_FRONT'
+export const EDIT_CARD_SET_BACK = 'EDIT_CARD_SET_BACK'
 
 export interface IEditCardSetFrontAction extends Action {
-  front: string;
+  front: string
 }
 
 export interface IEditCardSetBackAction extends Action {
-  back: string;
+  back: string
 }
 
 export function editCardSetFront(front: string): IEditCardSetFrontAction {

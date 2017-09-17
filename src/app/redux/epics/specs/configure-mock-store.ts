@@ -1,14 +1,14 @@
-import { Action } from 'redux';
+import { Action } from 'redux'
 import {
   Epic,
   createEpicMiddleware,
-} from 'redux-observable';
+} from 'redux-observable'
 import createMockStore, {
   mockStore,
   IStore,
-} from 'redux-mock-store';
-import { Map } from 'immutable';
-import { IState } from '../../state';
+} from 'redux-mock-store'
+import { Map } from 'immutable'
+import { IState } from '../../state'
 
 export function createMockState(overrides: any = null): IState {
   return {
@@ -29,11 +29,11 @@ export function createMockState(overrides: any = null): IState {
 }
 
 export function configureMockStore(epic: Epic<Action, IState>, state: IState = null): IStore<IState> {
-  const middlewares = [createEpicMiddleware(epic)];
-  const _mockStore: mockStore<IState> = createMockStore<IState>(middlewares);
+  const middlewares = [createEpicMiddleware(epic)]
+  const _mockStore: mockStore<IState> = createMockStore<IState>(middlewares)
 
   state = state || createMockState()
-  const store: IStore<IState> = _mockStore(state);
+  const store: IStore<IState> = _mockStore(state)
 
-  return store;
+  return store
 }

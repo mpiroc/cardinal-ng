@@ -1,14 +1,14 @@
-import { Action } from 'redux';
+import { Action } from 'redux'
 
-export const EDIT_DECK_SET_NAME = 'EDIT_DECK_SET_NAME';
-export const EDIT_DECK_SET_DESCRIPTION = 'EDIT_DECK_SET_DESCRIPTION';
+export const EDIT_DECK_SET_NAME = 'EDIT_DECK_SET_NAME'
+export const EDIT_DECK_SET_DESCRIPTION = 'EDIT_DECK_SET_DESCRIPTION'
 
 export interface IEditDeckSetNameAction extends Action {
-  name: string;
+  name: string
 }
 
 export interface IEditDeckSetDescriptionAction extends Action {
-  description: string;
+  description: string
 }
 
 export function editDeckSetName(name: string): IEditDeckSetNameAction {

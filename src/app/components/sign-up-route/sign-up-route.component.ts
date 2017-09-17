@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { select } from '@angular-redux/store';
+import { Component } from '@angular/core'
+import { Observable } from 'rxjs/Observable'
+import { select } from '@angular-redux/store'
 
 @Component({
   selector: 'cardinal-sign-up-route',
@@ -9,5 +9,5 @@ import { select } from '@angular-redux/store';
 })
 export class SignUpRouteComponent {
   @select(['user', 'isLoading'])
-  isLoading$: Observable<boolean>;
+  isLoading$: Observable<boolean>
 }

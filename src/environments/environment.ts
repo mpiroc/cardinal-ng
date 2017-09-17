@@ -17,4 +17,4 @@ export const environment = {
     enableTracing: true,
     useHash: true,
   },
-};
+}

@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
+import { Component } from '@angular/core'
+import { NgRedux, select } from '@angular-redux/store'
 import {
   FormBuilder,
   FormControl,
   FormGroupDirective,
   NgForm,
-} from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { AuthForm } from '../../forms/auth.form';
-import { AuthService } from '../../services/firebase/auth.service';
+} from '@angular/forms'
+import { Observable } from 'rxjs/Observable'
+import { AuthForm } from '../../forms/auth.form'
+import { AuthService } from '../../services/firebase/auth.service'
 import {
   signUpSetEmail,
   signUpSetPassword,
-} from '../../redux/actions/sign-up';
-import { IState } from '../../redux/state';
+} from '../../redux/actions/sign-up'
+import { IState } from '../../redux/state'
 
 @Component({
   selector: 'cardinal-sign-up-component',
@@ -22,66 +22,66 @@ import { IState } from '../../redux/state';
 })
 export class SignUpComponent {
   @select(['signUp', 'isSubmitting'])
-  readonly isSubmitting$: Observable<boolean>;
+  readonly isSubmitting$: Observable<boolean>
 
   @select(['signUp', 'userError'])
-  readonly userError$: Observable<string>;
+  readonly userError$: Observable<string>
 
   @select(['signUp', 'passwordError'])
-  readonly passwordError$: Observable<string>;
+  readonly passwordError$: Observable<string>
 
-  readonly form: AuthForm;
+  readonly form: AuthForm
 
   constructor(
     private authService: AuthService,
     private ngRedux: NgRedux<IState>,
     private formBuilder: FormBuilder,
   ) {
-    this.form = new AuthForm(formBuilder);
+    this.form = new AuthForm(formBuilder)
   }
 
   getErrorStateMatcher(errorType: string) {
     return (control: FormControl, form: FormGroupDirective | NgForm) => {
-      const submitted = form && form.submitted;
+      const submitted = form && form.submitted
       if (control.invalid && (control.touched || submitted)) {
-        return true;
+        return true
       }
 
       if (!this.ngRedux) {
-        return false;
+        return false
       }
 
-      const state = this.ngRedux.getState();
+      const state = this.ngRedux.getState()
 
-      return !!state.signUp.get(errorType);
-    };
+      return !!state.signUp.get(errorType)
+    }
   }
 
   signUpWithGoogle(): void {
-    this.authService.signUpWithGoogle();
+    this.authService.signUpWithGoogle()
   }
 
   signUpWithFacebook(): void {
-    this.authService.signUpWithFacebook();
+    this.authService.signUpWithFacebook()
   }
 
   signUpWithTwitter(): void {
-    this.authService.signUpWithTwitter();
+    this.authService.signUpWithTwitter()
   }
 
   signUpWithEmail(): void {
-    const state: IState = this.ngRedux.getState();
-    const email: string = state.signUp.get('email');
-    const password: string = state.signUp.get('password');
+    const state: IState = this.ngRedux.getState()
+    const email: string = state.signUp.get('email')
+    const password: string = state.signUp.get('password')
 
-    this.authService.signUpWithEmail(email, password);
+    this.authService.signUpWithEmail(email, password)
   }
 
   onEmailInput($event: any) {
-    this.ngRedux.dispatch(signUpSetEmail($event.target.value));
+    this.ngRedux.dispatch(signUpSetEmail($event.target.value))
   }
 
   onPasswordInput($event: any) {
-    this.ngRedux.dispatch(signUpSetPassword($event.target.value));
+    this.ngRedux.dispatch(signUpSetPassword($event.target.value))
   }
 }

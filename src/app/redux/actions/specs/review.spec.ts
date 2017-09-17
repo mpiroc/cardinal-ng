@@ -5,7 +5,7 @@ import {
   reviewSetDeck,
   reviewSetHistory,
   reviewSetGrade,
-} from '../review';
+} from '../review'
 
 describe('actions', () => {
   describe('review', () => {
@@ -14,10 +14,10 @@ describe('actions', () => {
         const deck = {
           uid: 'uid',
           deckId: 'deckId',
-        };
-        const result = reviewSetDeck(deck);
-        expect(result.type).toEqual(REVIEW_SET_DECK);
-        expect(result.deck).toEqual(deck);
+        }
+        const result = reviewSetDeck(deck)
+        expect(result.type).toEqual(REVIEW_SET_DECK)
+        expect(result.deck).toEqual(deck)
       })
     }),
     describe('setHistory', () => {
@@ -31,17 +31,17 @@ describe('actions', () => {
           repetitions: 3,
           previousReview: 4,
           nextReview: 5,
-        };
-        const result = reviewSetHistory(history);
-        expect(result.type).toEqual(REVIEW_SET_HISTORY);
-        expect(result.history).toEqual(history);
+        }
+        const result = reviewSetHistory(history)
+        expect(result.type).toEqual(REVIEW_SET_HISTORY)
+        expect(result.history).toEqual(history)
       })
     }),
     describe('setGrade', () => {
       it('should create a valid action', () => {
-        const result = reviewSetGrade(42);
-        expect(result.type).toEqual(REVIEW_SET_GRADE);
-        expect(result.grade).toEqual(42);
+        const result = reviewSetGrade(42)
+        expect(result.type).toEqual(REVIEW_SET_GRADE)
+        expect(result.grade).toEqual(42)
       })
     })
   })

@@ -40,7 +40,7 @@ class Example {
   readonly cards: ICard[]
   readonly histories: ICardHistory[]
   readonly cards$ = new Subject<Map<string, ICard>>()
-  readonly histories$: Subject<Map<string, any>>[];
+  readonly histories$: Subject<Map<string, any>>[]
 
   constructor(uid: string, deckId: string, cardIds: string[]) {
     this.deck = {
@@ -59,7 +59,7 @@ class Example {
       previousReview: 0,
       nextReview: 0,
     }))
-    this.histories$ = this.histories.map(history => new Subject<Map<string, any>>());
+    this.histories$ = this.histories.map(history => new Subject<Map<string, any>>())
   }
 
   nextCards(cards: ICard[]) {
@@ -317,7 +317,7 @@ describe('epics', ()=> {
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards([ example.cards[0] ])
         example.nextHistory(0, example.histories[0])
-        store.clearActions();
+        store.clearActions()
 
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -350,7 +350,7 @@ describe('epics', ()=> {
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards([ example.cards[0] ])
         example.nextHistory(0, example.histories[0])
-        store.clearActions();
+        store.clearActions()
 
         example.nextCards([])
 
@@ -426,7 +426,7 @@ describe('epics', ()=> {
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
         example.nextHistory(1, example.histories[1])
-        store.clearActions();
+        store.clearActions()
 
         example.nextCards([ example.cards[1] ])
         example.nextHistory(1, example.histories[1])
@@ -603,7 +603,7 @@ describe('epics', ()=> {
 
     describe('errors', () => {
       it('should throw uncaught error if log services throws an error', () => {
-        pending();
+        pending()
         //when(logServiceMock.error(anyString())).thenThrow(new Error('error message'))
       })
 

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import {
   MdButtonModule,
   MdCardModule,
@@ -17,8 +17,8 @@ import {
   MdSnackBarModule,
   MdTabsModule,
   MdToolbarModule,
-} from '@angular/material';
-import { LogModule } from './log.module';
+} from '@angular/material'
+import { LogModule } from './log.module'
 
 @NgModule({
   imports: [

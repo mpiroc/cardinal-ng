@@ -1,8 +1,8 @@
 import { Map } from 'immutable'
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/observable/of';
-import { Action } from 'redux';
+import { Observable } from 'rxjs/Observable'
+import { Subject } from 'rxjs/Subject'
+import 'rxjs/add/observable/of'
+import { Action } from 'redux'
 
 import { AuthShimService, AuthShimServiceImplementation } from '../../../services/firebase/auth-shim.service'
 import { DatabaseService, DatabaseServiceImplementation } from '../../../services/firebase/database.service'
@@ -14,7 +14,7 @@ import {
   ICard,
   IDeckInfo,
   IDeck,
-} from '../../../interfaces/firebase';
+} from '../../../interfaces/firebase'
 import {
   IListReceivedAction,
   FirebaseActions,
@@ -45,18 +45,18 @@ import {
   anyString,
 } from 'ts-mockito'
 import { IStore } from 'redux-mock-store'
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from 'angularfire2/auth'
 import {
   configureMockStore,
   createMockState,
 } from './configure-mock-store'
 
 interface IArgs {
-  id: string;
+  id: string
 }
 
 interface IModel extends IArgs {
-  content: string;
+  content: string
 }
 
 class TestFirebaseActions extends FirebaseActions<IModel, IArgs> {
@@ -140,7 +140,7 @@ describe('epics', () => {
       let actions: FirebaseActions<IModel, IArgs>
       let args: IArgs
       let model: IModel
-      let fetchSubject: Subject<IModel>;
+      let fetchSubject: Subject<IModel>
 
       beforeEach(() => {
         actions = new TestFirebaseActions()
@@ -220,7 +220,7 @@ describe('epics', () => {
         const store = configureMockStore(epic.epic)
         store.dispatch(actions.beforeStartListening(args))
         fetchSubject.next(model)
-        store.clearActions();
+        store.clearActions()
 
         store.dispatch(actions.stopListening(args))
         fetchSubject.next(model)
@@ -242,7 +242,7 @@ describe('epics', () => {
         const store = configureMockStore(epic.epic)
         store.dispatch(actions.beforeStartListening(args))
         fetchSubject.next(model)
-        store.clearActions();
+        store.clearActions()
 
         store.dispatch(actions.stopListening({ id: 'myId2' }))
         fetchSubject.next(model)
@@ -362,7 +362,7 @@ describe('epics', () => {
           const store = configureMockStore(epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([ model ])
-          store.clearActions();
+          store.clearActions()
 
           store.dispatch(actions.stopListening(args))
           fetchSubject.next([ model ])
@@ -384,7 +384,7 @@ describe('epics', () => {
           const store = configureMockStore(epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([ model ])
-          store.clearActions();
+          store.clearActions()
 
           store.dispatch(actions.stopListening({ id: 'myId2' }))
           fetchSubject.next([ model ])

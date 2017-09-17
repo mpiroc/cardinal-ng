@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { LogService, LogServiceImplementation } from '../services/log.service';
+import { NgModule } from '@angular/core'
+import { LogService, LogServiceImplementation } from '../services/log.service'
 
 @NgModule({
   providers: [

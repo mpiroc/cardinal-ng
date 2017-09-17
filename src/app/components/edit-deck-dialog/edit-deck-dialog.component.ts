@@ -1,13 +1,13 @@
-import { Component, Inject } from '@angular/core';
-import { MD_DIALOG_DATA } from '@angular/material';
-import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Component, Inject } from '@angular/core'
+import { MD_DIALOG_DATA } from '@angular/material'
+import { NgRedux, select } from '@angular-redux/store'
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/operator/map'
 import {
   editDeckSetName,
   editDeckSetDescription,
-} from '../../redux/actions/edit-deck';
-import { IState } from '../../redux/state';
+} from '../../redux/actions/edit-deck'
+import { IState } from '../../redux/state'
 
 export enum EditDeckDialogResult {
   Cancel,
@@ -15,7 +15,7 @@ export enum EditDeckDialogResult {
 }
 
 interface IEditDeckDialogData {
-  title: string;
+  title: string
 }
 
 @Component({
@@ -25,12 +25,12 @@ interface IEditDeckDialogData {
 })
 export class EditDeckDialogComponent {
   @select(['editDeck', 'name'])
-  name$: Observable<string>;
+  name$: Observable<string>
 
   @select(['editDeck', 'description'])
-  description$: Observable<string>;
+  description$: Observable<string>
 
-  dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult;
+  dialogResult: typeof EditDeckDialogResult = EditDeckDialogResult
 
   constructor(
     @Inject(MD_DIALOG_DATA) public data: IEditDeckDialogData,
@@ -38,10 +38,10 @@ export class EditDeckDialogComponent {
   }
 
   onNameInput($event: any) {
-    this.ngRedux.dispatch(editDeckSetName($event.target.value));
+    this.ngRedux.dispatch(editDeckSetName($event.target.value))
   }
 
   onDescriptionInput($event: any) {
-    this.ngRedux.dispatch(editDeckSetDescription($event.target.value));
+    this.ngRedux.dispatch(editDeckSetDescription($event.target.value))
   }
 }

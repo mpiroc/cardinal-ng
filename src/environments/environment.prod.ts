@@ -11,4 +11,4 @@ export const environment = {
   routing: {
     useHash: true,
   },
-};
+}

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Map } from 'immutable';
-import { Action } from 'redux';
+import { Injectable } from '@angular/core'
+import { Map } from 'immutable'
+import { Action } from 'redux'
 
 import {
   IUser,
@@ -9,22 +9,22 @@ import {
   ICard,
   IDeckInfo,
   IDeck,
-} from '../../interfaces/firebase';
+} from '../../interfaces/firebase'
 
 export interface IObjectReceivedAction<TModel> extends Action {
-  data: TModel;
+  data: TModel
 }
 
 export interface IListReceivedAction<TModel> extends Action {
-  data: TModel[];
+  data: TModel[]
 }
 
 export interface ISetIsLoadingAction extends Action {
-  isLoading: boolean;
+  isLoading: boolean
 }
 
 export interface IErrorAction extends Action {
-  error: string;
+  error: string
 }
 
 export interface IHasArgs<TArgs> {
@@ -36,31 +36,31 @@ export class FirebaseActions<TModel, TArgs> {
   }
 
   get BEFORE_START_LISTENING() {
-    return this.prefix + '_BEFORE_START_LISTENING';
+    return this.prefix + '_BEFORE_START_LISTENING'
   }
 
   get START_LISTENING() {
-    return this.prefix + '_START_LISTENING';
+    return this.prefix + '_START_LISTENING'
   }
 
   get BEFORE_STOP_LISTENING() {
-    return this.prefix + '_BEFORE_STOP_LISTENING';
+    return this.prefix + '_BEFORE_STOP_LISTENING'
   }
 
   get STOP_LISTENING() {
-    return this.prefix + '_STOP_LISTENING';
+    return this.prefix + '_STOP_LISTENING'
   }
 
   get RECEIVED() {
-    return this.prefix + '_RECEIVED';
+    return this.prefix + '_RECEIVED'
   }
 
   get SET_IS_LOADING() {
-    return this.prefix + '_SET_IS_LOADING';
+    return this.prefix + '_SET_IS_LOADING'
   }
 
   get ERROR() {
-    return this.prefix + '_ERROR';
+    return this.prefix + '_ERROR'
   }
 
   beforeStartListening(args: TArgs): IHasArgs<TArgs> & Action {
@@ -74,7 +74,7 @@ export class FirebaseActions<TModel, TArgs> {
     return {
       type: this.START_LISTENING,
       args,
-    };
+    }
   }
 
   beforeStopListening(args: TArgs): IHasArgs<TArgs> & Action {
@@ -88,7 +88,7 @@ export class FirebaseActions<TModel, TArgs> {
     return {
       type: this.STOP_LISTENING,
       args,
-    };
+    }
   }
 
   objectReceived(args: TArgs, data: TModel): IHasArgs<TArgs> & Action & IObjectReceivedAction<TModel> {
@@ -96,7 +96,7 @@ export class FirebaseActions<TModel, TArgs> {
       type: this.RECEIVED,
       args,
       data,
-    };
+    }
   }
 
   listReceived(args: TArgs, data: TModel[]): IHasArgs<TArgs> & Action & IListReceivedAction<TModel> {
@@ -104,7 +104,7 @@ export class FirebaseActions<TModel, TArgs> {
       type: this.RECEIVED,
       args,
       data,
-    };
+    }
   }
 
   setIsLoading(args: TArgs, isLoading: boolean): IHasArgs<TArgs> & Action & ISetIsLoadingAction {
@@ -120,48 +120,48 @@ export class FirebaseActions<TModel, TArgs> {
       type: this.ERROR,
       args,
       error,
-    };
+    }
   }
 }
 
 @Injectable()
 export class CardContentActions extends FirebaseActions<ICardContent, ICard> {
   constructor() {
-    super('CARD_CONTENT');
+    super('CARD_CONTENT')
   }
 }
 
 @Injectable()
 export class CardHistoryActions extends FirebaseActions<ICardHistory, ICard> {
   constructor() {
-    super('CARD_HISTORY');
+    super('CARD_HISTORY')
   }
 }
 
 @Injectable()
 export class CardActions extends FirebaseActions<ICard, IDeck> {
   constructor() {
-    super('CARD');
+    super('CARD')
   }
 }
 
 @Injectable()
 export class DeckInfoActions extends FirebaseActions<IDeckInfo, IDeck> {
   constructor() {
-    super('DECK_INFO');
+    super('DECK_INFO')
   }
 }
 
 @Injectable()
 export class DeckActions extends FirebaseActions<IDeck, IUser> {
   constructor() {
-    super('DECK');
+    super('DECK')
   }
 }
 
 @Injectable()
 export class UserActions extends FirebaseActions<IUser, {}> {
   constructor() {
-    super('USER');
+    super('USER')
   }
 }

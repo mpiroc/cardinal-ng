@@ -12,25 +12,25 @@ import {
 } from 'angularfire2/database/interfaces'
 
 export interface IFirebaseObjectObservable {
-  update(value: Object): firebase.Promise<void>;
-  remove(): firebase.Promise<void>;
+  update(value: Object): firebase.Promise<void>
+  remove(): firebase.Promise<void>
 }
 
 export interface IFirebaseListObservable {
-  update(item: FirebaseOperation, value: Object): firebase.Promise<void>;
-  remove(item?: FirebaseOperation): firebase.Promise<void>;
-  push(val: any): firebase.Thenable<{ key: string }>;
+  update(item: FirebaseOperation, value: Object): firebase.Promise<void>
+  remove(item?: FirebaseOperation): firebase.Promise<void>
+  push(val: any): firebase.Thenable<{ key: string }>
 }
 
 export abstract class DatabaseShimService {
-  abstract list(pathOrRef: PathReference, opts?: FirebaseListFactoryOpts): IFirebaseListObservable & Observable<any[]>;
-  abstract object(pathOrRef: PathReference, opts?: FirebaseObjectFactoryOpts): IFirebaseObjectObservable & Observable<any>;
+  abstract list(pathOrRef: PathReference, opts?: FirebaseListFactoryOpts): IFirebaseListObservable & Observable<any[]>
+  abstract object(pathOrRef: PathReference, opts?: FirebaseObjectFactoryOpts): IFirebaseObjectObservable & Observable<any>
 }
 
 @Injectable()
 export class DatabaseShimServiceImplementation extends DatabaseShimService {
   constructor(private database: AngularFireDatabase) {
-    super();
+    super()
   }
 
   list(pathOrRef: PathReference, opts?: FirebaseListFactoryOpts): IFirebaseListObservable & Observable<any[]> {

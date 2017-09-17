@@ -1,6 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { MD_DIALOG_DATA } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { Component, Inject } from '@angular/core'
+import { MD_DIALOG_DATA } from '@angular/material'
+import { Observable } from 'rxjs/Observable'
 
 export enum DeleteDeckDialogResult {
   Cancel,
@@ -8,7 +8,7 @@ export enum DeleteDeckDialogResult {
 }
 
 interface IDeleteDeckDialogData {
-  name$: Observable<string>;
+  name$: Observable<string>
 }
 
 @Component({
@@ -17,10 +17,10 @@ interface IDeleteDeckDialogData {
   styleUrls: [ './delete-deck-dialog.component.scss' ],
 })
 export class DeleteDeckDialogComponent {
-  public name$: Observable<string>;
-  dialogResult: typeof DeleteDeckDialogResult = DeleteDeckDialogResult;
+  public name$: Observable<string>
+  dialogResult: typeof DeleteDeckDialogResult = DeleteDeckDialogResult
 
   constructor(@Inject(MD_DIALOG_DATA) data: IDeleteDeckDialogData) {
-    this.name$ = data.name$;
+    this.name$ = data.name$
   }
 }

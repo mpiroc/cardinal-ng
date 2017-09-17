@@ -22,7 +22,7 @@ export class AuthShimServiceImplementation extends AuthShimService {
   }
 
   getUser(): Observable<IUser> {
-    return this.afAuth.authState.map(user => user ? { uid: user.uid } as IUser : null);
+    return this.afAuth.authState.map(user => user ? { uid: user.uid } as IUser : null)
   }
 
   async setPersistence(persistence: firebase.auth.Auth.Persistence): Promise<any> {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 
 export enum DeleteCardDialogResult {
   Cancel,
@@ -11,5 +11,5 @@ export enum DeleteCardDialogResult {
   styleUrls: [ './delete-card-dialog.component.scss' ],
 })
 export class DeleteCardDialogComponent {
-  dialogResult: typeof DeleteCardDialogResult = DeleteCardDialogResult;
+  dialogResult: typeof DeleteCardDialogResult = DeleteCardDialogResult
 }

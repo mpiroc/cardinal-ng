@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Map } from 'immutable';
-import { Action, Reducer } from 'redux';
+import { Injectable } from '@angular/core'
+import { Map } from 'immutable'
+import { Action, Reducer } from 'redux'
 
 import {
   IUser,
@@ -9,7 +9,7 @@ import {
   ICard,
   IDeckInfo,
   IDeck,
-} from '../../interfaces/firebase';
+} from '../../interfaces/firebase'
 
 import {
   FirebaseActions,
@@ -24,10 +24,10 @@ import {
   DeckInfoActions,
   DeckActions,
   UserActions,
-} from '../actions/firebase';
+} from '../actions/firebase'
 
 export interface IFirebaseReducer {
-  reducer: Reducer<Map<string, any>>;
+  reducer: Reducer<Map<string, any>>
 }
 
 export abstract class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseReducer {
@@ -36,12 +36,12 @@ export abstract class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseR
     isLoading: true,
     error: null,
     data: null,
-  });
+  })
 
-  public reducer: Reducer<Map<string, any>>;
+  public reducer: Reducer<Map<string, any>>
 
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
-    this.reducer = this._reducer.bind(this);
+    this.reducer = this._reducer.bind(this)
   }
 
   _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
@@ -50,48 +50,48 @@ export abstract class FirebaseObjectReducer<TModel, TArgs> implements IFirebaseR
         return state
           .set('isListening', true)
           .set('isLoading', true)
-          .set('error', null);
+          .set('error', null)
 
       case this.actions.STOP_LISTENING:
         return state
           .set('isListening', false)
           .set('isLoading', false)
-          .set('error', null);
+          .set('error', null)
 
       case this.actions.RECEIVED:
         return state
           .set('isLoading', false)
           .set('error', null)
-          .set('data', Map<string, any>((action as IObjectReceivedAction<TModel>).data));
+          .set('data', Map<string, any>((action as IObjectReceivedAction<TModel>).data))
 
       case this.actions.SET_IS_LOADING:
         return state
-          .set('isLoading', (action as ISetIsLoadingAction).isLoading);
+          .set('isLoading', (action as ISetIsLoadingAction).isLoading)
 
       case this.actions.ERROR:
         return state
           .set('isListening', false)
           .set('isLoading', false)
-          .set('error', (action as IErrorAction).error);
+          .set('error', (action as IErrorAction).error)
 
       default:
-        return state;
+        return state
     }
   }
 }
 
 export abstract class FirebaseMapReducer<TModel, TArgs> implements IFirebaseReducer {
-  private initialState = Map<string, Map<string, any>>();
+  private initialState = Map<string, Map<string, any>>()
 
-  public reducer: Reducer<Map<string, any>>;
+  public reducer: Reducer<Map<string, any>>
 
   constructor(
     private actions: FirebaseActions<TModel, TArgs>,
     private objectReducer: IFirebaseReducer) {
-    this.reducer = this._reducer.bind(this);
+    this.reducer = this._reducer.bind(this)
   }
 
-  abstract selectKey(args: TArgs): string;
+  abstract selectKey(args: TArgs): string
 
   _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
@@ -102,18 +102,18 @@ export abstract class FirebaseMapReducer<TModel, TArgs> implements IFirebaseRedu
       case this.actions.SET_IS_LOADING:
       case this.actions.ERROR:
       {
-        const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
-        return state.set(key, this.objectReducer.reducer(state.get(key), action as Action));
+        const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args)
+        return state.set(key, this.objectReducer.reducer(state.get(key), action as Action))
       }
 
       case this.actions.STOP_LISTENING:
       {
-        const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args);
-        return state.remove(key);
+        const key: string = this.selectKey(((action as any) as IHasArgs<TArgs>).args)
+        return state.remove(key)
       }
 
       default:
-        return state;
+        return state
     }
   }
 }
@@ -124,15 +124,15 @@ export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseRed
     isLoading: true,
     error: null,
     data: Map<string, TModel>(),
-  });
+  })
 
-  public reducer: Reducer<Map<string, any>>;
+  public reducer: Reducer<Map<string, any>>
 
   constructor(private actions: FirebaseActions<TModel, TArgs>) {
-    this.reducer = this._reducer.bind(this);
+    this.reducer = this._reducer.bind(this)
   }
 
-  protected abstract selectKey(data: TModel): string;
+  protected abstract selectKey(data: TModel): string
 
   private _reducer(state: Map<string, any> = this.initialState, action: Action): Map<string, any> {
     switch (action.type) {
@@ -140,131 +140,131 @@ export abstract class FirebaseListReducer<TModel, TArgs> implements IFirebaseRed
         return state
           .set('isListening', true)
           .set('isLoading', true)
-          .set('error', null);
+          .set('error', null)
 
       case this.actions.STOP_LISTENING:
         return state
           .set('isListening', false)
           .set('isLoading', false)
           .set('error', null)
-          .set('data', state.get('data').clear());
+          .set('data', state.get('data').clear())
 
       case this.actions.RECEIVED:
         return state
           .set('isLoading', false)
           .set('error', null)
-          .set('data', this.convertToMap((action as IListReceivedAction<TModel>).data));
+          .set('data', this.convertToMap((action as IListReceivedAction<TModel>).data))
 
       case this.actions.SET_IS_LOADING:
         return state
-          .set('isLoading', (action as ISetIsLoadingAction).isLoading);
+          .set('isLoading', (action as ISetIsLoadingAction).isLoading)
 
       case this.actions.ERROR:
         return state
           .set('isListening', false)
           .set('isLoading', false)
-          .set('error', (action as IErrorAction).error);
+          .set('error', (action as IErrorAction).error)
 
       default:
-        return state;
+        return state
     }
   }
 
   private convertToMap(data: TModel[]): Map<string, TModel> {
-    return data.reduce((result, current) => result.set(this.selectKey(current), current), Map<string, TModel>());
+    return data.reduce((result, current) => result.set(this.selectKey(current), current), Map<string, TModel>())
   }
 }
 
 @Injectable()
 export class CardContentObjectReducer extends FirebaseObjectReducer<ICardContent, ICard> {
   constructor(private cardContentActions: CardContentActions) {
-    super(cardContentActions);
+    super(cardContentActions)
   }
 }
 
 @Injectable()
 export class CardContentMapReducer extends FirebaseMapReducer<ICardContent, ICard> {
   constructor(cardContentActions: CardContentActions, cardContentObjectReducer: CardContentObjectReducer) {
-    super(cardContentActions, cardContentObjectReducer);
+    super(cardContentActions, cardContentObjectReducer)
   }
 
   selectKey(args: ICard) {
-    return args.cardId;
+    return args.cardId
   }
 }
 
 @Injectable()
 export class CardHistoryObjectReducer extends FirebaseObjectReducer<ICardHistory, ICard> {
   constructor(cardHistoryActions: CardHistoryActions) {
-    super(cardHistoryActions);
+    super(cardHistoryActions)
   }
 }
 
 @Injectable()
 export class CardHistoryMapReducer extends FirebaseMapReducer<ICardHistory, ICard> {
   constructor(cardHistoryActions: CardHistoryActions, cardHistoryObjectReducer: CardHistoryObjectReducer) {
-    super(cardHistoryActions, cardHistoryObjectReducer);
+    super(cardHistoryActions, cardHistoryObjectReducer)
   }
 
   selectKey(args: ICard) {
-    return args.cardId;
+    return args.cardId
   }
 }
 
 @Injectable()
 export class CardListReducer extends FirebaseListReducer<ICard, IDeck> {
   constructor(cardActions: CardActions) {
-    super(cardActions);
+    super(cardActions)
   }
 
   protected selectKey(card: ICard): string {
-    return card.cardId;
+    return card.cardId
   }
 }
 
 @Injectable()
 export class CardMapReducer extends FirebaseMapReducer<ICard, IDeck> {
   constructor(cardActions: CardActions, cardListReducer: CardListReducer) {
-    super(cardActions, cardListReducer);
+    super(cardActions, cardListReducer)
   }
 
   selectKey(args: IDeck) {
-    return args.deckId;
+    return args.deckId
   }
 }
 
 @Injectable()
 export class DeckInfoObjectReducer extends FirebaseObjectReducer<IDeckInfo, IDeck> {
   constructor(deckInfoActions: DeckInfoActions) {
-    super(deckInfoActions);
+    super(deckInfoActions)
   }
 }
 
 @Injectable()
 export class DeckInfoMapReducer extends FirebaseMapReducer<IDeckInfo, IDeck> {
   constructor(deckInfoActions: DeckInfoActions, deckInfoObjectReducer: DeckInfoObjectReducer) {
-    super(deckInfoActions, deckInfoObjectReducer);
+    super(deckInfoActions, deckInfoObjectReducer)
   }
 
   selectKey(args: IDeck) {
-    return args.deckId;
+    return args.deckId
   }
 }
 
 @Injectable()
 export class DeckListReducer extends FirebaseListReducer<IDeck, IUser> {
   constructor(deckActions: DeckActions) {
-    super(deckActions);
+    super(deckActions)
   }
 
   protected selectKey(deck: IDeck): string {
-    return deck.deckId;
+    return deck.deckId
   }
 }
 
 @Injectable()
 export class UserObjectReducer extends FirebaseObjectReducer<IUser, {}> {
   constructor(userActions: UserActions) {
-    super(userActions);
+    super(userActions)
   }
 }

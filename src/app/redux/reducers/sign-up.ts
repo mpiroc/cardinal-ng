@@ -1,5 +1,5 @@
-import { Map } from 'immutable';
-import { Action } from 'redux';
+import { Map } from 'immutable'
+import { Action } from 'redux'
 
 import {
   SIGN_UP_SET_EMAIL,
@@ -12,7 +12,7 @@ import {
   ISignUpSetEmailAction,
   ISignUpSetPasswordAction,
   ISignUpSubmitErrorAction,
-} from '../actions/sign-up';
+} from '../actions/sign-up'
 
 
 const initialState = Map<string, any>({
@@ -27,10 +27,10 @@ const initialState = Map<string, any>({
 export function signUp(state: Map<string, any> = initialState, action: Action) {
   switch (action.type) {
     case SIGN_UP_SET_EMAIL:
-      return state.set('email', (action as ISignUpSetEmailAction).email);
+      return state.set('email', (action as ISignUpSetEmailAction).email)
 
     case SIGN_UP_SET_PASSWORD:
-      return state.set('password', (action as ISignUpSetPasswordAction).password);
+      return state.set('password', (action as ISignUpSetPasswordAction).password)
 
     case SIGN_UP_SUBMIT:
       return state
@@ -68,6 +68,6 @@ export function signUp(state: Map<string, any> = initialState, action: Action) {
         .set('providerError', (action as ISignUpSubmitErrorAction).error)
 
     default:
-      return state;
+      return state
   }
 }

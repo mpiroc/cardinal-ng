@@ -1,23 +1,23 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { LogModule } from './log.module';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { LogModule } from './log.module'
 
-import { AuthGuardService, AuthGuardServiceImplementation } from '../services/routing/auth-guard.service';
-import { DeckResolver, DeckResolverImplementation } from '../services/routing/deck-resolver.service';
-import { RedirectService, RedirectServiceImplementation } from '../services/routing/redirect.service';
-import { UserResolver, UserResolverImplementation } from '../services/routing/user-resolver.service';
+import { AuthGuardService, AuthGuardServiceImplementation } from '../services/routing/auth-guard.service'
+import { DeckResolver, DeckResolverImplementation } from '../services/routing/deck-resolver.service'
+import { RedirectService, RedirectServiceImplementation } from '../services/routing/redirect.service'
+import { UserResolver, UserResolverImplementation } from '../services/routing/user-resolver.service'
 
-import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component';
-import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component';
-import { DecksRouteComponent } from '../components/decks-route/decks-route.component';
-import { DeckRouteComponent } from '../components/deck-route/deck-route.component';
-import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component';
+import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component'
+import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component'
+import { DecksRouteComponent } from '../components/decks-route/decks-route.component'
+import { DeckRouteComponent } from '../components/deck-route/deck-route.component'
+import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component'
 import {
   ResetPasswordConfirmationRouteComponent,
-} from '../components/reset-password-confirmation-route/reset-password-confirmation-route.component';
-import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component';
+} from '../components/reset-password-confirmation-route/reset-password-confirmation-route.component'
+import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component'
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment'
 
 const routes: Routes = [
   {
@@ -64,7 +64,7 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'decks',
   },
-];
+]
 
 @NgModule({
   imports: [
@@ -83,6 +83,6 @@ const routes: Routes = [
 })
 export class CardinalRoutingModule {
   constructor(private redirectService: RedirectService) {
-    redirectService.startListening();
+    redirectService.startListening()
   }
 }

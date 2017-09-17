@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { select } from '@angular-redux/store';
+import { Component } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
+import { Observable } from 'rxjs/Observable'
+import { select } from '@angular-redux/store'
 
 @Component({
   selector: 'cardinal-reset-password-confirmation-route',
@@ -10,11 +10,11 @@ import { select } from '@angular-redux/store';
 })
 export class ResetPasswordConfirmationRouteComponent {
   @select(['user', 'isLoading'])
-  isLoading$: Observable<boolean>;
+  isLoading$: Observable<boolean>
 
-  email$: Observable<string>;
+  email$: Observable<string>
 
   constructor(activatedRoute: ActivatedRoute) {
-    this.email$ = activatedRoute.queryParams.map(params => params['email']);
+    this.email$ = activatedRoute.queryParams.map(params => params['email'])
   }
 }

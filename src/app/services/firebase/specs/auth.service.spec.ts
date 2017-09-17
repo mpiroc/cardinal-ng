@@ -25,14 +25,14 @@ import {
   signInSubmitUserError,
   signInSubmitPasswordError,
   signInSubmitProviderError,
-} from '../../../redux/actions/sign-in';
+} from '../../../redux/actions/sign-in'
 import {
   signUpSubmit,
   signUpSubmitSuccess,
   signUpSubmitUserError,
   signUpSubmitPasswordError,
   signUpSubmitProviderError,
-} from '../../../redux/actions/sign-up';
+} from '../../../redux/actions/sign-up'
 
 class TestAuthError extends Error {
   constructor(message: string, private code: string) {

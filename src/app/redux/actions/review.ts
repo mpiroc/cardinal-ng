@@ -1,24 +1,24 @@
-import { Action } from 'redux';
+import { Action } from 'redux'
 
 import {
   ICardHistory,
   IDeck,
-} from '../../interfaces/firebase';
+} from '../../interfaces/firebase'
 
-export const REVIEW_SET_DECK = 'REVIEW_SET_DECK';
-export const REVIEW_SET_HISTORY = 'REVIEW_SET_HISTORY';
-export const REVIEW_SET_GRADE = 'REVIEW_SET_GRADE';
+export const REVIEW_SET_DECK = 'REVIEW_SET_DECK'
+export const REVIEW_SET_HISTORY = 'REVIEW_SET_HISTORY'
+export const REVIEW_SET_GRADE = 'REVIEW_SET_GRADE'
 
 export interface IReviewSetDeckAction extends Action {
-  deck: IDeck,
+  deck: IDeck
 }
 
 export interface IReviewSetHistoryAction extends Action {
-  history: ICardHistory,
+  history: ICardHistory
 }
 
 export interface IReviewSetGradeAction extends Action {
-  grade: number;
+  grade: number
 }
 
 export function reviewSetDeck(deck: IDeck): IReviewSetDeckAction {
