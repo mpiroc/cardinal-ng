@@ -1,9 +1,9 @@
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-  AngularFireDatabase,
-  FirebaseListObservable,
-  FirebaseObjectObservable,
-} from 'angularfire2/database';
+  DatabaseShimService,
+  IFirebaseListObservable,
+  IFirebaseObjectObservable,
+} from './database-shim.service';
 import { Observable } from 'rxjs/Observable';
 import {
   database,
@@ -54,7 +54,7 @@ export abstract class DatabaseService {
 
 @Injectable()
 export class DatabaseServiceImplementation extends DatabaseService {
-  constructor(private database: AngularFireDatabase) {
+  constructor(private databaseShimService: DatabaseShimService) {
     super();
   }
 
@@ -117,32 +117,32 @@ export class DatabaseServiceImplementation extends DatabaseService {
     return this._getCardHistory(args);
   }
 
-  private _getDecks(args: IUser): FirebaseListObservable<IDeck[]> {
-    return this.database.list(this.getDeckBasePath(args));
+  private _getDecks(args: IUser): IFirebaseListObservable & Observable<IDeck[]> {
+    return this.databaseShimService.list(this.getDeckBasePath(args));
   }
 
-  private _getDeck(args: IDeck): FirebaseObjectObservable<IDeck> {
-    return this.database.object(this.getDeckPath(args));
+  private _getDeck(args: IDeck): IFirebaseObjectObservable & Observable<IDeck> {
+    return this.databaseShimService.object(this.getDeckPath(args));
   }
 
-  private _getDeckInfo(args: IDeck): FirebaseObjectObservable<IDeckInfo> {
-    return this.database.object(this.getDeckInfoPath(args));
+  private _getDeckInfo(args: IDeck): IFirebaseObjectObservable & Observable<IDeckInfo> {
+    return this.databaseShimService.object(this.getDeckInfoPath(args));
   }
 
-  private _getCards(args: IDeck): FirebaseListObservable<ICard[]> {
-    return this.database.list(this.getCardBasePath(args));
+  private _getCards(args: IDeck): IFirebaseListObservable & Observable<ICard[]> {
+    return this.databaseShimService.list(this.getCardBasePath(args));
   }
 
-  private _getCard(args: ICard): FirebaseObjectObservable<ICard> {
-    return this.database.object(this.getCardPath(args));
+  private _getCard(args: ICard): IFirebaseObjectObservable & Observable<ICard> {
+    return this.databaseShimService.object(this.getCardPath(args));
   }
 
-  private _getCardContent(args: ICard): FirebaseObjectObservable<ICardContent> {
-    return this.database.object(this.getCardContentPath(args));
+  private _getCardContent(args: ICard): IFirebaseObjectObservable & Observable<ICardContent> {
+    return this.databaseShimService.object(this.getCardContentPath(args));
   }
 
-  private _getCardHistory(args: ICard): FirebaseObjectObservable<ICardHistory> {
-    return this.database.object(this.getCardHistoryPath(args));
+  private _getCardHistory(args: ICard): IFirebaseObjectObservable & Observable<ICardHistory> {
+    return this.databaseShimService.object(this.getCardHistoryPath(args));
   }
 
   // Update
@@ -196,15 +196,15 @@ export class DatabaseServiceImplementation extends DatabaseService {
   deleteDeck(args: IDeck): Promise<any[]> {
     return Promise.all([
       this._getDecks(args).remove(args.deckId),
-      this.database.list(this.getDeckInfoBasePath(args)).remove(args.deckId),
+      this.databaseShimService.list(this.getDeckInfoBasePath(args)).remove(args.deckId),
     ]);
   }
 
   async deleteCard(args: ICard): Promise<any[]> {
     return Promise.all([
       this._getCards(args).remove(args.cardId),
-      this.database.list(this.getCardContentBasePath(args)).remove(args.cardId),
-      this.database.list(this.getCardHistoryBasePath(args)).remove(args.cardId),
+      this.databaseShimService.list(this.getCardContentBasePath(args)).remove(args.cardId),
+      this.databaseShimService.list(this.getCardHistoryBasePath(args)).remove(args.cardId),
     ]);
   }
 

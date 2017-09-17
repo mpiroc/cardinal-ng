@@ -4,8 +4,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/of';
 import { Action } from 'redux';
 
+import { AuthShimService, AuthShimServiceImplementation } from '../../../services/firebase/auth-shim.service'
 import { DatabaseService, DatabaseServiceImplementation } from '../../../services/firebase/database.service'
-import { UserProviderService, UserProviderServiceImplementation } from '../../../services/firebase/user-provider.service'
 import { LogService, LogServiceImplementation } from '../../../services/log.service'
 import {
   IUser,
@@ -931,7 +931,7 @@ describe('epics', () => {
     describe('user', () => {
       let actions: UserActions
       let deckActions: DeckActions
-      let userProviderServiceMock: UserProviderService
+      let authShimServiceMock: AuthShimService
       let args: {}
       let model: IUser
       let modelSubject: Subject<IUser>
@@ -940,19 +940,19 @@ describe('epics', () => {
       beforeEach(() => {
         actions = new UserActions()
         deckActions = new DeckActions()
-        userProviderServiceMock = mock(UserProviderServiceImplementation)
+        authShimServiceMock = mock(AuthShimServiceImplementation)
         args = {}
         model = {
           uid: 'myUid',
         }
         modelSubject = new Subject<IUser>()
-        when(userProviderServiceMock.getUser()).thenReturn(modelSubject)
+        when(authShimServiceMock.getUser()).thenReturn(modelSubject)
 
         epic = new UserEpic(
           actions,
           deckActions,
           instance(logServiceMock),
-          instance(userProviderServiceMock),
+          instance(authShimServiceMock),
         )
       })
 

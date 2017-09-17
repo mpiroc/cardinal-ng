@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { NgRedux } from '@angular-redux/store';
 import { auth } from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { IState } from '../../redux/state';
+import { AuthShimService } from './auth-shim.service';
 import { UserActions } from '../../redux/actions/firebase';
 import {
   signInSubmit,
@@ -46,7 +46,7 @@ export class AuthServiceImplementation extends AuthService {
   isLoggedIn$: Observable<boolean>;
 
   constructor(
-    private afAuth: AngularFireAuth,
+    private authShim: AuthShimService,
     private ngRedux: NgRedux<IState>,
     private userActions: UserActions,
   ) {
@@ -56,29 +56,28 @@ export class AuthServiceImplementation extends AuthService {
       .select(['user', 'isLoading']);
     this.isLoggedIn$ = ngRedux
       .select(['user', 'data', 'uid'])
-      .map(uid => uid ? true : false);
+      .map(uid => !!uid);
   }
 
-  signInWithGoogle(): void {
-    this.signInWithProvider(new auth.GoogleAuthProvider());
+  signInWithGoogle(): Promise<any> {
+    return this.signInWithProvider(new auth.GoogleAuthProvider());
   }
 
-  signInWithFacebook(): void {
-    this.signInWithProvider(new auth.FacebookAuthProvider());
+  signInWithFacebook(): Promise<any> {
+    return this.signInWithProvider(new auth.FacebookAuthProvider());
   }
 
-  signInWithTwitter(): void {
-    this.signInWithProvider(new auth.TwitterAuthProvider());
+  signInWithTwitter(): Promise<any> {
+    return this.signInWithProvider(new auth.TwitterAuthProvider());
   }
 
   private async signInWithProvider(provider: auth.AuthProvider): Promise<any> {
-    this.ngRedux.dispatch(signInSubmit());
-
     try {
+      this.ngRedux.dispatch(signInSubmit());
       this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
 
-      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
-      await this.afAuth.auth.signInWithPopup(provider);
+      await this.authShim.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.authShim.signInWithPopup(provider);
 
       this.ngRedux.dispatch(signInSubmitSuccess());
     } catch (error) {
@@ -87,14 +86,15 @@ export class AuthServiceImplementation extends AuthService {
   }
 
   async signInWithEmail(email: string, password: string, rememberMe: boolean): Promise<any> {
-    const persistence = rememberMe ?
-      auth.Auth.Persistence.LOCAL :
-      auth.Auth.Persistence.SESSION;
-
-    this.ngRedux.dispatch(signInSubmit());
     try {
-      await this.afAuth.auth.setPersistence(persistence);
-      await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+      this.ngRedux.dispatch(signInSubmit());
+      this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
+
+      const persistence = rememberMe ?
+        auth.Auth.Persistence.LOCAL :
+        auth.Auth.Persistence.SESSION;
+      await this.authShim.setPersistence(persistence);
+      await this.authShim.signInWithEmailAndPassword(email, password);
 
       this.ngRedux.dispatch(signInSubmitSuccess());
     } catch (error) {
@@ -119,26 +119,25 @@ export class AuthServiceImplementation extends AuthService {
     }
   }
 
-  signUpWithGoogle(): void {
-    this.signUpWithProvider(new auth.GoogleAuthProvider());
+  signUpWithGoogle(): Promise<any> {
+    return this.signUpWithProvider(new auth.GoogleAuthProvider());
   }
 
-  signUpWithFacebook(): void {
-    this.signUpWithProvider(new auth.FacebookAuthProvider());
+  signUpWithFacebook(): Promise<any> {
+    return this.signUpWithProvider(new auth.FacebookAuthProvider());
   }
 
-  signUpWithTwitter(): void {
-    this.signUpWithProvider(new auth.TwitterAuthProvider());
+  signUpWithTwitter(): Promise<any> {
+    return this.signUpWithProvider(new auth.TwitterAuthProvider());
   }
 
   private async signUpWithProvider(provider: auth.AuthProvider): Promise<any> {
-    this.ngRedux.dispatch(signUpSubmit());
-
     try {
+      this.ngRedux.dispatch(signUpSubmit());
       this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
 
-      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
-      await this.afAuth.auth.signInWithPopup(provider);
+      await this.authShim.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.authShim.signInWithPopup(provider);
 
       this.ngRedux.dispatch(signUpSubmitSuccess());
     } catch (error) {
@@ -147,11 +146,12 @@ export class AuthServiceImplementation extends AuthService {
   }
 
   async signUpWithEmail(email: string, password: string): Promise<any> {
-    this.ngRedux.dispatch(signUpSubmit());
-
     try {
-      await this.afAuth.auth.setPersistence(auth.Auth.Persistence.LOCAL);
-      await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+      this.ngRedux.dispatch(signUpSubmit());
+      this.ngRedux.dispatch(this.userActions.setIsLoading({}, true));
+
+      await this.authShim.setPersistence(auth.Auth.Persistence.LOCAL);
+      await this.authShim.createUserWithEmailAndPassword(email, password);
 
       this.ngRedux.dispatch(signUpSubmitSuccess());
     } catch (error) {
@@ -180,11 +180,11 @@ export class AuthServiceImplementation extends AuthService {
     }
   }
 
-  signOut(): void {
-    this.afAuth.auth.signOut();
+  signOut(): Promise<any> {
+    return this.authShim.signOut();
   }
 
-  async resetPassword(email: string): Promise<any> {
-    return await this.afAuth.auth.sendPasswordResetEmail(email);
+  resetPassword(email: string): Promise<any> {
+    return this.authShim.sendPasswordResetEmail(email);
   }
 }

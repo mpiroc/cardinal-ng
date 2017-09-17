@@ -8,8 +8,9 @@ import { LogModule } from './log.module';
 
 import { environment } from '../../environments/environment';
 import { AuthService, AuthServiceImplementation } from '../services/firebase/auth.service';
+import { AuthShimService, AuthShimServiceImplementation } from '../services/firebase/auth-shim.service';
 import { DatabaseService, DatabaseServiceImplementation } from '../services/firebase/database.service';
-import { UserProviderService, UserProviderServiceImplementation } from '../services/firebase/user-provider.service';
+import { DatabaseShimService, DatabaseShimServiceImplementation } from '../services/firebase/database-shim.service';
 
 @NgModule({
   imports: [
@@ -22,8 +23,9 @@ import { UserProviderService, UserProviderServiceImplementation } from '../servi
   ],
   providers: [
     { provide: AuthService, useClass: AuthServiceImplementation },
+    { provide: AuthShimService, useClass: AuthShimServiceImplementation },
     { provide: DatabaseService, useClass: DatabaseServiceImplementation },
-    { provide: UserProviderService, useClass: UserProviderServiceImplementation },
+    { provide: DatabaseShimService, useClass: DatabaseShimServiceImplementation },
   ],
 })
 export class FirebaseModule {

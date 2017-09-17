@@ -13,7 +13,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 
 import { IState } from '../state';
 import { DatabaseService } from '../../services/firebase/database.service';
-import { UserProviderService } from '../../services/firebase/user-provider.service';
+import { AuthShimService } from '../../services/firebase/auth-shim.service';
 import { LogService } from '../../services/log.service';
 import {
   IUser,
@@ -311,7 +311,7 @@ export class UserEpic extends FirebaseObjectEpic<IUser, {}> {
     private userActions: UserActions,
     private deckActions: DeckActions,
     logService: LogService,
-    private userProviderService: UserProviderService,
+    private authShimService: AuthShimService,
   ) {
     super(userActions, logService);
   }
@@ -342,6 +342,6 @@ export class UserEpic extends FirebaseObjectEpic<IUser, {}> {
   }
 
   protected fetch(args: {}): Observable<IUser> {
-    return this.userProviderService.getUser();
+    return this.authShimService.getUser();
   }
 }
