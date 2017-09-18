@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core'
 import { NgRedux, select } from '@angular-redux/store'
-import {
-  Router,
-  GuardsCheckStart,
-} from '@angular/router'
+import { GuardsCheckStart } from '@angular/router'
 import { Observable } from 'rxjs/Observable'
+import { Subscription } from 'rxjs/Subscription'
 import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/filter'
 import 'rxjs/add/operator/map'
 
 import { AuthService } from '../firebase/auth.service'
+import { RouterShimService } from './router-shim.service'
 
 export abstract class RedirectService {
   abstract startListening()
@@ -25,22 +24,19 @@ export class RedirectServiceImplementation extends RedirectService {
     '/reset-password-confirmation',
   ]
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private routerShimService: RouterShimService, private authService: AuthService) {
     super()
   }
 
-  startListening() {
-    const guardsCheckStart$ = this.router.events
+  startListening(): Subscription {
+    return this.routerShimService.getEvents()
       .filter(event => event instanceof GuardsCheckStart)
-      .map(event => event as GuardsCheckStart)
-
-    guardsCheckStart$
-      .switchMap(event => this.authService.isLoading$
+      .map(event => (event as GuardsCheckStart).url)
+      .switchMap(url => this.authService.isLoading$
         .filter(isLoading => !isLoading)
-        .switchMap(isLoading => this.authService.isLoggedIn$
-          .do(isLoggedIn => this.redirect(event.url, isLoggedIn))
-        )
-      ).subscribe()
+        .switchMap(isLoading => this.authService.isLoggedIn$)
+        .map(isLoggedIn => ({ url, isLoggedIn }))
+      ).subscribe(result => this.redirect(result.url, result.isLoggedIn))
   }
 
   private redirect(url: string, isLoggedIn: boolean) {
@@ -48,11 +44,11 @@ export class RedirectServiceImplementation extends RedirectService {
       .find(publicUrl => url.startsWith(publicUrl))
 
     if (isLoggedIn && isUrlPublic) {
-      this.router.navigate(['/decks'])
+      this.routerShimService.navigate(['/decks'])
     }
 
     if (!isLoggedIn && !isUrlPublic) {
-      this.router.navigate(['/sign-in'])
+      this.routerShimService.navigate(['/sign-in'])
     }
   }
 }

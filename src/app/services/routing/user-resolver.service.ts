@@ -10,7 +10,7 @@ import { IState } from '../../redux/state'
 import { IUser } from '../../interfaces/firebase'
 
 export abstract class UserResolver implements Resolve<IUser> {
-  abstract resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IUser
+  abstract resolve(route: any, state: any): IUser
 }
 
 @Injectable()
@@ -19,7 +19,7 @@ export class UserResolverImplementation extends UserResolver {
     super()
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IUser {
+  resolve(route: any, state: any): IUser {
     // This resolver should only be used with routes that use AuthGuard.
     // This will prevent this route from being resolved if the user is
     // not logged in, so it's safe to synchronously fetch the uid from

@@ -3,26 +3,27 @@ import {
   Resolve,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
+  ParamMap,
 } from '@angular/router'
-import { NgRedux } from '@angular-redux/store'
 
 import { UserResolver } from './user-resolver.service'
-import { IState } from '../../redux/state'
 import { IDeck } from '../../interfaces/firebase'
 
+interface IHasParamMap {
+  paramMap: ParamMap
+}
+
 export abstract class DeckResolver implements Resolve<IDeck> {
-  abstract resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IDeck
+  abstract resolve(route: IHasParamMap, state: any): IDeck
 }
 
 @Injectable()
-export class DeckResolverImplementation implements Resolve<IDeck> {
-  constructor(
-    private ngRedux: NgRedux<IState>,
-    private userResolver: UserResolver
-  ) {
+export class DeckResolverImplementation extends DeckResolver {
+  constructor(private userResolver: UserResolver) {
+    super()
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): IDeck {
+  resolve(route: IHasParamMap, state: any): IDeck {
     const user = this.userResolver.resolve(route, state)
     const deckId: string = route.paramMap.get('deckId')
 

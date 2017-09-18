@@ -5,6 +5,7 @@ import { LogModule } from './log.module'
 import { AuthGuardService, AuthGuardServiceImplementation } from '../services/routing/auth-guard.service'
 import { DeckResolver, DeckResolverImplementation } from '../services/routing/deck-resolver.service'
 import { RedirectService, RedirectServiceImplementation } from '../services/routing/redirect.service'
+import { RouterShimService, RouterShimServiceImplementation } from '../services/routing/router-shim.service'
 import { UserResolver, UserResolverImplementation } from '../services/routing/user-resolver.service'
 
 import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component'
@@ -78,6 +79,7 @@ const routes: Routes = [
     { provide: AuthGuardService, useClass: AuthGuardServiceImplementation },
     { provide: DeckResolver, useClass: DeckResolverImplementation },
     { provide: RedirectService, useClass: RedirectServiceImplementation },
+    { provide: RouterShimService, useClass: RouterShimServiceImplementation },
     { provide: UserResolver, useClass: UserResolverImplementation },
   ],
 })
