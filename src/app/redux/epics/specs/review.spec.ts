@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject'
 import { NgRedux } from '@angular-redux/store'
 import { GradingService, GradingServiceImplementation } from '../../../services/grading.service'
 import { LogService, LogServiceImplementation } from '../../../services/log.service'
-import { RandomService, RandomServiceImplementation } from '../../../services/random.service'
+import { RandomShimService, RandomShimServiceImplementation } from '../../../services/random-shim.service'
 import {
   ICard,
   ICardHistory,
@@ -93,7 +93,7 @@ describe('epics', ()=> {
     let logServiceMock: LogService
     let ngReduxMock: NgRedux<IState>
     let gradingServiceMock: GradingService
-    let randomServiceMock: RandomService
+    let randomShimServiceMock: RandomShimService
     let cardActions: CardActions
     let cardHistoryActions: CardHistoryActions
 
@@ -105,7 +105,7 @@ describe('epics', ()=> {
 
       ngReduxMock = mock(NgReduxExtension)
       gradingServiceMock = mock(GradingServiceImplementation)
-      randomServiceMock = mock(RandomServiceImplementation)
+      randomShimServiceMock = mock(RandomShimServiceImplementation)
 
       cardActions = new CardActions()
       cardHistoryActions = new CardHistoryActions()
@@ -120,7 +120,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -149,7 +149,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -178,7 +178,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -207,7 +207,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -238,7 +238,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -267,13 +267,13 @@ describe('epics', ()=> {
         when(ngReduxMock.getState()).thenReturn(createMockState())
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
-        when(randomServiceMock.random()).thenReturn(0.5)
+        when(randomShimServiceMock.random()).thenReturn(0.5)
 
         const epic = new ReviewEpic(
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -308,7 +308,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -341,7 +341,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -376,7 +376,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -404,7 +404,7 @@ describe('epics', ()=> {
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId2', 'data']))).thenReturn(example.histories$[1])
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
-        when(randomServiceMock.random()).thenReturn(0)
+        when(randomShimServiceMock.random()).thenReturn(0)
 
         const mockState = createMockState()
         when(ngReduxMock.getState()).thenReturn(mockState, {
@@ -416,7 +416,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -452,7 +452,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -482,13 +482,13 @@ describe('epics', ()=> {
         when(ngReduxMock.getState()).thenReturn(createMockState())
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true, false)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
-        when(randomServiceMock.random()).thenReturn(0)
+        when(randomShimServiceMock.random()).thenReturn(0)
 
         const epic = new ReviewEpic(
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -518,7 +518,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -547,7 +547,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -574,13 +574,13 @@ describe('epics', ()=> {
         when(ngReduxMock.getState()).thenReturn(createMockState())
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true, false)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
-        when(randomServiceMock.random()).thenReturn(0)
+        when(randomShimServiceMock.random()).thenReturn(0)
 
         const epic = new ReviewEpic(
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -617,7 +617,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -643,7 +643,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )
@@ -672,7 +672,7 @@ describe('epics', ()=> {
           instance(logServiceMock),
           instance(ngReduxMock),
           instance(gradingServiceMock),
-          instance(randomServiceMock),
+          instance(randomShimServiceMock),
           cardActions,
           cardHistoryActions,
         )

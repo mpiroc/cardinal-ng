@@ -62,7 +62,7 @@ describe('services', () => {
     it('redirects to sign in page if not logged in and route is protected', () => {
       const redirectService = new RedirectServiceImplementation(
         instance(routerShimServiceMock),
-        authServiceMock,
+        authService,
       )
 
       const subscription: Subscription = redirectService.startListening()
@@ -76,13 +76,13 @@ describe('services', () => {
 
       subscription.unsubscribe()
 
-      verify(routerShimServiceMock.navigate([ '/sign-in' ])).once()
+      verify(routerShimServiceMock.navigate(deepEqual([ '/sign-in' ]))).once()
     })
 
     it('redirects to decks route if logged in and route is not protected', () => {
       const redirectService = new RedirectServiceImplementation(
         instance(routerShimServiceMock),
-        instance(authServiceMock),
+        authService,
       )
 
       const subscription: Subscription = redirectService.startListening()
@@ -96,13 +96,13 @@ describe('services', () => {
 
       subscription.unsubscribe()
 
-      verify(routerShimServiceMock.navigate([ '/decks' ])).once()
+      verify(routerShimServiceMock.navigate(deepEqual([ '/decks' ]))).once()
     })
 
     it('does not redirect if logged in and route is protected', () => {
       const redirectService = new RedirectServiceImplementation(
         instance(routerShimServiceMock),
-        instance(authServiceMock),
+        authService,
       )
 
       const subscription: Subscription = redirectService.startListening()
@@ -122,7 +122,7 @@ describe('services', () => {
     it('does not redirect if not logged in and route is not protected', () => {
       const redirectService = new RedirectServiceImplementation(
         instance(routerShimServiceMock),
-        instance(authServiceMock),
+        authService,
       )
 
       const subscription: Subscription = redirectService.startListening()

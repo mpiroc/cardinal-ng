@@ -1,3 +1,5 @@
+// Attribution: Algorithm from https://www.supermemo.com/english/ol/sm2.htm
+
 import { Injectable } from '@angular/core'
 import { NgRedux } from '@angular-redux/store'
 import * as moment from 'moment'
@@ -11,7 +13,7 @@ const MINIMUM_CORRECT_GRADE = 3
 
 export abstract class GradingService {
   abstract isDue(history: ICardHistory, nowMs: number): boolean
-  abstract submitGrade(): Promise<void>
+  abstract submitGrade(nowMs: number): Promise<void>
 }
 
 @Injectable()
@@ -24,35 +26,46 @@ export class GradingServiceImplementation extends GradingService {
     return history.grade < MINIMUM_CORRECT_GRADE || !history.nextReview || nowMs >= history.nextReview
   }
 
-  async submitGrade(): Promise<void> {
-    const now = moment.now()
-
+  submitGrade(nowMs: number): Promise<void> {
     const state: IState = this.ngRedux.getState()
     const history: ICardHistory = state.review.get('history')
     const grade: number = state.review.get('grade')
 
     const difficulty = this.computeDifficulty(history, grade)
     const repetitions = this.computeRepetitions(history, grade)
-    const nextReview = this.computeNextReview(history, difficulty, repetitions, now)
+    const nextReview = this.computeNextReview(history, difficulty, repetitions, nowMs)
 
-    await this.databaseService.updateCardHistory(
+    return this.databaseService.updateCardHistory(
       history,
       difficulty,
       grade,
       repetitions,
-      now,
+      nowMs,
       nextReview,
     )
   }
 
   private computeDifficulty(history: ICardHistory, grade: number): number {
-    if (history.grade < MINIMUM_CORRECT_GRADE) {
-      return history.difficulty
-    }
-
-    const result = history.difficulty - 0.8 + 0.28 * grade - 0.02 * grade * grade
+    const result = this.computeUnboundedDifficulty(history.difficulty, grade)
 
     return Math.max(result, MINIMUM_DIFFICULTY)
+  }
+
+  private computeUnboundedDifficulty(difficulty: number, grade: number) {
+    // EF' := EF - 0.8 + 0.28 * q - 0.02 * q * q
+    switch (grade) {
+      case 3:
+        return difficulty - 0.14
+
+      case 4:
+        return difficulty
+
+      case 5:
+        return difficulty + 0.10
+
+      default:
+        return difficulty
+    }
   }
 
   private computeRepetitions(history: ICardHistory, grade: number): number {

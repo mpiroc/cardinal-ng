@@ -20,7 +20,7 @@ import {
 } from '../../interfaces/firebase'
 import { GradingService } from '../../services/grading.service'
 import { LogService } from '../../services/log.service'
-import { RandomService } from '../../services/random.service'
+import { RandomShimService } from '../../services/random-shim.service'
 
 import { IState } from '../state'
 import {
@@ -41,7 +41,7 @@ export class ReviewEpic {
     private logService: LogService,
     private ngRedux: NgRedux<IState>,
     private gradingService: GradingService,
-    private randomService: RandomService,
+    private randomShimService: RandomShimService,
     private cardActions: CardActions,
     private cardHistoryActions: CardHistoryActions,
   ) {
@@ -104,7 +104,7 @@ export class ReviewEpic {
         const currentCardId = currentHistory ? currentHistory.cardId : null
         histories = histories.filter(history => history.cardId !== currentCardId)
 
-        const index = Math.floor(this.randomService.random() * histories.length)
+        const index = Math.floor(this.randomShimService.random() * histories.length)
         return reviewSetHistory(histories[index]) as Action
       })
       .startWith(...beforeStartListeningActions)

@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router'
 import { NgRedux, select, WithSubStore } from '@angular-redux/store'
 import { Observable } from 'rxjs/Observable'
 import 'rxjs/add/observable/combineLatest'
+import * as moment from 'moment'
 import { GradingService } from '../../services/grading.service'
 import {
   IDeck,
@@ -43,7 +44,7 @@ export class ReviewDeckRouteComponent implements OnInit {
   }
 
   onNext() {
-    this.gradingService.submitGrade()
+    this.gradingService.submitGrade(moment.now())
   }
 
   onSelectGrade(grade: number) {
