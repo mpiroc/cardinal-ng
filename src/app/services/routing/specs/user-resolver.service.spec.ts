@@ -2,7 +2,7 @@ import { Map } from 'immutable'
 import { NgRedux } from '@angular-redux/store'
 
 import { IState } from '../../../redux/state'
-import { NgReduxExtension } from '../../../redux/epics/specs/ng-redux-extension'
+import { NgReduxExtension } from '../../../utils/test-utils.spec'
 import { UserResolver, UserResolverImplementation } from '../user-resolver.service'
 
 import {

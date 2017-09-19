@@ -32,8 +32,12 @@ import {
   anyNumber,
 } from 'ts-mockito'
 import { IStore } from 'redux-mock-store'
-import { NgReduxExtension } from './ng-redux-extension'
-import { configureMockStore, createMockState } from './configure-mock-store'
+import {
+  expectEqual,
+  configureMockStore,
+  createMockState,
+  NgReduxExtension,
+} from '../../../utils/test-utils.spec'
 
 class Example {
   readonly deck: IDeck
@@ -75,15 +79,6 @@ class Example {
   nextHistory(index: number, history: ICardHistory) {
     const historyMap = history ? Map<string, any>(history) : undefined
     this.histories$[index].next(Map<string, any>(historyMap))
-  }
-}
-
-function expectEqual<T>(actual: T[], expected: T[]) {
-  expect(actual.length).toEqual(expected.length)
-
-  const maxLength = Math.max(actual.length, expected.length)
-  for (let i = 0; i < maxLength; i++) {
-    expect(actual[i]).toEqual(expected[i])
   }
 }
 

@@ -1,0 +1,84 @@
+<div class='centered-container'>
+  <div class='centered-content'>
+    <md-progress-bar *ngIf='isSubmitting$ | async' mode='indeterminate'></md-progress-bar>
+    <md-card>
+      <md-card-content>
+        <div [ngClass]="{'main-container': true, 'cd-disabled': (isSubmitting$ | async)}">
+          <form>
+            <button
+              md-raised-button class='google' color='accent'
+              (click)='signInWithGoogle()'>
+              Sign in with Google
+            </button>
+            <button
+              md-raised-button class='facebook' color='accent'
+              (click)='signInWithFacebook()'>
+              Sign in with Facebook
+            </button>
+            <button
+              md-raised-button class='twitter' color='accent'
+              (click)='signInWithTwitter()'>
+              Sign in with Twitter
+            </button>
+          </form>
+          <form [formGroup]='form.form' (ngSubmit)='signInWithEmail()'>
+            <div class='mat-caption secondary-label'>or sign in with email</div>
+            <div class='input-with-icon'>
+              <md-icon>email</md-icon>
+              <md-form-field>
+                <input mdInput type='text' placeholder='email' formControlName='email'
+                  [errorStateMatcher]="getErrorStateMatcher('userError')"
+                  (input)='onEmailInput($event)'>
+                <md-error *ngIf="form.getFirstEmailError() === 'required'">
+                  required
+                </md-error>
+                <md-error *ngIf="form.getFirstEmailError() === 'email'">
+                  not a valid email address
+                </md-error>
+                <md-error *ngIf="!!(userError$ | async)">
+                  {{userError$ | async}}
+                </md-error>
+            </md-form-field>
+            </div>
+            <div class='input-with-icon'>
+              <md-icon>lock</md-icon>
+              <md-form-field>
+                <input mdInput type='password' placeholder='password' formControlName='password'
+                  [errorStateMatcher]="getErrorStateMatcher('passwordError')"
+                  (input)='onPasswordInput($event)'>
+                <md-error *ngIf="form.getFirstPasswordError() === 'required'">
+                  required
+                </md-error>
+                <md-error *ngIf="form.getFirstPasswordError() === 'minlength'">
+                  must be at least 12 characters
+                </md-error>
+                <md-error *ngIf="form.getFirstPasswordError() === 'pattern'">
+                  must contain at least one lowercase letter (a-z), one uppercase letter (A-Z), one digit (0-9), and one special character (# ? ! @ $ % ^ &amp; * -)
+                </md-error>
+                <md-error *ngIf="!!(passwordError$ | async)">
+                  {{passwordError$ | async}}
+                </md-error>
+              </md-form-field>
+            </div>
+            <div class='auth-options'>
+              <md-checkbox (change)='onRememberMeChanged($event)'>
+                Remember me
+              </md-checkbox>
+              <a md-button color='accent' routerLink='/reset-password'>Forgot password?</a>
+            </div>
+            <button
+              class='main-button' md-raised-button color='primary'
+              type='submit'
+              [disabled]='!(form.isValid$ | async)'>
+              Sign in
+            </button>
+            <div class="wrong-form-container">
+              <span class='mat-body-1'>New to Cardinal?</span>
+              <a md-button color='accent' routerLink='/sign-up'>Sign up</a>
+            </div>
+          </form>
+        </div>
+      </md-card-content>
+    </md-card>
+  </div>
+</div>

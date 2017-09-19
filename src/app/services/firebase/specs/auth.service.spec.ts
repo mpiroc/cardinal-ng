@@ -15,7 +15,10 @@ import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/first'
 import 'rxjs/add/operator/toPromise'
 import { UserActions } from '../../../redux/actions/firebase'
-import { NgReduxExtension } from '../../../redux/epics/specs/ng-redux-extension'
+import {
+  expectEqual,
+  NgReduxExtension,
+} from '../../../utils/test-utils.spec'
 import { IState } from '../../../redux/state'
 import { AuthService, AuthServiceImplementation } from '../auth.service'
 import { AuthShimService, AuthShimServiceImplementation } from '../auth-shim.service'
@@ -37,15 +40,6 @@ import {
 class TestAuthError extends Error {
   constructor(message: string, private code: string) {
     super(message)
-  }
-}
-
-function expectEqual<T>(actual: T[], expected: T[]) {
-  expect(actual.length).toEqual(expected.length)
-
-  const maxLength = Math.max(actual.length, expected.length)
-  for (let i = 0; i < maxLength; i++) {
-    expect(actual[i]).toEqual(expected[i])
   }
 }
 

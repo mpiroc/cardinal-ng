@@ -8,15 +8,15 @@ import { RedirectService, RedirectServiceImplementation } from '../services/rout
 import { RouterShimService, RouterShimServiceImplementation } from '../services/routing/router-shim.service'
 import { UserResolver, UserResolverImplementation } from '../services/routing/user-resolver.service'
 
-import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component'
-import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component'
-import { DecksRouteComponent } from '../components/decks-route/decks-route.component'
-import { DeckRouteComponent } from '../components/deck-route/deck-route.component'
-import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component'
+import { SignInRouteComponent } from '../components/routes/sign-in-route/sign-in-route.component'
+import { SignUpRouteComponent } from '../components/routes/sign-up-route/sign-up-route.component'
+import { DecksRouteComponent } from '../components/routes/decks-route/decks-route.component'
+import { DeckRouteComponent } from '../components/routes/deck-route/deck-route.component'
+import { ResetPasswordRouteComponent } from '../components/routes/reset-password-route/reset-password-route.component'
 import {
   ResetPasswordConfirmationRouteComponent,
-} from '../components/reset-password-confirmation-route/reset-password-confirmation-route.component'
-import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component'
+} from '../components/routes/reset-password-confirmation-route/reset-password-confirmation-route.component'
+import { ReviewDeckRouteComponent } from '../components/routes/review-deck-route/review-deck-route.component'
 
 import { environment } from '../../environments/environment'
 

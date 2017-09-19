@@ -7,7 +7,10 @@ import { UserActions } from '../../../redux/actions/firebase'
 import { AuthService, AuthServiceImplementation } from '../../firebase/auth.service'
 import { LogService, LogServiceImplementation } from '../../log.service'
 import { AuthGuardService, AuthGuardServiceImplementation } from '../auth-guard.service'
-import { NgReduxExtension } from '../../../redux/epics/specs/ng-redux-extension'
+import {
+  expectEqual,
+  NgReduxExtension,
+} from '../../../utils/test-utils.spec'
 
 import {
   instance,
@@ -19,15 +22,6 @@ import {
   anyOfClass,
   anyString,
 } from 'ts-mockito'
-
-function expectEqual<T>(actual: T[], expected: T[]) {
-  expect(actual.length).toEqual(expected.length)
-
-  const maxLength = Math.max(actual.length, expected.length)
-  for (let i = 0; i < maxLength; i++) {
-    expect(actual[i]).toEqual(expected[i])
-  }
-}
 
 describe('services', () => {
   describe('AuthGuardService', () => {

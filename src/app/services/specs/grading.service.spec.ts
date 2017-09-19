@@ -1,7 +1,7 @@
 import { Map } from 'immutable'
 import { NgRedux } from '@angular-redux/store'
 import * as moment from 'moment'
-import { NgReduxExtension } from '../../redux/epics/specs/ng-redux-extension'
+import { NgReduxExtension } from '../../utils/test-utils.spec'
 import { IState } from '../../redux/state'
 import { ICardHistory } from '../../interfaces/firebase'
 import { DatabaseService, DatabaseServiceImplementation } from '../firebase/database.service'

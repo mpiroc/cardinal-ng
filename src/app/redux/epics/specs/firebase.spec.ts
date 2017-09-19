@@ -47,9 +47,10 @@ import {
 import { IStore } from 'redux-mock-store'
 import { AngularFireAuth } from 'angularfire2/auth'
 import {
+  expectEqual,
   configureMockStore,
   createMockState,
-} from './configure-mock-store'
+} from '../../../utils/test-utils.spec'
 
 interface IArgs {
   id: string
@@ -110,15 +111,6 @@ class TestFirebaseListEpic extends FirebaseListEpic<IModel, IArgs> {
 
   protected fetch(args: IArgs): Observable<IModel[]> {
     return this.fetchFunc(args)
-  }
-}
-
-function expectEqual<T>(actual: T[], expected: T[]) {
-  expect(actual.length).toEqual(expected.length)
-
-  const maxLength = Math.max(actual.length, expected.length)
-  for (let i = 0; i < maxLength; i++) {
-    expect(actual[i]).toEqual(expected[i])
   }
 }
 

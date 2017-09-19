@@ -13,32 +13,29 @@ import { LogModule } from './log.module'
 import { GradingService, GradingServiceImplementation } from '../services/grading.service'
 import { LogService } from '../services/log.service'
 
-import { RootComponent } from '../components/root/root.component'
-import { SidenavComponent } from '../components/sidenav/sidenav.component'
-import { ToolbarComponent } from '../components/toolbar/toolbar.component'
-import { LoadingSpinnerComponent } from '../components/loading-spinner/loading-spinner.component'
-import { CardCardComponent } from '../components/card-card/card-card.component'
-import { DecksRouteComponent } from '../components/decks-route/decks-route.component'
-import { DeckCardComponent } from '../components/deck-card/deck-card.component'
-import { DeckRouteComponent } from '../components/deck-route/deck-route.component'
-import { ResetPasswordComponent } from '../components/reset-password/reset-password.component'
-import { ResetPasswordRouteComponent } from '../components/reset-password-route/reset-password-route.component'
+import { LoadingSpinnerComponent } from '../components/controls/loading-spinner/loading-spinner.component'
+import { CardCardComponent } from '../components/controls/card-card/card-card.component'
+import { DeckCardComponent } from '../components/controls/deck-card/deck-card.component'
+import { DeleteCardDialogComponent } from '../components/dialogs/delete-card-dialog/delete-card-dialog.component'
+import { DeleteDeckDialogComponent } from '../components/dialogs/delete-deck-dialog/delete-deck-dialog.component'
+import { EditCardDialogComponent } from '../components/dialogs/edit-card-dialog/edit-card-dialog.component'
+import { EditDeckDialogComponent } from '../components/dialogs/edit-deck-dialog/edit-deck-dialog.component'
+import { RootComponent } from '../components/layout/root/root.component'
+import { SidenavComponent } from '../components/layout/sidenav/sidenav.component'
+import { ToolbarComponent } from '../components/layout/toolbar/toolbar.component'
+import { DecksRouteComponent } from '../components/routes/decks-route/decks-route.component'
+import { DeckRouteComponent } from '../components/routes/deck-route/deck-route.component'
+import { ResetPasswordRouteComponent } from '../components/routes/reset-password-route/reset-password-route.component'
 import {
   ResetPasswordConfirmationRouteComponent,
-} from '../components/reset-password-confirmation-route/reset-password-confirmation-route.component'
-import { ReviewDeckRouteComponent } from '../components/review-deck-route/review-deck-route.component'
-import { SignInComponent } from '../components/sign-in/sign-in.component'
-import { SignInRouteComponent } from '../components/sign-in-route/sign-in-route.component'
-import { SignUpComponent } from '../components/sign-up/sign-up.component'
-import { SignUpRouteComponent } from '../components/sign-up-route/sign-up-route.component'
-import { DeleteCardDialogComponent } from '../components/delete-card-dialog/delete-card-dialog.component'
-import { DeleteDeckDialogComponent } from '../components/delete-deck-dialog/delete-deck-dialog.component'
-import { EditCardDialogComponent } from '../components/edit-card-dialog/edit-card-dialog.component'
-import { EditDeckDialogComponent } from '../components/edit-deck-dialog/edit-deck-dialog.component'
+} from '../components/routes/reset-password-confirmation-route/reset-password-confirmation-route.component'
+import { ReviewDeckRouteComponent } from '../components/routes/review-deck-route/review-deck-route.component'
+import { SignInRouteComponent } from '../components/routes/sign-in-route/sign-in-route.component'
+import { SignUpRouteComponent } from '../components/routes/sign-up-route/sign-up-route.component'
 
 import 'hammerjs'
 
-@NgModule({
+export const config = {
   declarations: [
     RootComponent,
     ToolbarComponent,
@@ -48,13 +45,10 @@ import 'hammerjs'
     DecksRouteComponent,
     DeckCardComponent,
     DeckRouteComponent,
-    ResetPasswordComponent,
     ResetPasswordRouteComponent,
     ResetPasswordConfirmationRouteComponent,
     ReviewDeckRouteComponent,
-    SignInComponent,
     SignInRouteComponent,
-    SignUpComponent,
     SignUpRouteComponent,
     DeleteCardDialogComponent,
     DeleteDeckDialogComponent,
@@ -74,7 +68,7 @@ import 'hammerjs'
   ],
   providers: [
     { provide: GradingService, useClass: GradingServiceImplementation },
-  ],
+  ] as any[],
   entryComponents: [
     DeleteCardDialogComponent,
     DeleteDeckDialogComponent,
@@ -82,7 +76,9 @@ import 'hammerjs'
     EditDeckDialogComponent,
   ],
   bootstrap: [ RootComponent ]
-})
+}
+
+@NgModule(config)
 export class CardinalModule {
   constructor(
     logService: LogService,
