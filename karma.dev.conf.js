@@ -4,8 +4,8 @@ const baseConfig = require('./karma.base.conf.js').baseConfig;
 
 module.exports = function (config) {
   config.set(Object.assign({}, baseConfig, {
-    browsers: ['ChromeHeadless'],
-    singleRun: true,
+    browsers: ['Chrome'],
+    singleRun: false,
     logLevel: config.LOG_INFO,
   }));
 };
