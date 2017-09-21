@@ -10,8 +10,10 @@ import {
   anything,
 } from 'ts-mockito'
 
-import { CardinalTestBed } from '../../../utils/cardinal-test-bed'
-import { updateComponent } from '../../../utils/test-utils.spec'
+import {
+  updateComponent,
+  CardinalTestBed,
+} from '../../../utils/component-test-utils'
 import {
   editDeckSetName,
   editDeckSetDescription,

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { NgRedux } from '@angular-redux/store'
-import { SimpleChange, TemplateRef } from '@angular/core'
+import { OnChanges, SimpleChange, TemplateRef } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { ComponentType } from '@angular/cdk/portal'
 import { Subject } from 'rxjs/Subject'
@@ -48,6 +48,14 @@ import {
   anything,
 } from 'ts-mockito'
 
+export function updateComponent<T>(component: OnChanges, propertyName: string, value: T) {
+  component[propertyName] = value
+  component.ngOnChanges({
+    [propertyName]: new SimpleChange(null, value, true)
+  })
+
+  return value
+}
 
 export class CardinalTestBed {
   private errorMessages: string[]

@@ -1,4 +1,3 @@
-import { OnChanges, SimpleChange } from '@angular/core'
 import {
   NgRedux,
   Selector,
@@ -31,15 +30,6 @@ import { GradingService } from '../services/grading.service'
 import { LogService } from '../services/log.service'
 import { ICardHistory } from '../interfaces/firebase'
 import { IState } from '../redux/state'
-
-export function updateComponent<T>(component: OnChanges, propertyName: string, value: T) {
-  component[propertyName] = value
-  component.ngOnChanges({
-    [propertyName]: new SimpleChange(null, value, true)
-  })
-
-  return value
-}
 
 export function configureMockStore(state: IState, epic?: Epic<Action, IState>): IStore<IState> {
   const middlewares = [
