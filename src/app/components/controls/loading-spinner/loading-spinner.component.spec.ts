@@ -1,29 +1,31 @@
-import { SimpleChange } from '@angular/core'
 import { TestBed, async } from '@angular/core/testing'
-import { config } from '../../../modules/cardinal.module'
+import { Map } from 'immutable'
+import { Subject } from 'rxjs/Subject'
+import {
+  instance,
+  mock,
+  when,
+  verify,
+  deepEqual,
+  anything,
+} from 'ts-mockito'
+
+import { CardinalTestBed } from '../../../utils/cardinal-test-bed'
+import { updateComponent } from '../../../utils/test-utils.spec'
 import { LoadingSpinnerComponent } from './loading-spinner.component'
 
-import { Observable } from 'rxjs/Observable'
-import { Subject } from 'rxjs/Subject'
-
-function updateIsLoading(
-  component: LoadingSpinnerComponent,
-): Subject<boolean> {
-  const isLoadingSubject = new Subject<boolean>()
-
-  component.isLoading$ = isLoadingSubject
-  component.ngOnChanges()
-
-  return isLoadingSubject
+function updateIsLoading(component: LoadingSpinnerComponent): Subject<boolean> {
+  return updateComponent(component, 'isLoading$', new Subject<boolean>())
 }
-
 
 describe('components', () => {
   describe('LoadingSpinnerComponent', () => {
+    let testBed: CardinalTestBed
     let component: LoadingSpinnerComponent
 
     beforeEach(async(() => {
-      TestBed.configureTestingModule(config).compileComponents()
+      testBed = new CardinalTestBed()
+      testBed.configure()
 
       const fixture = TestBed.createComponent(LoadingSpinnerComponent)
       component = fixture.debugElement.componentInstance
@@ -40,7 +42,6 @@ describe('components', () => {
       const subscription = component.isLoading$.subscribe(isLoading => currentIsLoading = isLoading)
 
       isLoadingSubject.next(true)
-
       subscription.unsubscribe()
 
       expect(currentIsLoading).toEqual(true)
@@ -57,7 +58,7 @@ describe('components', () => {
       expect(currentIsLoadingDebounced).toBeUndefined()
 
       await new Promise(resolve => setTimeout(resolve, 1000))
-
+      subscription.unsubscribe()
       expect(currentIsLoadingDebounced).toEqual(true)
 
       done()
