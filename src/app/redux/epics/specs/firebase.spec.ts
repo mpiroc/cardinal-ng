@@ -49,7 +49,6 @@ import { AngularFireAuth } from 'angularfire2/auth'
 import {
   expectEqual,
   configureMockStore,
-  createMockState,
 } from '../../../utils/test-utils.spec'
 
 interface IArgs {
@@ -152,7 +151,7 @@ describe('epics', () => {
           args => fetchSubject,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore({}, epic.epic)
         store.dispatch(actions.beforeStartListening(args))
 
         expectEqual(errorMessages, [])
@@ -172,7 +171,7 @@ describe('epics', () => {
           args => fetchSubject,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore({}, epic.epic)
         store.dispatch(actions.beforeStartListening(args))
 
         expectEqual(errorMessages, [])
@@ -189,7 +188,7 @@ describe('epics', () => {
           args => fetchSubject,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore({}, epic.epic)
         store.dispatch(actions.beforeStartListening(args))
         fetchSubject.next(model)
 
@@ -209,7 +208,7 @@ describe('epics', () => {
           args => fetchSubject,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore({}, epic.epic)
         store.dispatch(actions.beforeStartListening(args))
         fetchSubject.next(model)
         store.clearActions()
@@ -231,7 +230,7 @@ describe('epics', () => {
           args => fetchSubject,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore({}, epic.epic)
         store.dispatch(actions.beforeStartListening(args))
         fetchSubject.next(model)
         store.clearActions()
@@ -254,7 +253,7 @@ describe('epics', () => {
           args => fetchSubject,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore({}, epic.epic)
         store.dispatch(actions.beforeStartListening(args))
         fetchSubject.error(new Error('myError'))
 
@@ -294,7 +293,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
 
           expectEqual(errorMessages, [])
@@ -314,7 +313,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
 
           expectEqual(errorMessages, [])
@@ -331,7 +330,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([ model ])
 
@@ -351,7 +350,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([ model ])
           store.clearActions()
@@ -373,7 +372,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([ model ])
           store.clearActions()
@@ -396,7 +395,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.error(new Error('myError'))
 
@@ -422,7 +421,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([])
 
@@ -443,7 +442,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([])
 
@@ -467,7 +466,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.epic)
+          const store = configureMockStore({}, epic.epic)
           store.dispatch(actions.beforeStartListening(args))
           fetchSubject.next([ model ])
 
@@ -493,7 +492,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.stopListeningEpic)
+          const store = configureMockStore({}, epic.stopListeningEpic)
           store.dispatch(actions.beforeStopListening(args))
 
           expectEqual(errorMessages, [])
@@ -512,7 +511,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.stopListeningEpic)
+          const store = configureMockStore({}, epic.stopListeningEpic)
           store.dispatch(actions.beforeStopListening(args))
 
           expectEqual(errorMessages, [])
@@ -532,7 +531,7 @@ describe('epics', () => {
             args => fetchSubject,
           )
 
-          const store = configureMockStore(epic.stopListeningEpic)
+          const store = configureMockStore({}, epic.stopListeningEpic)
           store.dispatch(actions.beforeStopListening(args))
 
           expectEqual(errorMessages, [])
@@ -577,13 +576,13 @@ describe('epics', () => {
       })
 
       it('selects correct substore', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           cardContent: Map<string, any>({
             'myCardId': Map<string, any>({
               isListening: true,
             })
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
 
@@ -594,7 +593,10 @@ describe('epics', () => {
       })
 
       it('fetches model from database service', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { cardContent: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
 
@@ -643,13 +645,13 @@ describe('epics', () => {
       })
 
       it('selects correct substore', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           cardHistory: Map<string, any>({
             'myCardId': Map<string, any>({
               isListening: true,
             })
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
 
@@ -660,7 +662,10 @@ describe('epics', () => {
       })
 
       it('fetches model from database service', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { cardHistory: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
 
@@ -705,13 +710,13 @@ describe('epics', () => {
       })
 
       it('selects correct substore', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           deckInfo: Map<string, any>({
             'myDeckId': Map<string, any>({
               isListening: true,
             })
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
 
@@ -722,7 +727,10 @@ describe('epics', () => {
       })
 
       it('fetches model from database service', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { deckInfo: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
 
@@ -772,13 +780,13 @@ describe('epics', () => {
       })
 
       it('selects correct substore', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           card: Map<string, any>({
             'myDeckId': Map<string, any>({
               isListening: true,
             })
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
 
@@ -789,7 +797,10 @@ describe('epics', () => {
       })
 
       it('fetches models from database service', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { card: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
 
@@ -802,7 +813,7 @@ describe('epics', () => {
       })
 
       it('dispatches STOP_LISTENING actions for CARD_CONTENT and CARD_HISTORY', () => {
-        const store: IStore<IState> = configureMockStore(epic.stopListeningEpic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           card: Map<string, any>({
             'myDeckId': Map<string, any>({
               isListening: true,
@@ -811,7 +822,7 @@ describe('epics', () => {
               })
             })
           })
-        }))
+        }, epic.stopListeningEpic)
 
         store.dispatch(actions.beforeStopListening(args))
 
@@ -866,11 +877,11 @@ describe('epics', () => {
       })
 
       it('selects correct substore', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           deck: Map<string, any>({
             isListening: true,
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
 
@@ -881,7 +892,10 @@ describe('epics', () => {
       })
 
       it('fetches models from database service', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { deck: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
 
@@ -894,14 +908,14 @@ describe('epics', () => {
       })
 
       it('dispatches BEFORE_STOP_LISTENING for CARD and STOP_LISTENING for DECK_INFO', () => {
-        const store: IStore<IState> = configureMockStore(epic.stopListeningEpic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           deck: Map<string, any>({
             isListening: true,
             data: Map<string, IDeck>({
               ['myDeckId']: model[0],
             })
           })
-        }))
+        }, epic.stopListeningEpic)
 
         store.dispatch(actions.beforeStopListening(args))
 
@@ -949,11 +963,11 @@ describe('epics', () => {
       })
 
       it('selects correct substore', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           user: Map<string, any>({
             isListening: true,
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
 
@@ -964,7 +978,10 @@ describe('epics', () => {
       })
 
       it('fetches model from firebase auth service', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { user: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
 
@@ -978,13 +995,13 @@ describe('epics', () => {
       })
 
       it('dispatches DECK_BEFORE_STOP_LISTENING action for previous user if not null', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic, createMockState({
+        const store: IStore<IState> = configureMockStore({
           user: Map<string, any>({
             data: Map<string, any>({
               uid: 'myOldUid',
             })
           })
-        }))
+        }, epic.epic)
 
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
@@ -1000,7 +1017,10 @@ describe('epics', () => {
       })
 
       it('does not dispatch DECK_BEFORE_STOP_LISTENING action for previous user if null', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { user: Map<string, any>() },
+          epic.epic,
+        )
 
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
@@ -1015,7 +1035,10 @@ describe('epics', () => {
       })
 
       it('dispatches USER_OBJECT_RECEIVED and DECK_BEFORE_START_LISTENING for new user if not null', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { user: Map<string, any>() },
+          epic.epic,
+        )
 
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(model)
@@ -1030,7 +1053,10 @@ describe('epics', () => {
       })
 
       it('dispatches USER_OBJECT_RECEIVED but not DECK_BEFORE_START_LISTENING for new user if null', () => {
-        const store: IStore<IState> = configureMockStore(epic.epic)
+        const store: IStore<IState> = configureMockStore(
+          { user: Map<string, any>() },
+          epic.epic,
+        )
 
         store.dispatch(actions.beforeStartListening(args))
         modelSubject.next(null)

@@ -1,5 +1,6 @@
 import { Map } from 'immutable'
 import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/observable/combineLatest'
 import { Subject } from 'rxjs/Subject'
 
 import { NgRedux } from '@angular-redux/store'
@@ -35,7 +36,6 @@ import { IStore } from 'redux-mock-store'
 import {
   expectEqual,
   configureMockStore,
-  createMockState,
   NgReduxExtension,
 } from '../../../utils/test-utils.spec'
 
@@ -120,7 +120,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards([])
 
@@ -149,7 +152,11 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
+
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, undefined)
@@ -165,6 +172,7 @@ describe('epics', ()=> {
 
       it('should not choose a card if none due', () => {
         const example = new Example('uid', 'myDeckId', [ 'myCardId' ])
+        const initialState = { review: Map<string, any>() }
         when(ngReduxMock.select(deepEqual(['card', 'myDeckId', 'data']))).thenReturn(example.cards$)
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId', 'data']))).thenReturn(example.histories$[0])
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(false)
@@ -178,7 +186,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          initialState,
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards([ example.cards[0] ])
         example.nextHistory(0, example.histories[0])
@@ -207,7 +218,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -238,7 +252,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -256,10 +273,11 @@ describe('epics', ()=> {
 
       it('should choose *random* due card if multiple are due', () => {
         const example = new Example('uid', 'myDeckId', [ 'myCardId1', 'myCardId2' ])
+        const initialState = { review: Map<string, any>() }
         when(ngReduxMock.select(deepEqual(['card', 'myDeckId', 'data']))).thenReturn(example.cards$)
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId1', 'data']))).thenReturn(example.histories$[0])
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId2', 'data']))).thenReturn(example.histories$[1])
-        when(ngReduxMock.getState()).thenReturn(createMockState())
+        when(ngReduxMock.getState()).thenReturn(initialState)
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
         when(randomShimServiceMock.random()).thenReturn(0.5)
@@ -273,7 +291,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          initialState,
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -308,7 +329,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards([ example.cards[0] ])
         example.nextHistory(0, example.histories[0])
@@ -341,7 +365,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards([ example.cards[0] ])
         example.nextHistory(0, example.histories[0])
@@ -363,7 +390,7 @@ describe('epics', ()=> {
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
 
-        const mockState = createMockState()
+        const mockState = { review: Map<string, any>() }
         mockState.review = mockState.review.set('history', example.histories[0])
         when(ngReduxMock.getState()).thenReturn(mockState)
 
@@ -376,7 +403,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -401,7 +431,7 @@ describe('epics', ()=> {
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
         when(randomShimServiceMock.random()).thenReturn(0)
 
-        const mockState = createMockState()
+        const mockState = { review: Map<string, any>() }
         when(ngReduxMock.getState()).thenReturn(mockState, {
           ...mockState,
           review: mockState.review.set('history', example.histories[0]),
@@ -416,7 +446,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -436,10 +469,12 @@ describe('epics', ()=> {
       it('should not respond to changes to cards in previously selected deck', () => {
         const example1 = new Example('uid', 'myDeckId1', [ 'myCardId1' ])
         const example2 = new Example('uid', 'myDeckId2', [ 'myCardId2' ])
+        const initialState = { review: Map<string, any>() }
         when(ngReduxMock.select(deepEqual(['card', 'myDeckId1', 'data']))).thenReturn(example1.cards$)
         when(ngReduxMock.select(deepEqual(['card', 'myDeckId2', 'data']))).thenReturn(example2.cards$)
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId1', 'data']))).thenReturn(example1.histories$[0])
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId2', 'data']))).thenReturn(example2.histories$[0])
+        when(ngReduxMock.getState()).thenReturn(initialState)
         when(gradingServiceMock.isDue(deepEqual(example1.histories[0]), anyNumber())).thenReturn(true)
         when(gradingServiceMock.isDue(deepEqual(example2.histories[0]), anyNumber())).thenReturn(true)
 
@@ -452,7 +487,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          initialState,
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example1.deck))
         example1.nextCards(example1.cards)
         example1.nextHistory(0, example1.histories[0])
@@ -471,10 +509,11 @@ describe('epics', ()=> {
     describe('history changes', () => {
       it('should select other card if two are due, then current becomes not-due', () => {
         const example = new Example('uid', 'myDeckId', [ 'myCardId1', 'myCardId2' ])
+        const initialState = { review: Map<string, any>() }
         when(ngReduxMock.select(deepEqual(['card', 'myDeckId', 'data']))).thenReturn(example.cards$)
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId1', 'data']))).thenReturn(example.histories$[0])
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId2', 'data']))).thenReturn(example.histories$[1])
-        when(ngReduxMock.getState()).thenReturn(createMockState())
+        when(ngReduxMock.getState()).thenReturn(initialState)
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true, false)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
         when(randomShimServiceMock.random()).thenReturn(0)
@@ -488,7 +527,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          initialState,
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -518,7 +560,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -547,7 +592,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -563,10 +611,11 @@ describe('epics', ()=> {
 
       it('should not respond to changes to histories of cards previously in selected deck', () => {
         const example = new Example('uid', 'myDeckId', [ 'myCardId1', 'myCardId2' ])
+        const initialState = { review: Map<string, any>() }
         when(ngReduxMock.select(deepEqual(['card', 'myDeckId', 'data']))).thenReturn(example.cards$)
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId1', 'data']))).thenReturn(example.histories$[0])
         when(ngReduxMock.select(deepEqual(['cardHistory', 'myCardId2', 'data']))).thenReturn(example.histories$[1])
-        when(ngReduxMock.getState()).thenReturn(createMockState())
+        when(ngReduxMock.getState()).thenReturn(initialState)
         when(gradingServiceMock.isDue(deepEqual(example.histories[0]), anyNumber())).thenReturn(true, false)
         when(gradingServiceMock.isDue(deepEqual(example.histories[1]), anyNumber())).thenReturn(true)
         when(randomShimServiceMock.random()).thenReturn(0)
@@ -580,7 +629,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          initialState,
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])
@@ -617,7 +669,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
 
         expectEqual(errorMessages, [ 'error message' ])
@@ -643,7 +698,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
 
@@ -672,7 +730,10 @@ describe('epics', ()=> {
           cardHistoryActions,
         )
 
-        const store = configureMockStore(epic.epic)
+        const store = configureMockStore(
+          { review: Map<string, any>() },
+          epic.epic,
+        )
         store.dispatch(reviewSetDeck(example.deck))
         example.nextCards(example.cards)
         example.nextHistory(0, example.histories[0])

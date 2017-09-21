@@ -1,3 +1,4 @@
+import { OnChanges, SimpleChange } from '@angular/core'
 import {
   NgRedux,
   Selector,
@@ -31,34 +32,21 @@ import { LogService } from '../services/log.service'
 import { ICardHistory } from '../interfaces/firebase'
 import { IState } from '../redux/state'
 
-export function createMockState(overrides: any = null): IState {
-  return {
-    user: Map<string, any>(),
-    deck: Map<string, any>(),
-    deckInfo: Map<string, any>(),
-    card: Map<string, any>(),
-    editCard: Map<string, any>(),
-    editDeck: Map<string, any>(),
-    signIn: Map<string, any>(),
-    signUp: Map<string, any>(),
-    resetPassword: Map<string, any>(),
-    cardContent: Map<string, any>(),
-    cardHistory: Map<string, any>(),
-    review: Map<string, any>(),
-    ...(overrides || {}),
-  }
+export function updateComponent<T>(component: OnChanges, propertyName: string, value: T) {
+  component[propertyName] = value
+  component.ngOnChanges({
+    [propertyName]: new SimpleChange(null, value, true)
+  })
+
+  return value
 }
 
-export function configureMockStore(epic?: Epic<Action, IState>, state?: IState): IStore<IState> {
-  const emptyEpic = (action$, store) => Observable.of()
+export function configureMockStore(state: IState, epic?: Epic<Action, IState>): IStore<IState> {
   const middlewares = [
-    epic ?
-      createEpicMiddleware(epic) :
-      createEpicMiddleware(emptyEpic)
+    createEpicMiddleware(epic || ((action$, store) => Observable.of()))
   ]
-  const _mockStore: mockStore<IState> = createMockStore<IState>(middlewares)
 
-  state = state || createMockState()
+  const _mockStore: mockStore<IState> = createMockStore<IState>(middlewares)
   const store: IStore<IState> = _mockStore(state)
 
   return store

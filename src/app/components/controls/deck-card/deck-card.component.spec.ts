@@ -1,150 +1,68 @@
 import { TestBed, async } from '@angular/core/testing'
-import { config } from '../../../modules/cardinal.module'
-import { DeckCardComponent } from './deck-card.component'
-
 import { Map } from 'immutable'
 import { Subject } from 'rxjs/Subject'
-import { SimpleChange } from '@angular/core'
-import {
-  MdDialog,
-  MdDialogRef,
-} from '@angular/material'
-import { NgRedux } from '@angular-redux/store'
-import { IDeck, IDeckInfo, ICard } from '../../../interfaces/firebase'
-import { IState } from '../../../redux/state'
-import { AuthService, AuthServiceImplementation } from '../../../services/firebase/auth.service'
-import { DatabaseService, DatabaseServiceImplementation } from '../../../services/firebase/database.service'
-import { GradingService, GradingServiceImplementation } from '../../../services/grading.service'
-import { LogService, LogServiceImplementation } from '../../../services/log.service'
-import { EditDeckDialogComponent, EditDeckDialogResult } from '../../dialogs/edit-deck-dialog/edit-deck-dialog.component'
-import { DeleteDeckDialogComponent, DeleteDeckDialogResult } from '../../dialogs/delete-deck-dialog/delete-deck-dialog.component'
-import {
-  DeckInfoActions,
-  CardActions,
-} from '../../../redux/actions/firebase'
-import { BrowserModule } from '@angular/platform-browser'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { MarkdownModule } from 'angular2-markdown'
-import { MaterialModule } from '../../../modules/material.module'
-import { CardinalRoutingModule } from '../../../modules/cardinal-routing.module'
-import {
-  editDeckSetName,
-  editDeckSetDescription,
-} from '../../../redux/actions/edit-deck'
-
-import { IStore } from 'redux-mock-store'
 import {
   instance,
   mock,
   when,
   verify,
-  anything,
   deepEqual,
+  anything,
 } from 'ts-mockito'
+
+import { CardinalTestBed } from '../../../utils/cardinal-test-bed'
+import { updateComponent } from '../../../utils/test-utils.spec'
 import {
-  expectEqual,
-  configureMockStore,
-  createMockState,
-  NgReduxExtension,
-} from '../../../utils/test-utils.spec'
+  editDeckSetName,
+  editDeckSetDescription,
+} from '../../../redux/actions/edit-deck'
+import { EditDeckDialogComponent, EditDeckDialogResult } from '../../dialogs/edit-deck-dialog/edit-deck-dialog.component'
+import { DeleteDeckDialogComponent, DeleteDeckDialogResult } from '../../dialogs/delete-deck-dialog/delete-deck-dialog.component'
+import { DeckCardComponent } from './deck-card.component'
 
 function updateDeck(component: DeckCardComponent, deckId: string) {
-  const deck = {
+  return updateComponent(component, 'deck', {
     uid: undefined,
     deckId,
-  }
-  component.deck = deck
-  component.ngOnChanges({
-    deck: new SimpleChange(null, deck, true),
   })
-
-  return deck
 }
 
 describe('components', () => {
   describe('DeckCardComponent', () => {
-    let errorMessages: string[]
-    let deckInfoActions: DeckInfoActions
-    let cardActions: CardActions
-    let store: IStore<IState>
+    let testBed: CardinalTestBed
     let isLoadingSubject: Subject<boolean>
     let nameSubject: Subject<string>
     let descriptionSubject: Subject<string>
     let cardsSubject: Subject<Map<string, any>>
     let editDialogSubject: Subject<EditDeckDialogResult>
     let deleteDialogSubject: Subject<DeleteDeckDialogResult>
-    let databaseServiceMock: DatabaseService
     let component: DeckCardComponent
 
     beforeEach(async(() => {
-      errorMessages = []
-      deckInfoActions = new DeckInfoActions()
-      cardActions = new CardActions()
-      isLoadingSubject = new Subject<boolean>()
-      nameSubject = new Subject<string>()
-      descriptionSubject = new Subject<string>()
-      cardsSubject = new Subject<Map<string, any>>()
-      editDialogSubject = new Subject<EditDeckDialogResult>()
-      deleteDialogSubject = new Subject<DeleteDeckDialogResult>()
-      store = configureMockStore(undefined, {
+      testBed = new CardinalTestBed({
         editDeck: Map<string, any>({
           name: 'myName',
           description: 'myDescription',
         })
       })
-      databaseServiceMock = mock(DatabaseServiceImplementation)
-      const logServiceMock = mock(LogServiceImplementation)
-      const ngReduxMock = mock(NgReduxExtension)
-      const editDialogRefMock = mock(MdDialogRef)
-      const deleteDialogRefMock = mock(MdDialogRef)
-      const dialogMock = mock(MdDialog)
 
-      when(databaseServiceMock.updateDeckInfo(anything(), anything(), anything()))
-        .thenReturn(Promise.resolve())
-      when(databaseServiceMock.deleteDeck(anything()))
+      when(testBed.databaseServiceMock.updateDeckInfo(
+        anything(),
+        anything(),
+        anything(),
+      )).thenReturn(Promise.resolve())
+      when(testBed.databaseServiceMock.deleteDeck(anything()))
         .thenReturn(Promise.resolve([]))
 
-      when(logServiceMock.error(anything())).thenCall(message => errorMessages.push(message))
+      isLoadingSubject = testBed.whenSelect(['deckInfo', 'myDeckId', 'isLoading'])
+      nameSubject = testBed.whenSelect(['deckInfo', 'myDeckId', 'data', 'name'])
+      descriptionSubject = testBed.whenSelect(['deckInfo', 'myDeckId', 'data', 'description'])
+      cardsSubject = testBed.whenSelect(['card', 'myDeckId'])
 
-      when(ngReduxMock.dispatch(anything())).thenCall(action => store.dispatch(action))
-      when(ngReduxMock.getState()).thenReturn(store.getState())
-      when(ngReduxMock.select(deepEqual(['deckInfo', 'myDeckId', 'isLoading'])))
-        .thenReturn(isLoadingSubject)
-      when(ngReduxMock.select(deepEqual(['deckInfo', 'myDeckId', 'data', 'name'])))
-        .thenReturn(nameSubject)
-      when(ngReduxMock.select(deepEqual(['deckInfo', 'myDeckId', 'data', 'description'])))
-        .thenReturn(descriptionSubject)
-      when(ngReduxMock.select(deepEqual(['card', 'myDeckId'])))
-        .thenReturn(cardsSubject)
+      editDialogSubject = testBed.whenOpenDialog(EditDeckDialogComponent)
+      deleteDialogSubject = testBed.whenOpenDialog(DeleteDeckDialogComponent)
 
-      when(editDialogRefMock.afterClosed()).thenReturn(editDialogSubject)
-      when(deleteDialogRefMock.afterClosed()).thenReturn(deleteDialogSubject)
-      when(dialogMock.open(EditDeckDialogComponent, anything())).thenReturn(instance(editDialogRefMock))
-      when(dialogMock.open(DeleteDeckDialogComponent, anything())).thenReturn(instance(deleteDialogRefMock))
-
-      const testModuleConfig = {
-        ...config,
-        imports: [
-          BrowserModule,
-          MaterialModule,
-          MarkdownModule.forRoot(),
-          CardinalRoutingModule,
-          FormsModule,
-          ReactiveFormsModule,
-        ],
-        providers: [
-          { provide: AuthService, useValue: instance(mock(AuthServiceImplementation)) },
-          { provide: DatabaseService, useValue: instance(databaseServiceMock) },
-          { provide: GradingService, useValue: instance(mock(GradingServiceImplementation)) },
-          { provide: LogService, useValue: instance(logServiceMock) },
-          { provide: NgRedux, useValue: instance(ngReduxMock) },
-          { provide: DeckInfoActions, useValue: deckInfoActions },
-          { provide: CardActions, useValue: cardActions },
-          { provide: MdDialog, useValue: instance(dialogMock) },
-        ],
-      }
-
-      TestBed.configureTestingModule(testModuleConfig).compileComponents()
+      testBed.configure()
 
       const fixture = TestBed.createComponent(DeckCardComponent)
       component = fixture.debugElement.componentInstance
@@ -152,17 +70,17 @@ describe('components', () => {
 
     describe('main component', () => {
       it('should initialize without errors', async(() => {
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(component).toBeTruthy()
       }))
 
       it('should start listening for deck info and deck cards', async(() => {
         const deck = updateDeck(component, 'myDeckId')
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
         ])
       }))
 
@@ -178,7 +96,7 @@ describe('components', () => {
         cardsSubject.next(Map<string, any>({ isLoading: false }))
         expect(currentCount).toBeNull()
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
 
         subscription.unsubscribe()
       }))
@@ -190,7 +108,7 @@ describe('components', () => {
         const subscription = component.count$.subscribe(count => currentCount = count)
         cardsSubject.next(Map<string, any>({ isLoading: true }))
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(currentCount).toBeNull()
 
         subscription.unsubscribe()
@@ -204,13 +122,13 @@ describe('components', () => {
         const subscription = component.count$.subscribe(count => currentCount = count)
         cardsSubject.next(Map<string, any>({
           isLoading: false,
-          data: Map<string, ICard>({
+          data: Map<string, any>({
             myCardId1: {},
             myCardId2: {},
           })
         }))
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(currentCount).toEqual(2)
 
         subscription.unsubscribe()
@@ -225,14 +143,18 @@ describe('components', () => {
 
         editDialogSubject.next(EditDeckDialogResult.Cancel)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           editDeckSetName(null),
           editDeckSetDescription(null),
         ])
-        verify(databaseServiceMock.updateDeckInfo(anything(), anything(), anything())).never()
+        verify(testBed.databaseServiceMock.updateDeckInfo(
+          anything(),
+          anything(),
+          anything(),
+        )).never()
       }))
 
       it('should save the edit deck dialog without errors', async(() => {
@@ -242,14 +164,18 @@ describe('components', () => {
 
         editDialogSubject.next(EditDeckDialogResult.Save)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           editDeckSetName(null),
           editDeckSetDescription(null),
         ])
-        verify(databaseServiceMock.updateDeckInfo(deepEqual(deck), 'myName', 'myDescription')).once()
+        verify(testBed.databaseServiceMock.updateDeckInfo(
+          deepEqual(deck),
+          'myName',
+          'myDescription',
+        )).once()
       }))
 
       it('should pass deck name and description to the edit deck dialog', async(() => {
@@ -261,10 +187,10 @@ describe('components', () => {
         descriptionSubject.next('myDescription2')
         editDialogSubject.next(EditDeckDialogResult.Save)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           editDeckSetName('myName2'),
           editDeckSetDescription('myDescription2'),
           editDeckSetName(null),
@@ -279,13 +205,13 @@ describe('components', () => {
 
         editDialogSubject.error(new Error('myError'))
 
-        expectEqual(errorMessages, ['myError'])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors(['myError'])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           // TODO: editDeckError('myError'),
         ])
-        verify(databaseServiceMock.updateDeckInfo(anything(), anything(), anything())).never()
+        verify(testBed.databaseServiceMock.updateDeckInfo(anything(), anything(), anything())).never()
       }))
 
       it('should throw an error on unexpected edit deck dialog result', async(() => {
@@ -295,15 +221,15 @@ describe('components', () => {
 
         editDialogSubject.next(42)
 
-        expectEqual(errorMessages, ['Unknown dialog response: 42'])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors(['Unknown dialog response: 42'])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           editDeckSetName(null),
           editDeckSetDescription(null),
           // TODO: editDeckError('myError'),
         ])
-        verify(databaseServiceMock.updateDeckInfo(anything(), anything(), anything())).never()
+        verify(testBed.databaseServiceMock.updateDeckInfo(anything(), anything(), anything())).never()
       }))
 
       it('should unsubscribe from observables on edit deck success', async (done) => {
@@ -315,7 +241,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(subscription.closed).toEqual(true)
 
         done()
@@ -329,7 +255,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, ['myError'])
+        testBed.expectErrors(['myError'])
         expect(subscription.closed).toEqual(true)
 
         done()
@@ -344,12 +270,12 @@ describe('components', () => {
 
         deleteDialogSubject.next(DeleteDeckDialogResult.Cancel)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
         ])
-        verify(databaseServiceMock.deleteDeck(anything())).never()
+        verify(testBed.databaseServiceMock.deleteDeck(anything())).never()
       }))
 
       it('should save the delete deck dialog without errors', async(() => {
@@ -359,12 +285,12 @@ describe('components', () => {
 
         deleteDialogSubject.next(DeleteDeckDialogResult.Ok)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
         ])
-        verify(databaseServiceMock.deleteDeck(deepEqual(deck))).once()
+        verify(testBed.databaseServiceMock.deleteDeck(deepEqual(deck))).once()
       }))
 
       it('should catch and log delete deck dialog errors', async(() => {
@@ -374,13 +300,13 @@ describe('components', () => {
 
         deleteDialogSubject.error(new Error('myError'))
 
-        expectEqual(errorMessages, ['myError'])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors(['myError'])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           // TODO: deleteDeckError('myError'),
         ])
-        verify(databaseServiceMock.deleteDeck(anything())).never()
+        verify(testBed.databaseServiceMock.deleteDeck(anything())).never()
       }))
 
       it('should throw an error on unexpected delete deck dialog result', async(() => {
@@ -390,13 +316,13 @@ describe('components', () => {
 
         deleteDialogSubject.next(42)
 
-        expectEqual(errorMessages, ['Unknown dialog response: 42'])
-        expectEqual(store.getActions(), [
-          deckInfoActions.beforeStartListening(deck),
-          cardActions.beforeStartListening(deck),
+        testBed.expectErrors(['Unknown dialog response: 42'])
+        testBed.expectActions([
+          testBed.deckInfoActions.beforeStartListening(deck),
+          testBed.cardActions.beforeStartListening(deck),
           // TODO: deleteDeckError('myError'),
         ])
-        verify(databaseServiceMock.deleteDeck(anything())).never()
+        verify(testBed.databaseServiceMock.deleteDeck(anything())).never()
       }))
 
       it('should unsubscribe from observables on delete deck success', async (done) => {
@@ -407,7 +333,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(subscription.closed).toEqual(true)
 
         done()
@@ -421,7 +347,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, ['myError'])
+        testBed.expectErrors(['myError'])
         expect(subscription.closed).toEqual(true)
 
         done()

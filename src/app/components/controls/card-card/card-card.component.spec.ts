@@ -1,145 +1,68 @@
 import { TestBed, async } from '@angular/core/testing'
-import { config } from '../../../modules/cardinal.module'
-import { CardCardComponent } from './card-card.component'
-
 import { Map } from 'immutable'
-import { SimpleChange } from '@angular/core'
-import { NgRedux } from '@angular-redux/store'
 import { Subject } from 'rxjs/Subject'
-import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/observable/of'
-import { IStore } from 'redux-mock-store'
-import { AuthService, AuthServiceImplementation } from '../../../services/firebase/auth.service'
-import { DatabaseService, DatabaseServiceImplementation } from '../../../services/firebase/database.service'
-import { GradingService, GradingServiceImplementation } from '../../../services/grading.service'
-import { LogService, LogServiceImplementation } from '../../../services/log.service'
-import { IState } from '../../../redux/state'
-import {
-  editCardSetFront,
-  editCardSetBack,
-} from '../../../redux/actions/edit-card'
-import { CardContentActions } from '../../../redux/actions/firebase'
 import {
   instance,
   mock,
   when,
   verify,
   deepEqual,
-  anyString,
-  anyNumber,
   anything,
 } from 'ts-mockito'
-import {
-  expectEqual,
-  configureMockStore,
-  createMockState,
-  NgReduxExtension,
-} from '../../../utils/test-utils.spec'
 
-import { BrowserModule } from '@angular/platform-browser'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { MarkdownModule } from 'angular2-markdown'
-import { MaterialModule } from '../../../modules/material.module'
-import { CardinalRoutingModule } from '../../../modules/cardinal-routing.module'
-
+import { CardinalTestBed } from '../../../utils/cardinal-test-bed'
+import { updateComponent } from '../../../utils/test-utils.spec'
 import {
-  MdDialog,
-  MdDialogRef,
-} from '@angular/material'
+  editCardSetFront,
+  editCardSetBack,
+} from '../../../redux/actions/edit-card'
 import { EditCardDialogComponent, EditCardDialogResult } from '../../dialogs/edit-card-dialog/edit-card-dialog.component'
 import { DeleteCardDialogComponent, DeleteCardDialogResult } from '../../dialogs/delete-card-dialog/delete-card-dialog.component'
+import { CardCardComponent } from './card-card.component'
 
 function updateCard(component: CardCardComponent, cardId: string) {
-  const card = {
+  return updateComponent(component, 'card', {
     uid: undefined,
     deckId: undefined,
     cardId,
-  }
-  component.card = card
-  component.ngOnChanges({
-    card: new SimpleChange(null, card, true),
   })
-
-  return card
 }
 
 describe('components', () => {
   describe('CardCardComponent', () => {
-    let errorMessages: string[]
-    let cardContentActions: CardContentActions
-    let store: IStore<IState>
+    let testBed: CardinalTestBed
+
     let isLoadingSubject: Subject<boolean>
     let frontSubject: Subject<string>
     let backSubject: Subject<string>
     let editDialogSubject: Subject<EditCardDialogResult>
     let deleteDialogSubject: Subject<DeleteCardDialogResult>
-    let databaseServiceMock: DatabaseService
     let component: CardCardComponent
 
     beforeEach(async(() => {
-      errorMessages = []
-      cardContentActions = new CardContentActions()
-      isLoadingSubject = new Subject<boolean>()
-      frontSubject = new Subject<string>()
-      backSubject = new Subject<string>()
-      editDialogSubject = new Subject<EditCardDialogResult>()
-      deleteDialogSubject = new Subject<DeleteCardDialogResult>()
-      store = configureMockStore(undefined, {
+      testBed = new CardinalTestBed({
         editCard: Map<string, any>({
           front: 'myFront',
           back: 'myBack',
         })
       })
-      databaseServiceMock = mock(DatabaseServiceImplementation)
-      const logServiceMock = mock(LogServiceImplementation)
-      const ngReduxMock = mock(NgReduxExtension)
-      const editDialogRefMock = mock(MdDialogRef)
-      const deleteDialogRefMock = mock(MdDialogRef)
-      const dialogMock = mock(MdDialog)
 
-      when(databaseServiceMock.updateCardContent(anything(), anything(), anything()))
-        .thenReturn(Promise.resolve())
-      when(databaseServiceMock.deleteCard(anything()))
+      isLoadingSubject = testBed.whenSelect(['cardContent', 'myCardId', 'isLoading'])
+      frontSubject = testBed.whenSelect(['cardContent', 'myCardId', 'data', 'front'])
+      backSubject = testBed.whenSelect(['cardContent', 'myCardId', 'data', 'back'])
+      editDialogSubject = testBed.whenOpenDialog(EditCardDialogComponent)
+      deleteDialogSubject = testBed.whenOpenDialog(DeleteCardDialogComponent)
+
+      when(testBed.databaseServiceMock.updateCardContent(
+        anything(),
+        anything(),
+        anything(),
+      )).thenReturn(Promise.resolve())
+
+      when(testBed.databaseServiceMock.deleteCard(anything()))
         .thenReturn(Promise.resolve([]))
 
-      when(logServiceMock.error(anything())).thenCall(message => errorMessages.push(message))
-
-      when(ngReduxMock.dispatch(anything())).thenCall(action => store.dispatch(action))
-      when(ngReduxMock.getState()).thenReturn(store.getState())
-      when(ngReduxMock.select(deepEqual(['cardContent', 'myCardId', 'isLoading'])))
-        .thenReturn(isLoadingSubject)
-      when(ngReduxMock.select(deepEqual(['cardContent', 'myCardId', 'data', 'front'])))
-        .thenReturn(frontSubject)
-      when(ngReduxMock.select(deepEqual(['cardContent', 'myCardId', 'data', 'back'])))
-        .thenReturn(backSubject)
-
-      when(editDialogRefMock.afterClosed()).thenReturn(editDialogSubject)
-      when(deleteDialogRefMock.afterClosed()).thenReturn(deleteDialogSubject)
-      when(dialogMock.open(EditCardDialogComponent, anything())).thenReturn(instance(editDialogRefMock))
-      when(dialogMock.open(DeleteCardDialogComponent)).thenReturn(instance(deleteDialogRefMock))
-
-      const testModuleConfig = {
-        ...config,
-        imports: [
-          BrowserModule,
-          MaterialModule,
-          MarkdownModule.forRoot(),
-          CardinalRoutingModule,
-          FormsModule,
-          ReactiveFormsModule,
-        ],
-        providers: [
-          { provide: AuthService, useValue: instance(mock(AuthServiceImplementation)) },
-          { provide: DatabaseService, useValue: instance(databaseServiceMock) },
-          { provide: GradingService, useValue: instance(mock(GradingServiceImplementation)) },
-          { provide: LogService, useValue: instance(logServiceMock) },
-          { provide: NgRedux, useValue: instance(ngReduxMock) },
-          { provide: CardContentActions, useValue: cardContentActions },
-          { provide: MdDialog, useValue: instance(dialogMock) },
-        ],
-      }
-
-      TestBed.configureTestingModule(testModuleConfig).compileComponents()
+      testBed.configure()
 
       const fixture = TestBed.createComponent(CardCardComponent)
       component = fixture.debugElement.componentInstance
@@ -147,7 +70,7 @@ describe('components', () => {
 
     describe('main component', () => {
       it('should initialize without errors', async(() => {
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(component).toBeTruthy()
       }))
 
@@ -157,9 +80,9 @@ describe('components', () => {
         frontSubject.next('myFront')
         backSubject.next('myBack')
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card)
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card)
         ])
       }))
     })
@@ -171,13 +94,17 @@ describe('components', () => {
 
         editDialogSubject.next(EditCardDialogResult.Cancel)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           editCardSetFront(null),
           editCardSetBack(null),
         ])
-        verify(databaseServiceMock.updateCardContent(anything(), anything(), anything())).never()
+        verify(testBed.databaseServiceMock.updateCardContent(
+          anything(),
+          anything(),
+          anything(),
+        )).never()
       }))
 
       it('should save the edit card dialog without errors', async(() => {
@@ -186,13 +113,17 @@ describe('components', () => {
 
         editDialogSubject.next(EditCardDialogResult.Save)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           editCardSetFront(null),
           editCardSetBack(null),
         ])
-        verify(databaseServiceMock.updateCardContent(deepEqual(card), 'myFront', 'myBack')).once()
+        verify(testBed.databaseServiceMock.updateCardContent(
+          deepEqual(card),
+          'myFront',
+          'myBack',
+        )).once()
       }))
 
       it('should pass card front and back to the edit card dialog', async(() => {
@@ -203,9 +134,9 @@ describe('components', () => {
         backSubject.next('myBack2')
         editDialogSubject.next(EditCardDialogResult.Save)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           editCardSetFront('myFront2'),
           editCardSetBack('myBack2'),
           editCardSetFront(null),
@@ -219,9 +150,9 @@ describe('components', () => {
 
         editDialogSubject.error(new Error('myError'))
 
-        expectEqual(errorMessages, [ 'myError' ])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors(['myError'])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           // TODO: editCardError('myError'),
         ])
       }))
@@ -231,9 +162,9 @@ describe('components', () => {
         component.onEdit()
 
         editDialogSubject.next(42)
-        expectEqual(errorMessages, [ 'Unknown dialog response: 42' ])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors(['Unknown dialog response: 42'])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           editCardSetFront(null),
           editCardSetBack(null),
         ])
@@ -247,7 +178,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(subscription.closed).toEqual(true)
 
         done()
@@ -261,7 +192,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, ['myError'])
+        testBed.expectErrors(['myError'])
         expect(subscription.closed).toEqual(true)
 
         done()
@@ -276,11 +207,11 @@ describe('components', () => {
 
         deleteDialogSubject.next(DeleteCardDialogResult.Cancel)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
         ])
-        verify(databaseServiceMock.deleteCard(anything())).never()
+        verify(testBed.databaseServiceMock.deleteCard(anything())).never()
       }))
 
       it('should save the delete card dialog without errors', async(() => {
@@ -289,11 +220,11 @@ describe('components', () => {
 
         deleteDialogSubject.next(DeleteCardDialogResult.Ok)
 
-        expectEqual(errorMessages, [])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors([])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
         ])
-        verify(databaseServiceMock.deleteCard(deepEqual(card))).once()
+        verify(testBed.databaseServiceMock.deleteCard(deepEqual(card))).once()
       }))
 
       it('should catch and log delete card dialog errors', async(() => {
@@ -302,9 +233,9 @@ describe('components', () => {
 
         deleteDialogSubject.error(new Error('myError'))
 
-        expectEqual(errorMessages, [ 'myError' ])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors(['myError'])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           // TODO: deleteCardError('myError'),
         ])
       }))
@@ -314,9 +245,9 @@ describe('components', () => {
         component.onDelete()
 
         deleteDialogSubject.next(42)
-        expectEqual(errorMessages, [ 'Unknown dialog response: 42' ])
-        expectEqual(store.getActions(), [
-          cardContentActions.beforeStartListening(card),
+        testBed.expectErrors(['Unknown dialog response: 42'])
+        testBed.expectActions([
+          testBed.cardContentActions.beforeStartListening(card),
           // TODO: deleteDialogError('Unknown dialog response: 42'),
         ])
       }))
@@ -329,7 +260,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, [])
+        testBed.expectErrors([])
         expect(subscription.closed).toEqual(true)
 
         done()
@@ -343,7 +274,7 @@ describe('components', () => {
 
         await complete
 
-        expectEqual(errorMessages, ['myError'])
+        testBed.expectErrors(['myError'])
         expect(subscription.closed).toEqual(true)
 
         done()
