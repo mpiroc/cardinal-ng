@@ -13,7 +13,7 @@ import {
 import {
   updateComponent,
   CardinalTestBed,
-} from '../../../utils/component-test-utils'
+} from '../../../utils/component-test-utils.spec'
 import { LoadingSpinnerComponent } from './loading-spinner.component'
 
 function updateIsLoading(component: LoadingSpinnerComponent): Subject<boolean> {

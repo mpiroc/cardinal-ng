@@ -128,13 +128,13 @@ describe('services', () => {
 
       it('dispatches expected actions on failure', async (done) => {
         when(authShimServiceMock.signInWithPopup(anything())).thenThrow(new Error('myError'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signInWithGoogle()
+        await _authService.signInWithGoogle()
 
         expectEqual(actions, [
           signInSubmit(),
@@ -219,13 +219,13 @@ describe('services', () => {
       it('logs auth/user-not-found as user error with custom message', async (done) => {
         when(authShimServiceMock.signInWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'auth/user-not-found'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signInWithEmail('myEmail', 'myPassword', true)
+        await _authService.signInWithEmail('myEmail', 'myPassword', true)
 
         expectEqual(actions, [
           signInSubmit(),
@@ -239,13 +239,13 @@ describe('services', () => {
       it('logs auth/user-disabled as user error with custom message', async (done) => {
         when(authShimServiceMock.signInWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'auth/user-disabled'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signInWithEmail('myEmail', 'myPassword', true)
+        await _authService.signInWithEmail('myEmail', 'myPassword', true)
 
         expectEqual(actions, [
           signInSubmit(),
@@ -259,13 +259,13 @@ describe('services', () => {
       it('logs auth/wrong-password as password error with custom message', async (done) => {
         when(authShimServiceMock.signInWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'auth/wrong-password'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signInWithEmail('myEmail', 'myPassword', true)
+        await _authService.signInWithEmail('myEmail', 'myPassword', true)
 
         expectEqual(actions, [
           signInSubmit(),
@@ -279,13 +279,13 @@ describe('services', () => {
       it('logs all other auth errors as password errors', async (done) => {
         when(authShimServiceMock.signInWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'myCode'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signInWithEmail('myEmail', 'myPassword', true)
+        await _authService.signInWithEmail('myEmail', 'myPassword', true)
 
         expectEqual(actions, [
           signInSubmit(),
@@ -312,13 +312,13 @@ describe('services', () => {
 
       it('dispatches expected actions on failure', async (done) => {
         when(authShimServiceMock.signInWithPopup(anything())).thenThrow(new Error('myError'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signUpWithGoogle()
+        await _authService.signUpWithGoogle()
 
         expectEqual(actions, [
           signUpSubmit(),
@@ -388,13 +388,13 @@ describe('services', () => {
       it('logs auth/user-not-found as user error with custom message', async (done) => {
         when(authShimServiceMock.createUserWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'auth/user-not-found'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signUpWithEmail('myEmail', 'myPassword')
+        await _authService.signUpWithEmail('myEmail', 'myPassword')
 
         expectEqual(actions, [
           signUpSubmit(),
@@ -408,13 +408,13 @@ describe('services', () => {
       it('logs auth/user-disabled as user error with custom message', async (done) => {
         when(authShimServiceMock.createUserWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'auth/user-disabled'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signUpWithEmail('myEmail', 'myPassword')
+        await _authService.signUpWithEmail('myEmail', 'myPassword')
 
         expectEqual(actions, [
           signUpSubmit(),
@@ -428,13 +428,13 @@ describe('services', () => {
       it('logs auth/wrong-password as password error with custom message', async (done) => {
         when(authShimServiceMock.createUserWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'auth/wrong-password'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signUpWithEmail('myEmail', 'myPassword')
+        await _authService.signUpWithEmail('myEmail', 'myPassword')
 
         expectEqual(actions, [
           signUpSubmit(),
@@ -448,13 +448,13 @@ describe('services', () => {
       it('logs all other auth errors as password errors', async (done) => {
         when(authShimServiceMock.createUserWithEmailAndPassword(anyString(), anyString()))
           .thenThrow(new TestAuthError('myError', 'myCode'))
-        const authService: AuthService = new AuthServiceImplementation(
+        const _authService: AuthService = new AuthServiceImplementation(
           instance(authShimServiceMock),
           instance(ngReduxMock),
           userActions,
         )
 
-        await authService.signUpWithEmail('myEmail', 'myPassword')
+        await _authService.signUpWithEmail('myEmail', 'myPassword')
 
         expectEqual(actions, [
           signUpSubmit(),

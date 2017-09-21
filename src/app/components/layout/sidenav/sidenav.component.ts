@@ -1,8 +1,7 @@
-import { Component, ContentChild, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/startWith'
-import { RouterOutlet } from '@angular/router'
 import { AuthService } from '../../../services/firebase/auth.service'
 
 @Component({

@@ -2,8 +2,8 @@
   <div class='centered-container'>
     <div class='centered-content'>
       <div class='content-list'>
-        <div *ngFor='let card of emptyIfNull(cards$ | async).toArray()'>
-          <cardinal-card-card [card]='card' [showActions]='true'></cardinal-card-card>
+        <div *ngFor='let card of (cards$ | async)'>
+          <cardinal-card [card]='card' [showActions]='true'></cardinal-card>
         </div>
       </div>
       <div class='new-button-container'>

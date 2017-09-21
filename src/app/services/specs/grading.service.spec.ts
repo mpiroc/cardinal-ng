@@ -481,7 +481,7 @@ describe('services', () => {
             instance(databaseServiceMock),
           )
 
-          const now: number = 100
+          const now = 100
           await gradingService.submitGrade(now)
 
           expect(newNextReview).toEqual(now + 3 * (now - 0))

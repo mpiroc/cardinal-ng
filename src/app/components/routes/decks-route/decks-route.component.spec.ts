@@ -1,16 +1,21 @@
 import { TestBed, async } from '@angular/core/testing'
-import { config } from '../../../modules/cardinal.module'
+import { CardinalTestBed } from '../../../utils/component-test-utils.spec'
 import { DecksRouteComponent } from './decks-route.component'
 
 describe('components', () => {
   describe('DecksRouteComponent', () => {
+    let testBed: CardinalTestBed
+    let component: DecksRouteComponent
+
     beforeEach(async(() => {
-      TestBed.configureTestingModule(config).compileComponents()
+      testBed = new CardinalTestBed()
+      testBed.configure()
+
+      const fixture = TestBed.createComponent(DecksRouteComponent)
+      component = fixture.debugElement.componentInstance
     }))
 
     it('should initialize without errors', async(() => {
-      const fixture = TestBed.createComponent(DecksRouteComponent)
-      const component = fixture.debugElement.componentInstance
       expect(component).toBeTruthy()
     }))
   })

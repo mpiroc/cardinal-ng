@@ -1,16 +1,23 @@
 import { TestBed, async } from '@angular/core/testing'
-import { config } from '../../../modules/cardinal.module'
-import { ResetPasswordConfirmationRouteComponent } from './reset-password-confirmation-route.component'
+import { CardinalTestBed } from '../../../utils/component-test-utils.spec'
+import {
+  ResetPasswordConfirmationRouteComponent
+} from './reset-password-confirmation-route.component'
 
 describe('components', () => {
   describe('ResetPasswordConfirmationRouteComponent', () => {
+    let testBed: CardinalTestBed
+    let component: ResetPasswordConfirmationRouteComponent
+
     beforeEach(async(() => {
-      TestBed.configureTestingModule(config).compileComponents()
+      testBed = new CardinalTestBed()
+      testBed.configure()
+
+      const fixture = TestBed.createComponent(ResetPasswordConfirmationRouteComponent)
+      component = fixture.debugElement.componentInstance
     }))
 
     it('should initialize without errors', async(() => {
-      const fixture = TestBed.createComponent(ResetPasswordConfirmationRouteComponent)
-      const component = fixture.debugElement.componentInstance
       expect(component).toBeTruthy()
     }))
   })

@@ -82,7 +82,7 @@ class Example {
   }
 }
 
-describe('epics', ()=> {
+describe('epics', () => {
   describe('review', () => {
     let errorMessages: string[]
     let logServiceMock: LogService
@@ -651,7 +651,7 @@ describe('epics', ()=> {
     describe('errors', () => {
       it('should throw uncaught error if log services throws an error', () => {
         pending()
-        //when(logServiceMock.error(anyString())).thenThrow(new Error('error message'))
+        // when(logServiceMock.error(anyString())).thenThrow(new Error('error message'))
       })
 
       it('should log error in log service and state if cards store throws an error', () => {

@@ -33,10 +33,10 @@ import {
 } from '../database-shim.service'
 
 class TestFirebaseListObservable<T> extends Observable<T> implements IFirebaseListObservable {
+  toPromise: <T>(this: Observable<T>) => Promise<T>
   push(val: any): firebase.database.ThenableReference { return null }
   update(item: FirebaseOperation, value: Object): firebase.Promise<void> { return null }
   remove(item?: FirebaseOperation): firebase.Promise<void> { return null }
-  toPromise: <T>(this: Observable<T>) => Promise<T>
 }
 
 class TestFirebaseObjectObservable<T> extends Observable<T> implements IFirebaseObjectObservable {

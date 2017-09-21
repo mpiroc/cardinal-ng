@@ -11,10 +11,10 @@ import {
 } from 'ts-mockito'
 
 class ParamMapExtension implements ParamMap {
+  readonly keys: string[]
   has(name: string): boolean { return null }
   get(name: string): string | null { return null }
   getAll(name: string): string[] { return null }
-  readonly keys: string[]
 }
 
 describe('services', () => {

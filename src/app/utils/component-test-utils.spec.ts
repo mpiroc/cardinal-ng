@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 import { NgRedux } from '@angular-redux/store'
 import { OnChanges, SimpleChange, TemplateRef } from '@angular/core'
+import { APP_BASE_HREF } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { ComponentType } from '@angular/cdk/portal'
 import { Subject } from 'rxjs/Subject'
@@ -154,11 +155,13 @@ export class CardinalTestBed {
       { provide: DeckInfoActions, useValue: this.deckInfoActions },
       { provide: DeckActions, useValue: this.deckActions },
       { provide: UserActions, useValue: this.userActions },
+
+      { provide: APP_BASE_HREF, useValue: '/' },
     ].concat(extraProviders)
 
     const imports = [
       BrowserModule,
-      RouterModule,
+      RouterModule.forRoot([]),
       MaterialModule,
       MarkdownModule.forRoot(),
       FormsModule,

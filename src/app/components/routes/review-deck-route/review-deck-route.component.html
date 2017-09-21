@@ -2,11 +2,11 @@
   <div class='centered-container'>
     <div class='centered-content'>
       <div class='content-list'>
-        <cardinal-card-card
+        <cardinal-card
           *ngIf="(history$ | async) ? true : false"
           [card]='history$ | async'
           [showActions]='false'>
-        </cardinal-card-card>
+        </cardinal-card>
         <div *ngIf="(history$ | async) ? true : false">
           <md-card>
             <md-card-title>

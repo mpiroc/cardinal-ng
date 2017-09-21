@@ -14,8 +14,8 @@ import { GradingService, GradingServiceImplementation } from '../services/gradin
 import { LogService } from '../services/log.service'
 
 import { LoadingSpinnerComponent } from '../components/controls/loading-spinner/loading-spinner.component'
-import { CardCardComponent } from '../components/controls/card-card/card-card.component'
-import { DeckCardComponent } from '../components/controls/deck-card/deck-card.component'
+import { CardComponent } from '../components/controls/card/card.component'
+import { DeckComponent } from '../components/controls/deck/deck.component'
 import { DeleteCardDialogComponent } from '../components/dialogs/delete-card-dialog/delete-card-dialog.component'
 import { DeleteDeckDialogComponent } from '../components/dialogs/delete-deck-dialog/delete-deck-dialog.component'
 import { EditCardDialogComponent } from '../components/dialogs/edit-card-dialog/edit-card-dialog.component'
@@ -41,9 +41,9 @@ export const config = {
     ToolbarComponent,
     SidenavComponent,
     LoadingSpinnerComponent,
-    CardCardComponent,
+    CardComponent,
     DecksRouteComponent,
-    DeckCardComponent,
+    DeckComponent,
     DeckRouteComponent,
     ResetPasswordRouteComponent,
     ResetPasswordConfirmationRouteComponent,

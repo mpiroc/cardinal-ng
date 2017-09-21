@@ -80,7 +80,7 @@ export abstract class FirebaseObjectEpic<TModel, TArgs> extends FirebaseEpic<TMo
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
-      .mergeMap(action => this.fetch(action.args)//.delay(ARTIFICIAL_LATENCY)
+      .mergeMap(action => this.fetch(action.args) // .delay(ARTIFICIAL_LATENCY)
         .mergeMap((data: TModel) => this.handleReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)
@@ -123,7 +123,7 @@ export abstract class FirebaseListEpic<TModel, TArgs> extends FirebaseEpic<TMode
       .ofType(this.actions.BEFORE_START_LISTENING)
       .map(action => action as (Action & IHasArgs<TArgs>))
       .filter(action => !this.isListening(store, action))
-      .mergeMap(action => this.fetch(action.args)//.delay(ARTIFICIAL_LATENCY)
+      .mergeMap(action => this.fetch(action.args) // .delay(ARTIFICIAL_LATENCY)
         .mergeMap((data: TModel[]) => this.handleListReceived(store, data, action.args))
         .takeUntil(action$
           .ofType(this.actions.STOP_LISTENING)

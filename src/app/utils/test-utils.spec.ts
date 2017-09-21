@@ -52,16 +52,24 @@ export function expectEqual<T>(actual: T[], expected: T[]) {
 }
 
 export class NgReduxExtension extends NgRedux<IState> {
-  configureStore: (rootReducer: Reducer<IState>, initState: IState, middleware?: Middleware[], enhancers?: StoreEnhancer<IState>[]) => void =
-    (rootReducer, initState, middleware, enhancers) => {}
+  configureStore: (
+    rootReducer: Reducer<IState>,
+    initState: IState,
+    middleware?: Middleware[],
+    enhancers?: StoreEnhancer<IState>[],
+  ) => void = (rootReducer, initState, middleware, enhancers) => {}
   provideStore: (store: Store<IState>) => void = store => {}
   dispatch: Dispatch<IState> = action => action
   getState: () => IState = () => null
 
   subscribe: (listener: () => void) => Unsubscribe = listener => null
   replaceReducer: (nextReducer: Reducer<IState>) => void = nextReducer => null
-  select: <SelectedType>(selector?: Selector<IState, SelectedType>, comparator?: Comparator) => Observable<SelectedType> =
-    (selector, comparator) => null
-  configureSubStore: <SubState>(basePath: PathSelector, localReducer: Reducer<SubState>) => ObservableStore<SubState> =
-    (basePath, localReducer) => null
+  select: <SelectedType>(
+    selector?: Selector<IState, SelectedType>,
+    comparator?: Comparator,
+  ) => Observable<SelectedType> = (selector, comparator) => null
+  configureSubStore: <SubState>(
+    basePath: PathSelector,
+    localReducer: Reducer<SubState>,
+  ) => ObservableStore<SubState> = (basePath, localReducer) => null
 }

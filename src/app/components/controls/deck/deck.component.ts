@@ -44,11 +44,11 @@ import {
 import { IState } from '../../../redux/state'
 
 @Component({
-  selector: 'cardinal-deck-card',
-  templateUrl: './deck-card.component.html',
-  styleUrls: [ './deck-card.component.scss' ],
+  selector: 'cardinal-deck',
+  templateUrl: './deck.component.html',
+  styleUrls: [ './deck.component.scss' ],
 })
-export class DeckCardComponent implements OnChanges {
+export class DeckComponent implements OnChanges {
   @Input()
   deck: IDeck
 
@@ -102,60 +102,17 @@ export class DeckCardComponent implements OnChanges {
     subscription: Subscription,
     complete: Promise<any>,
   } {
-    const nameSubscription = this.name$.subscribe(name =>
-      this.ngRedux.dispatch(editDeckSetName(name)))
-    const descriptionSubscription = this.description$.subscribe(description =>
-      this.ngRedux.dispatch(editDeckSetDescription(description)))
-
     const dialogRef: MdDialogRef<EditDeckDialogComponent> = this.dialog.open(EditDeckDialogComponent, {
-      data: { title: 'Edit Deck' }
+      data: {
+        title: 'Edit Deck',
+        name$: this.name$,
+        description$: this.description$,
+      }
     })
 
-    const completeSubject = new Subject<any>()
-    const subscription = dialogRef.afterClosed().first()
-      .map(result => result || EditDeckDialogResult.Cancel)
-      .switchMap(result => this.handleEditResult(result))
-      .do(result => {
-        subscription.unsubscribe()
-        completeSubject.next()
-        completeSubject.complete()
-      })
-      .catch(error => {
-        this.logService.error(error.message)
-        completeSubject.next()
-        completeSubject.complete()
-        return Observable.of()
-      })
-      .subscribe(result => {
-        nameSubscription.unsubscribe()
-        descriptionSubscription.unsubscribe()
-      })
-
-    return {
-      subscription,
-      complete: completeSubject.toPromise(),
-    }
-  }
-
-  private handleEditResult(result: EditDeckDialogResult) {
-    const state: IState = this.ngRedux.getState()
-    this.ngRedux.dispatch(editDeckSetName(null))
-    this.ngRedux.dispatch(editDeckSetDescription(null))
-
-    switch (result) {
-      case EditDeckDialogResult.Cancel:
-        return Observable.of<void>()
-
-      case EditDeckDialogResult.Save:
-        return this.databaseService.updateDeckInfo(
-          this.deck,
-          state.editDeck.get('name'),
-          state.editDeck.get('description'),
-        )
-
-      default:
-        throw new Error(`Unknown dialog response: ${result}`)
-    }
+    return dialogRef.componentInstance.getResult(
+      (name, description) => this.databaseService.updateDeckInfo(this.deck, name, description)
+    )
   }
 
   onDelete() {
@@ -163,39 +120,6 @@ export class DeckCardComponent implements OnChanges {
       data: { name$: this.name$ },
     })
 
-    const completeSubject = new Subject<any>()
-    const subscription = dialogRef.afterClosed().first()
-      .map(result => result || DeleteDeckDialogResult.Cancel)
-      .switchMap(result => this.handleDeleteResult(result))
-      .do(result => {
-        subscription.unsubscribe()
-        completeSubject.next()
-        completeSubject.complete()
-      })
-      .catch(error => {
-        this.logService.error(error.message)
-        completeSubject.next()
-        completeSubject.complete()
-        return Observable.of()
-      })
-      .subscribe()
-
-    return {
-      subscription,
-      complete: completeSubject.toPromise(),
-    }
-  }
-
-  private handleDeleteResult(result: DeleteDeckDialogResult) {
-    switch (result) {
-      case DeleteDeckDialogResult.Cancel:
-        return Observable.of<void>()
-
-      case DeleteDeckDialogResult.Ok:
-        return Observable.from<any>(this.databaseService.deleteDeck(this.deck))
-
-      default:
-        throw new Error(`Unknown dialog response: ${result}`)
-    }
+    return dialogRef.componentInstance.getResult(this.deck)
   }
 }

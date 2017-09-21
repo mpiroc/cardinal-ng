@@ -148,7 +148,7 @@ describe('epics', () => {
           actions,
           instance(logServiceMock),
           Map<string, any>(),
-          args => fetchSubject,
+          _ => fetchSubject,
         )
 
         const store = configureMockStore({}, epic.epic)
@@ -168,7 +168,7 @@ describe('epics', () => {
           Map<string, any>({
             isListening: true,
           }),
-          args => fetchSubject,
+          _ => fetchSubject,
         )
 
         const store = configureMockStore({}, epic.epic)
@@ -185,7 +185,7 @@ describe('epics', () => {
           actions,
           instance(logServiceMock),
           Map<string, any>(),
-          args => fetchSubject,
+          _ => fetchSubject,
         )
 
         const store = configureMockStore({}, epic.epic)
@@ -205,7 +205,7 @@ describe('epics', () => {
           actions,
           instance(logServiceMock),
           Map<string, any>(),
-          args => fetchSubject,
+          _ => fetchSubject,
         )
 
         const store = configureMockStore({}, epic.epic)
@@ -227,7 +227,7 @@ describe('epics', () => {
           actions,
           instance(logServiceMock),
           Map<string, any>(),
-          args => fetchSubject,
+          _ => fetchSubject,
         )
 
         const store = configureMockStore({}, epic.epic)
@@ -250,7 +250,7 @@ describe('epics', () => {
           actions,
           instance(logServiceMock),
           Map<string, any>(),
-          args => fetchSubject,
+          _ => fetchSubject,
         )
 
         const store = configureMockStore({}, epic.epic)
@@ -290,7 +290,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -310,7 +310,7 @@ describe('epics', () => {
             Map<string, any>({
               isListening: true,
             }),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -327,7 +327,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -347,7 +347,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -369,7 +369,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -392,7 +392,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -418,7 +418,7 @@ describe('epics', () => {
                 [model.id]: model,
               }),
             }),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -439,7 +439,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -463,7 +463,7 @@ describe('epics', () => {
                 [model.id]: model,
               }),
             }),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.epic)
@@ -489,7 +489,7 @@ describe('epics', () => {
                 [model.id]: model,
               }),
             }),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.stopListeningEpic)
@@ -508,7 +508,7 @@ describe('epics', () => {
             actions,
             instance(logServiceMock),
             Map<string, any>(),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.stopListeningEpic)
@@ -528,7 +528,7 @@ describe('epics', () => {
             Map<string, any>({
               data: Map<string, IModel>(),
             }),
-            args => fetchSubject,
+            _ => fetchSubject,
           )
 
           const store = configureMockStore({}, epic.stopListeningEpic)
