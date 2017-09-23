@@ -6,8 +6,13 @@
           <cardinal-deck [deck]='deck'></cardinal-deck>
         </div>
       </div>
-      <div class='new-button-container'>
+      <div class='new-button-container tutorial-target'>
         <button md-fab class='new-button' (click)='this.onNewDeck()'><md-icon>add</md-icon></button>
+        <div class='tutorial-tip'>
+          <md-card>
+            <span>Let's start by creating a 'deck' of flash cards. Click here to create a new one.</span>
+          </md-card>
+        </div>
       </div>
     </div>
   </div>

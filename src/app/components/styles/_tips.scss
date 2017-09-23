@@ -1,0 +1,26 @@
+.tutorial-blanket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.5;
+  z-index: 100;
+
+  visibility: collapse;
+}
+
+.tutorial-tip {
+  position: relative;
+  z-index: 200;
+  width: auto;
+  align-self: center;
+
+  visibility: collapse;
+}
+
+.tutorial-target {
+  position: relative;
+  z-index: 200;
+}

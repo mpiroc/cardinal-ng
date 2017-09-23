@@ -1,6 +1,7 @@
 <md-sidenav-container>
   <md-sidenav mode="side" class="mat-elevation-z6"
-    [opened]="!(isLoading$ | async) && (this.authService.isLoggedIn$ | async)" >
+    [opened]="!(isLoading$ | async) && (this.authService.isLoggedIn$ | async)">
+    <div class='tutorial-blanket'></div>
     <md-nav-list>
       <md-list-item routerLink='/'>
         <md-icon>home</md-icon>
@@ -13,6 +14,7 @@
     </md-nav-list>
   </md-sidenav>
 
+  <div class='tutorial-blanket'></div>
   <cardinal-loading-spinner [isLoading$]="isLoading$">
     <router-outlet #outlet
       (activate)='_isLoading$.next(false)'
