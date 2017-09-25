@@ -16,6 +16,7 @@ deploy:
   bucket: aws-website-cardinal-ng-y2tww
   local-dir: dist
   acl: public_read
+  skip_cleanup: true
   on:
     repo: mpiroc/cardinal-ng
     branch: staging
