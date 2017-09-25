@@ -8,3 +8,15 @@ script:
 cache:
   directories:
   - node_modules
+deploy:
+  provider: s3
+  access_key_id: AKIAJUVSS3ZQNE55X64Q
+  secret_access_key:
+    secure: Ov3mSbhmMyrAPa08K18eMeHiz0r5qGT+7l5rKPPm9DagGnhfKo47x7T91DXy33ov9IYu25uHu83t0tLqNbfr12uqmgWB0K9F5jPrd4HQhxeYAqePh1T6s/0dY9Q+LKSvm1rJv/dpBuq+nSF5EGBpUQQlayKXTwrzKJ8vKCwxfAm0B8OwyixjnnlnZ428fQ7LBt71/fIkYRTXwqM/abgZLZYNWEw7Uy+LPnDwJeF/K0XcTOwrvw36RFJ9B+0gwv/5niWM+eH9Twm0EoW9fj7nqF8/GA0t+Unxfc8Gl37lA/5uZIEB/9y9gqZw8lOBc2pyTLgujWl6jE2YzVepqejge9UYC5tCJwzzKK206Jj+6ZOS5U/1GDnUWAsQo9HRGcHvSQR7HUvsuG7Kzm6oz83UdMjpkUerJmjUrcdv7XaOx3i8T4GjAiBmTK91uIaoKiVMreTE4KuAGafJgIerXh2a/l8dwe24wpqM53dLiDPSjo0LtIDZa9Ue3N18N3WklJKbT3v2XlmM6xygN+qYo4ce8dafqyJuYkIhgYhTOd20aPftVb4sr6FdNOD6KRmobt9C+FNiMo1Avl1k6Bh8iBrzO9E83zHDNE5jrxUNPRgbalSqaooeY3Xxoy2nvRk8FIJiyRjRuIaIZTE6yegK6HzzLOPWtJzavLzz1BB2JeELfi0=
+  bucket: aws-website-cardinal-ng-y2tww
+  skip_cleanup: true
+  acl: public_read
+  local_dir: dist
+  on:
+    repo: mpiroc/cardinal-ng
+    branch: staging
