@@ -16,7 +16,10 @@
     </cardinal-loading-spinner>
   </md-card-content>
   <md-card-actions *ngIf='showActions && !(isLoading$ | async)'>
-    <a md-button (click)='this.onEdit()'>Edit</a>
-    <a md-button (click)='this.onDelete()'>Delete</a>
+    <div>
+      <a md-button (click)='this.onEdit()'>Edit</a>
+      <a md-button (click)='this.onDelete()'>Delete</a>
+    </div>
+    <span class='mat-caption cardinal-secondary-text'>{{nextDue$ | async}}</span>
   </md-card-actions>
 </md-card>

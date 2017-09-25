@@ -31,6 +31,7 @@ describe('components', () => {
     let isLoadingSubject: Subject<boolean>
     let frontSubject: Subject<string>
     let backSubject: Subject<string>
+    let nextReviewSubject: Subject<number>
     let component: CardComponent
 
     beforeEach(async(() => {
@@ -39,6 +40,7 @@ describe('components', () => {
       isLoadingSubject = testBed.whenSelect(['cardContent', 'myCardId', 'isLoading'])
       frontSubject = testBed.whenSelect(['cardContent', 'myCardId', 'data', 'front'])
       backSubject = testBed.whenSelect(['cardContent', 'myCardId', 'data', 'back'])
+      nextReviewSubject = testBed.whenSelect(['cardHistory', 'myCardId', 'data', 'nextReview'])
 
       testBed.configure()
 
@@ -46,23 +48,23 @@ describe('components', () => {
       component = fixture.debugElement.componentInstance
     }))
 
-    describe('main component', () => {
-      it('should initialize without errors', async(() => {
-        testBed.expectErrors([])
-        expect(component).toBeTruthy()
-      }))
+    it('should initialize without errors', async(() => {
+      testBed.expectErrors([])
+      expect(component).toBeTruthy()
+    }))
 
-      it('should start listening for card content', async(() => {
-        const card = updateCard(component, 'myCardId')
-        isLoadingSubject.next(false)
-        frontSubject.next('myFront')
-        backSubject.next('myBack')
+    it('should start listening for card content and due date', async(() => {
+      const card = updateCard(component, 'myCardId')
+      isLoadingSubject.next(false)
+      frontSubject.next('myFront')
+      backSubject.next('myBack')
+      nextReviewSubject.next(0)
 
-        testBed.expectErrors([])
-        testBed.expectActions([
-          testBed.cardContentActions.beforeStartListening(card)
-        ])
-      }))
-    })
+      testBed.expectErrors([])
+      testBed.expectActions([
+        testBed.cardContentActions.beforeStartListening(card),
+        testBed.cardHistoryActions.beforeStartListening(card),
+      ])
+    }))
   })
 })

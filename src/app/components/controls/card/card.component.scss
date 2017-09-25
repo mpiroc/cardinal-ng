@@ -1,1 +1,12 @@
 @import '../../styles/material-card';
+
+.mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .mat-caption {
+    align-self: center;
+    margin-right: 16px;
+  }
+}

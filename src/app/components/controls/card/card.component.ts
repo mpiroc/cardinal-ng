@@ -15,8 +15,12 @@ import { DatabaseService } from '../../../services/firebase/database.service'
 import { ICard } from '../../../interfaces/firebase'
 import { DeleteCardDialogComponent } from '../../dialogs/delete-card-dialog/delete-card-dialog.component'
 import { EditCardDialogComponent } from '../../dialogs/edit-card-dialog/edit-card-dialog.component'
-import { CardContentActions } from '../../../redux/actions/firebase'
+import {
+  CardContentActions,
+  CardHistoryActions,
+} from '../../../redux/actions/firebase'
 import { IState } from '../../../redux/state'
+import * as moment from 'moment'
 
 @Component({
   selector: 'cardinal-card',
@@ -30,12 +34,14 @@ export class CardComponent implements OnChanges {
   isLoading$: Observable<boolean>
   front$: Observable<string>
   back$: Observable<string>
+  nextDue$: Observable<string>
 
   constructor(
     private ngRedux: NgRedux<IState>,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
     private cardContentActions: CardContentActions,
+    private cardHistoryActions: CardHistoryActions,
   ) {
   }
 
@@ -47,8 +53,12 @@ export class CardComponent implements OnChanges {
     this.isLoading$ = this.ngRedux.select(['cardContent', this.card.cardId, 'isLoading'])
     this.front$ = this.ngRedux.select(['cardContent', this.card.cardId, 'data', 'front'])
     this.back$ = this.ngRedux.select(['cardContent', this.card.cardId, 'data', 'back'])
+    this.nextDue$ = this.ngRedux.select(['cardHistory', this.card.cardId, 'data', 'nextReview'])
+      .map((nextDue: number) => moment(nextDue))
+      .map(nextDue => `Due ${nextDue.fromNow()}`)
 
     this.ngRedux.dispatch(this.cardContentActions.beforeStartListening(this.card))
+    this.ngRedux.dispatch(this.cardHistoryActions.beforeStartListening(this.card))
   }
 
   onEdit(): {
