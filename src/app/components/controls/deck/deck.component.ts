@@ -8,35 +8,14 @@ import {
   MdDialog,
   MdDialogRef,
 } from '@angular/material'
-import {
-  NgRedux,
-  select,
-  WithSubStore,
-} from '@angular-redux/store'
+import { NgRedux } from '@angular-redux/store'
 import { Observable } from 'rxjs/Observable'
-import { Subject } from 'rxjs/Subject'
 import { Subscription } from 'rxjs/Subscription'
-import 'rxjs/add/observable/from'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/switchMap'
-import 'rxjs/add/operator/finally'
 import { DatabaseService } from '../../../services/firebase/database.service'
-import { LogService } from '../../../services/log.service'
 import { IDeck, ICard } from '../../../interfaces/firebase'
-import {
-  EditDeckDialogComponent,
-  EditDeckDialogResult,
-} from '../../dialogs/edit-deck-dialog/edit-deck-dialog.component'
-import {
-  DeleteDeckDialogComponent,
-  DeleteDeckDialogResult,
-} from '../../dialogs/delete-deck-dialog/delete-deck-dialog.component'
-import {
-  editDeckSetName,
-  editDeckSetDescription,
-} from '../../../redux/actions/edit-deck'
+import { EditDeckDialogComponent } from '../../dialogs/edit-deck-dialog/edit-deck-dialog.component'
+import { DeleteDeckDialogComponent } from '../../dialogs/delete-deck-dialog/delete-deck-dialog.component'
 import {
   CardActions,
   DeckInfoActions,
@@ -55,13 +34,13 @@ export class DeckComponent implements OnChanges {
   isLoading$: Observable<boolean>
   name$: Observable<string>
   description$: Observable<string>
-  count$: Observable<any>
+  count$: Observable<number>
+  dueCount$: Observable<number>
 
   constructor(
     private ngRedux: NgRedux<IState>,
     private databaseService: DatabaseService,
     private dialog: MdDialog,
-    private logService: LogService,
     private deckInfoActions: DeckInfoActions,
     private cardActions: CardActions,
   ) {
@@ -78,6 +57,7 @@ export class DeckComponent implements OnChanges {
     this.isLoading$ = this.ngRedux.select(['deckInfo', this.deck.deckId, 'isLoading'])
     this.name$ = this.ngRedux.select(['deckInfo', this.deck.deckId, 'data', 'name'])
     this.description$ = this.ngRedux.select(['deckInfo', this.deck.deckId, 'data', 'description'])
+
     this.count$ = this.ngRedux
       .select(['card', this.deck.deckId])
       .map<Map<string, any>, any>(cards => {

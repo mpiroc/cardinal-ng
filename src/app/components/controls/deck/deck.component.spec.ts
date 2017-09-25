@@ -70,71 +70,72 @@ describe('components', () => {
       component = fixture.debugElement.componentInstance
     }))
 
-    describe('main component', () => {
-      it('should initialize without errors', async(() => {
-        testBed.expectErrors([])
-        expect(component).toBeTruthy()
+    it('should initialize without errors', async(() => {
+      testBed.expectErrors([])
+      expect(component).toBeTruthy()
+    }))
+
+    it('should start listening for deck info and deck cards', async(() => {
+      const deck = updateDeck(component, 'myDeckId')
+
+      testBed.expectErrors([])
+      testBed.expectActions([
+        testBed.deckInfoActions.beforeStartListening(deck),
+        testBed.cardActions.beforeStartListening(deck),
+      ])
+    }))
+
+    it('should not display the total card count if card list is missing data', async(() => {
+      const deck = updateDeck(component, 'myDeckId')
+
+      let currentCount: Number
+      const subscription = component.count$.subscribe(count => currentCount = count)
+
+      cardsSubject.next(undefined)
+      expect(currentCount).toBeNull()
+
+      cardsSubject.next(Map<string, any>({ isLoading: false }))
+      expect(currentCount).toBeNull()
+
+      testBed.expectErrors([])
+
+      subscription.unsubscribe()
+    }))
+
+    it('should not display the total card count before cards have loaded', async(() => {
+      const deck = updateDeck(component, 'myDeckId')
+
+      let currentCount: Number
+      const subscription = component.count$.subscribe(count => currentCount = count)
+      cardsSubject.next(Map<string, any>({ isLoading: true }))
+
+      testBed.expectErrors([])
+      expect(currentCount).toBeNull()
+
+      subscription.unsubscribe()
+    }))
+
+    it('should display the total number of cards in the deck', async(() => {
+      const deck = updateDeck(component, 'myDeckId')
+
+      let currentCount: Number
+      const subscription = component.count$.subscribe(count => currentCount = count)
+      cardsSubject.next(Map<string, any>({
+        isLoading: false,
+        data: Map<string, any>({
+          myCardId1: {},
+          myCardId2: {},
+        })
       }))
 
-      it('should start listening for deck info and deck cards', async(() => {
-        const deck = updateDeck(component, 'myDeckId')
+      testBed.expectErrors([])
+      expect(currentCount).toEqual(2)
 
-        testBed.expectErrors([])
-        testBed.expectActions([
-          testBed.deckInfoActions.beforeStartListening(deck),
-          testBed.cardActions.beforeStartListening(deck),
-        ])
-      }))
+      subscription.unsubscribe()
+    }))
 
-      it('should not display the card count if card list is missing data', async(() => {
-        const deck = updateDeck(component, 'myDeckId')
-
-        let currentCount: Number
-        const subscription = component.count$.subscribe(count => currentCount = count)
-
-        cardsSubject.next(undefined)
-        expect(currentCount).toBeNull()
-
-        cardsSubject.next(Map<string, any>({ isLoading: false }))
-        expect(currentCount).toBeNull()
-
-        testBed.expectErrors([])
-
-        subscription.unsubscribe()
-      }))
-
-      it('should not display the card count before cards have loaded', async(() => {
-        const deck = updateDeck(component, 'myDeckId')
-
-        let currentCount: Number
-        const subscription = component.count$.subscribe(count => currentCount = count)
-        cardsSubject.next(Map<string, any>({ isLoading: true }))
-
-        testBed.expectErrors([])
-        expect(currentCount).toBeNull()
-
-        subscription.unsubscribe()
-      }))
-
-
-      it('should display the number of cards in the deck', async(() => {
-        const deck = updateDeck(component, 'myDeckId')
-
-        let currentCount: Number
-        const subscription = component.count$.subscribe(count => currentCount = count)
-        cardsSubject.next(Map<string, any>({
-          isLoading: false,
-          data: Map<string, any>({
-            myCardId1: {},
-            myCardId2: {},
-          })
-        }))
-
-        testBed.expectErrors([])
-        expect(currentCount).toEqual(2)
-
-        subscription.unsubscribe()
-      }))
-    })
+    it('should should listening for card histories')
+    it('should display the number of due cards in the deck')
+    it('should not display the number of total cards before the number of due cards has loaded')
   })
 })
