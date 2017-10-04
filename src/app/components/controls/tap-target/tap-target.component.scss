@@ -23,6 +23,7 @@ $tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-p
     height: 0;
     left: 50%;
     opacity: 0;
+    margin-top: $target-element-radius;
   }
 
   &.expanded {
@@ -33,10 +34,7 @@ $tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-p
     background-color: $app-accent-color;
     z-index: -2;
 
-    &.collapsed {
-      margin-top: $target-element-radius;
-    }
-
+    /*
     &.expanded {
       width: 2 * $tap-target-background-radius;
       height: 2 * $tap-target-background-radius;
@@ -44,16 +42,14 @@ $tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-p
       margin-top: $target-element-radius - $tap-target-background-radius;
       opacity: 0.96;
     }
+    */
   }
 
   &.foreground {
     background-color: $app-background-color;
     z-index: -1;
 
-    &.collapsed {
-      margin-top: $target-element-radius;
-    }
-
+    /*
     &.expanded {
       width: 2 * $tap-target-foreground-radius;
       height: 2 * $tap-target-foreground-radius;
@@ -61,6 +57,7 @@ $tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-p
       margin-top: $target-element-radius - $tap-target-foreground-radius;
       opacity: 1;
     }
+    */
   }
 }
 
