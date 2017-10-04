@@ -1,2 +1,71 @@
 @import '../../styles/centered';
 @import '../../styles/content-list';
+
+$app-accent-color: #3f51b5;
+$app-background-color: #fafafa;
+
+$target-element-radius: 56px / 2;
+$tap-target-foreground-padding: 20px;
+$tap-target-background-radius: 200px;
+$tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-padding;
+
+.tap-target {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+
+  transition-property: width, height, left, margin-top, opacity;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+
+  &.collapsed {
+    pointer-events: none;
+
+    width: 0;
+    height: 0;
+    left: 50%;
+    opacity: 0;
+  }
+
+  &.expanded {
+    pointer-events: auto;
+  }
+
+  &.background {
+    background-color: $app-accent-color;
+    z-index: -2;
+
+    &.collapsed {
+      margin-top: $target-element-radius;
+    }
+
+    &.expanded {
+      width: 2 * $tap-target-background-radius;
+      height: 2 * $tap-target-background-radius;
+      left: calc(50% - #{$tap-target-background-radius});
+      margin-top: $target-element-radius - $tap-target-background-radius;
+      opacity: 0.96;
+    }
+  }
+
+  &.foreground {
+    background-color: $app-background-color;
+    z-index: -1;
+
+    &.collapsed {
+      margin-top: $target-element-radius;
+    }
+
+    &.expanded {
+      width: 2 * $tap-target-foreground-radius;
+      height: 2 * $tap-target-foreground-radius;
+      left: calc(50% - #{$tap-target-foreground-radius});
+      margin-top: $target-element-radius - $tap-target-foreground-radius;
+      opacity: 1;
+    }
+  }
+}
+
+.new-button-container {
+  transform: translate3d(0, 0, 0);
+}
