@@ -2,8 +2,9 @@ $app-accent-color: #3f51b5;
 $app-background-color: #fafafa;
 
 $target-element-radius: 56px / 2;
-$tap-target-foreground-padding: 20px;
 $tap-target-background-radius: 200px;
+
+$tap-target-foreground-padding: 20px;
 $tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-padding;
 
 .tap-target {

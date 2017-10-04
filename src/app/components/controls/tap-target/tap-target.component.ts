@@ -10,12 +10,12 @@ import 'rxjs/add/operator/take';
   styleUrls: [ './tap-target.component.scss' ],
 })
 export class TapTargetComponent {
-  readonly tapTargetExpanded$: Observable<boolean>
+  readonly tapTargetState$: Observable<string>
 
   constructor() {
-    this.tapTargetExpanded$ = Observable
+    this.tapTargetState$ = Observable
       .interval(3000)
-      .map(value => value % 2 === 0)
-      //.take(1)
+      .map(value => value % 2 === 0 ? "expanded" : "collapsed")
+      .startWith('collapsed')
   }
 }
