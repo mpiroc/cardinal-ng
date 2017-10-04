@@ -32,6 +32,7 @@ import {
 import { ReviewDeckRouteComponent } from '../components/routes/review-deck-route/review-deck-route.component'
 import { SignInRouteComponent } from '../components/routes/sign-in-route/sign-in-route.component'
 import { SignUpRouteComponent } from '../components/routes/sign-up-route/sign-up-route.component'
+import { TapTargetComponent } from '../components/controls/tap-target/tap-target.component'
 
 import 'hammerjs'
 
@@ -54,6 +55,7 @@ export const config = {
     DeleteDeckDialogComponent,
     EditCardDialogComponent,
     EditDeckDialogComponent,
+    TapTargetComponent,
   ],
   imports: [
     BrowserModule,
