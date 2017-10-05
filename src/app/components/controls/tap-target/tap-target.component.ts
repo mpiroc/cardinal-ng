@@ -12,7 +12,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/take';
 
-const backgroundRadius = '200px'
+const backgroundRadius = '250px'
 const targetRadius = '28px'
 const foregroundPadding = '20px'
 

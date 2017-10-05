@@ -1,29 +1,13 @@
 $app-accent-color: #3f51b5;
 $app-background-color: #fafafa;
 
-$target-element-radius: 56px / 2;
-$tap-target-background-radius: 200px;
-
-$tap-target-foreground-padding: 20px;
-$tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-padding;
-
 .tap-target {
   position: absolute;
   border-radius: 50%;
   display: flex;
 
-  transition-property: width, height, left, margin-top, opacity;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
-
   &.collapsed {
     pointer-events: none;
-
-    width: 0;
-    height: 0;
-    left: 50%;
-    opacity: 0;
-    margin-top: $target-element-radius;
   }
 
   &.expanded {
@@ -33,31 +17,35 @@ $tap-target-foreground-radius: $target-element-radius + $tap-target-foreground-p
   &.background {
     background-color: $app-accent-color;
     z-index: -2;
-
-    /*
-    &.expanded {
-      width: 2 * $tap-target-background-radius;
-      height: 2 * $tap-target-background-radius;
-      left: calc(50% - #{$tap-target-background-radius});
-      margin-top: $target-element-radius - $tap-target-background-radius;
-      opacity: 0.96;
-    }
-    */
   }
 
   &.foreground {
     background-color: $app-background-color;
     z-index: -1;
+  }
+}
 
-    /*
-    &.expanded {
-      width: 2 * $tap-target-foreground-radius;
-      height: 2 * $tap-target-foreground-radius;
-      left: calc(50% - #{$tap-target-foreground-radius});
-      margin-top: $target-element-radius - $tap-target-foreground-radius;
-      opacity: 1;
-    }
-    */
+.hint-text {
+  color: white;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  margin-left: calc(-250px + 28px + 40px);
+  margin-top: calc(2 * 28px + 20px);
+  //right: calc(50% + 48px);
+  //top: 76px;
+  //left: 0;
+  //text-align: left;
+  //top: 128px;
+  //z-index: -1;
+
+  .mat-subheading-1 {
+    margin: 0 0 8px 0;
+  }
+
+  .mat-caption {
+    opacity: 0.5;
   }
 }
 
